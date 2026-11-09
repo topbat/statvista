@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "date": "2026-11-09",
+    "task": "T02 角色与 RLS 绑定（种子冻结版）",
+    "rls_rule": "RLS 谓词只能由服务端按账号绑定机构节点生成，编译期注入，前端传参一律忽略（PRD D9）；越权（省用户显式过滤他省）返回空集而非报错（D7）；缓存键含 RLS 指纹（D10）",
+    "predicate_rule": "绑定节点 → 自动生成 path LIKE '<bind_path>%'；谓词命中本节点及其全部子孙，天然支持“省看全省、市看本市”",
+    "dim_tree_trim": "省账号的维度树侧栏只渲染本省子树（D8）；指标卡=本省口径，排名表=本省所辖市排名"
+  },
+  "roles": [
+    {
+      "id": "leader",
+      "name": "领导（全国）",
+      "desc": "全量视角：驾驶舱显示 5 省排名与全国指标卡",
+      "bind_node": "000000",
+      "bind_node_path": "/",
+      "rls": { "type": "allow_all", "dim": "region", "predicate": null },
+      "dim_tree_root": "/",
+      "allowed_metrics": [
+        "MACRO.GDP.VA0001", "MACRO.GDP.GR0001", "MACRO.IND.VA0002", "MACRO.CPI.IDX0003",
+        "MACRO.INV.CU0004", "MACRO.CON.VA0005", "MACRO.TRADE.VA0006", "MACRO.FIN.VA0007",
+        "MACRO.EMP.CU0008", "MACRO.ENGI.GR0009",
+        "TECH.RD.CU0001", "TECH.RD.INT0002", "TECH.PAT.VA0003", "TECH.PAT.SH0004",
+        "TECH.HTI.VA0005", "TECH.RDP.SN0006"
+      ],
+      "allowed_themes": ["macro", "tech"]
+    },
+    {
+      "id": "prov-js",
+      "name": "江苏省级用户（RLS）",
+      "desc": "同一 URL 自动裁剪为本省：指标卡=江苏口径，排名表=江苏 13 市中的 4 个种子市排名，维度树只显示江苏子树",
+      "bind_node": "320000",
+      "bind_node_path": "/320000/",
+      "rls": { "type": "path_prefix", "dim": "region", "predicate": "region_path LIKE '/320000/%'" },
+      "dim_tree_root": "/320000/",
+      "allowed_metrics": [
+        "MACRO.GDP.VA0001", "MACRO.GDP.GR0001", "MACRO.IND.VA0002", "MACRO.CPI.IDX0003",
+        "MACRO.INV.CU0004", "MACRO.CON.VA0005", "MACRO.TRADE.VA0006", "MACRO.FIN.VA0007",
+        "MACRO.EMP.CU0008", "MACRO.ENGI.GR0009",
+        "TECH.RD.CU0001", "TECH.RD.INT0002", "TECH.PAT.VA0003", "TECH.PAT.SH0004",
+        "TECH.HTI.VA0005", "TECH.RDP.SN0006"
+      ],
+      "allowed_themes": ["macro", "tech"]
+    },
+    {
+      "id": "prov-gd",
+      "name": "广东省级用户（RLS）",
+      "desc": "同 prov-js，绑定广东；与 prov-js 同一 DSL 命中不同缓存条目（缓存键含 RLS 指纹，D10）",
+      "bind_node": "440000",
+      "bind_node_path": "/440000/",
+      "rls": { "type": "path_prefix", "dim": "region", "predicate": "region_path LIKE '/440000/%'" },
+      "dim_tree_root": "/440000/",
+      "allowed_metrics": [
+        "MACRO.GDP.VA0001", "MACRO.GDP.GR0001", "MACRO.IND.VA0002", "MACRO.CPI.IDX0003",
+        "MACRO.INV.CU0004", "MACRO.CON.VA0005", "MACRO.TRADE.VA0006", "MACRO.FIN.VA0007",
+        "MACRO.EMP.CU0008", "MACRO.ENGI.GR0009",
+        "TECH.RD.CU0001", "TECH.RD.INT0002", "TECH.PAT.VA0003", "TECH.PAT.SH0004",
+        "TECH.HTI.VA0005", "TECH.RDP.SN0006"
+      ],
+      "allowed_themes": ["macro", "tech"]
+    }
+  ]
+}

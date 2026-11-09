@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StatVista 开源发布 · GitHub 授权</title>
+<style>
+:root{--bg0:#050A14;--bg1:#081226;--panel:rgba(10,24,46,.62);--line:rgba(110,160,220,.16);
+--ink:#E9F2FC;--ink2:#9DB4D0;--ink3:#5E7694;--cyan:#2CE0F5;--ok:#3BE0A0;--bad:#FF7B72;--gold:#F6CB7D}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;color:var(--ink);
+background:radial-gradient(1200px 500px at 50% -10%,rgba(44,224,245,.10),transparent 60%),linear-gradient(180deg,#050A14,#081226 55%,#050A14);
+min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.card{width:680px;max-width:96vw;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px 28px;position:relative}
+.card::before{content:"";position:absolute;left:-1px;top:-1px;width:16px;height:16px;border:2px solid rgba(44,224,245,.55);border-right:none;border-bottom:none;border-radius:6px 0 0 0}
+.card::after{content:"";position:absolute;right:-1px;bottom:-1px;width:16px;height:16px;border:2px solid rgba(44,224,245,.55);border-left:none;border-top:none;border-radius:0 0 6px 0}
+h1{font-size:19px;margin-bottom:4px}
+h1 small{display:block;font-size:10px;color:var(--ink2);letter-spacing:.24em;margin-top:4px;font-weight:400}
+.lead{font-size:11.5px;color:var(--ink2);margin-bottom:6px}
+.step{display:flex;gap:10px;margin:14px 0}
+.step .no{width:24px;height:24px;border-radius:50%;background:rgba(44,224,245,.12);border:1px solid rgba(44,224,245,.35);color:var(--cyan);display:grid;place-items:center;font-size:12px;font-weight:700;flex:none}
+.step .bd{flex:1;min-width:0}
+.step b{font-size:13.5px}
+.step p{font-size:11.5px;color:var(--ink2);line-height:1.7;margin-top:3px}
+code{font-family:Consolas,monospace;font-size:10.5px;background:rgba(110,160,220,.12);padding:1px 6px;border-radius:4px}
+a{color:var(--cyan)}
+.btnrow{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
+button{font-family:inherit;border-radius:11px;border:1px solid rgba(44,224,245,.4);background:linear-gradient(180deg,rgba(20,44,78,.8),rgba(10,24,46,.8));color:var(--ink);padding:9px 15px;font-size:12.5px;font-weight:600;cursor:pointer;transition:.25s}
+button:hover:not(:disabled){border-color:var(--cyan);box-shadow:0 0 16px -4px rgba(44,224,245,.6);transform:translateY(-1px)}
+button:disabled{opacity:.45;cursor:wait}
+input{font-family:Consolas,monospace;background:rgba(8,18,38,.8);border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:10px 12px;font-size:12px;outline:none}
+input:focus{border-color:var(--cyan);box-shadow:0 0 12px -4px rgba(44,224,245,.5)}
+.row{display:flex;gap:10px;margin-top:8px}
+.row input{flex:1;min-width:0}
+.tag{font-size:11px;color:var(--ink3)}
+.stat{margin-top:8px;font-size:12px;color:var(--ink2);min-height:18px}
+.stat.ok{color:var(--ok)}.stat.bad{color:var(--bad)}
+.prog{margin-top:12px;display:none}
+.prog .bar{height:6px;border-radius:4px;background:rgba(110,160,220,.13);overflow:hidden}
+.prog .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#0E7490,var(--cyan));transition:width .6s}
+.steps{margin-top:10px;max-height:210px;overflow:auto;font-size:11px;color:var(--ink2);line-height:1.8;font-family:Consolas,monospace}
+.steps b{color:var(--cyan);font-weight:400}
+.links{margin-top:10px;display:none}
+.links a{display:inline-block;margin-right:14px;font-size:12.5px;color:var(--ok)}
+.warn{margin-top:14px;font-size:10.5px;color:var(--ink3);line-height:1.7;border-top:1px dashed var(--line);padding-top:10px}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>StatVista · GitHub 开源发布授权</h1>
+  <p class="lead">MVP 原型全量产出 → 公开仓库 → Pages 公网体验站 · 指挥中心战报流实时记录全程</p>
+
+  <div class="step">
+    <div class="no">1</div>
+    <div class="bd">
+      <b>创建 GitHub 令牌（即"登录"）</b>
+      <p>GitHub 已于 2021 年取消密码调用 API，<b>令牌就是登录凭证</b>。点击下方按钮直达创建页（已预填 repo 权限与备注），
+      勾选 <code>repo</code> → Generate token → 复制 <code>ghp_…</code>。</p>
+      <div class="btnrow">
+        <button id="openGh">🌐 打开 GitHub 令牌创建页</button>
+        <button id="openHome">👤 打开 github.com 首页</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="no">2</div>
+    <div class="bd">
+      <b>粘贴令牌并验证账号</b>
+      <div class="row">
+        <input id="token" type="password" placeholder="ghp_…（粘贴后点击右侧按钮）" autocomplete="off">
+        <button id="verify">验证账号</button>
+      </div>
+      <div class="stat" id="vstat">令牌仅驻内存用于本次发布，不落盘、不经第三方。</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="no">3</div>
+    <div class="bd">
+      <b>点击发布 · 全自动执行</b>
+      <p>验证通过后点击「开始发布」：创建公开仓库（默认名 <code>statvista</code>，可改）→ 单提交推送全部交付文件 → 设置中文简介与 20 个关键词 → 启用 Pages。进度实时显示，并同步到指挥中心。</p>
+      <div class="row">
+        <button id="publish" disabled>🚀 开始发布（建仓 + 推送 + Pages）</button>
+        <input id="repo" value="statvista" title="仓库名（可改）" style="max-width:200px">
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="no">4</div>
+    <div class="bd">
+      <b>完成后获得</b>
+      <p>① 仓库地址 ② 中文一句话简介 ③ 20 个关键词（topics）④ 公网体验入口 <code>https://你的用户名.github.io/statvista/</code>（Pages 构建 1–3 分钟后生效）</p>
+    </div>
+  </div>
+
+  <div class="prog" id="prog">
+    <div class="bar"><i id="pbar"></i></div>
+    <div class="steps" id="psteps"></div>
+    <div class="links" id="plinks">
+      <a id="lRepo" target="_blank" href="#">📦 仓库地址</a>
+      <a id="lPages" target="_blank" href="#">🌐 公网入口</a>
+    </div>
+  </div>
+
+  <div class="warn">安全说明：令牌仅在本页与发布请求中使用，不落盘、不经过任何第三方；发布完成后建议到 GitHub → Settings → Applications 删除该令牌。</div>
+</div>
+
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+$('openGh').onclick = () => window.open('https://github.com/settings/tokens/new?scopes=repo&description=StatVista%20publish', '_blank');
+$('openHome').onclick = () => window.open('https://github.com/', '_blank');
+
+let TOKEN = '';
+$('verify').onclick = async () => {
+  TOKEN = $('token').value.trim();
+  if (!TOKEN) { $('vstat').textContent = '请先粘贴令牌'; $('vstat').className = 'stat bad'; return; }
+  $('verify').disabled = true;
+  $('vstat').textContent = '验证中…';
+  $('vstat').className = 'stat';
+  try {
+    const r = await fetch('/api/gh/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: TOKEN }) });
+    const j = await r.json();
+    if (j.ok) {
+      $('vstat').textContent = '✅ 账号验证通过：' + j.login + (j.name ? '（' + j.name + '）' : '') + ' — 可以点击发布';
+      $('vstat').className = 'stat ok';
+      $('publish').disabled = false;
+    } else {
+      $('vstat').textContent = '❌ ' + j.error;
+      $('vstat').className = 'stat bad';
+    }
+  } catch (e) {
+    $('vstat').textContent = '❌ 无法连接 api.github.com：' + e;
+    $('vstat').className = 'stat bad';
+  }
+  $('verify').disabled = false;
+};
+
+$('publish').onclick = async () => {
+  if (!TOKEN) { $('vstat').textContent = '请先粘贴并验证令牌'; $('vstat').className = 'stat bad'; return; }
+  $('publish').disabled = true;
+  $('prog').style.display = 'block';
+  $('psteps').innerHTML = '<div><b>' + fmt(new Date().toISOString()) + '</b> 正在向服务器发送发布指令…</div>';
+  try {
+    const r = await fetch('/api/gh/publish', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: TOKEN, repo: ($('repo').value || 'statvista').trim() })
+    });
+    if (!r.ok) {
+      const j = await r.json().catch(() => ({}));
+      throw new Error(j.error || ('HTTP ' + r.status));
+    }
+    poll();
+  } catch (e) {
+    $('psteps').innerHTML += '<div style="color:var(--bad)"><b>❌</b> 发布指令发送失败：' + esc(String(e.message || e)) + '</div>';
+    $('publish').disabled = false;
+  }
+};
+
+function poll() {
+  fetch('/api/gh/status').then(r => r.json()).then(j => {
+    const steps = j.steps || [];
+    $('psteps').innerHTML = steps.map(s => '<div><b>' + fmt(s.t) + '</b> ' + esc(s.msg) + '</div>').join('');
+    let pct = 0;
+    for (const s of steps) if (typeof s.pct === 'number') pct = s.pct;
+    $('pbar').style.width = pct + '%';
+    if (j.status === 'running') setTimeout(poll, 2000);
+    if (j.status === 'done') {
+      $('plinks').style.display = 'block';
+      $('lRepo').href = j.urls.repo;
+      $('lPages').href = j.urls.pages;
+      $('psteps').innerHTML += '<div><b>🎉</b> 全部完成，可关闭本页。指挥中心战报流已记录全程。</div>';
+    }
+    if (j.status === 'error') {
+      $('psteps').innerHTML += '<div style="color:var(--bad)"><b>❌</b> ' + esc(j.error) + ' — 修正后可重新发布</div>';
+    }
+  }).catch(() => setTimeout(poll, 3000));
+}
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m])); }
+function fmt(iso) { const d = new Date(iso); return isNaN(d) ? '' : [d.getHours(), d.getMinutes(), d.getSeconds()].map(x => String(x).padStart(2, '0')).join(':'); }
+</script>
+</body>
+</html>

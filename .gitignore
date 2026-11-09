@@ -1,0 +1,10 @@
+.refs/
+*.log
+.figs/
+.shot*
+node_modules/
+.dom.html
+.r4.json
+.accept*
+.mimosa/
+**/.mimosa/

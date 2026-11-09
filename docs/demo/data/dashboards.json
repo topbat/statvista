@@ -1,0 +1,234 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "date": "2026-11-09",
+    "task": "T07 看板配置（dashboard 即 JSON，契约 03 文档 §6 schema 的正式实例）",
+    "note": "服务端启动时优先读本文件（server/index.js），替代内置 DEFAULT_DASHBOARDS 兜底；前端 loadMetas() 消费 data.cards[].metric 覆盖主题看板卡带。P0 三实例：dash-cockpit / dash-macro / dash-tech（契约 §5.1）",
+    "chartId_note": "c1-industry-donut 与前端 app.js 联动总线广播的 sourceChartId 一致（J1 第 4 步 D14 溯源锚点）",
+    "alert_note": "驾驶舱预警区为前端预埋清单（app.js PRESET_ALERTS A1/A2/A3），c3-alert-table 为其取数引用声明"
+  },
+  "dashboards": [
+    {
+      "dashboardId": "dash-cockpit",
+      "version": "1.0.0",
+      "title": "宏观经济运行驾驶舱",
+      "domain": "cockpit",
+      "layout": { "cols": 12, "rowHeight": 64, "note": "顶20%卡带/中55%趋势分布/底25%排名预警（PRD §5.1）" },
+      "globalFilters": [
+        { "id": "gf-time", "dim": "time", "op": "time_range", "label": "时间", "component": "month-range", "default": { "range": ["2026-10", "2026-10"] } },
+        { "id": "gf-region", "dim": "region", "op": "descendantOf", "label": "地区", "component": "dim-tree", "default": { "value": "000000" } },
+        { "id": "gf-industry", "dim": "industry", "op": "in", "label": "行业", "component": "dim-multi-select", "default": { "values": [] } }
+      ],
+      "cards": [
+        { "cardId": "card-gdp", "metric": "MACRO.GDP.VA0001", "compare": ["yoy"], "timeMode": "latest", "position": { "x": 0, "y": 0, "w": 3, "h": 2 } },
+        { "cardId": "card-ind", "metric": "MACRO.IND.VA0002", "compare": ["yoy"], "timeMode": "latest", "position": { "x": 3, "y": 0, "w": 3, "h": 2 } },
+        { "cardId": "card-cpi", "metric": "MACRO.CPI.IDX0003", "compare": ["yoy"], "timeMode": "latest", "position": { "x": 6, "y": 0, "w": 3, "h": 2 } },
+        { "cardId": "card-emp", "metric": "MACRO.EMP.CU0008", "compare": ["yoy"], "timeMode": "latest", "position": { "x": 9, "y": 0, "w": 3, "h": 2 } },
+        { "cardId": "card-inv", "metric": "MACRO.INV.CU0004", "compare": ["yoy"], "timeMode": "latest", "position": { "x": 0, "y": 2, "w": 3, "h": 2 } },
+        { "cardId": "card-cons", "metric": "MACRO.CON.VA0005", "compare": ["yoy"], "timeMode": "latest", "position": { "x": 3, "y": 2, "w": 3, "h": 2 } },
+        { "cardId": "card-engi", "metric": "MACRO.ENGI.GR0009", "compare": ["yoy"], "timeMode": "latest", "position": { "x": 6, "y": 2, "w": 3, "h": 2 } },
+        { "cardId": "card-hti", "metric": "TECH.HTI.VA0005", "compare": ["yoy"], "timeMode": "latest", "position": { "x": 9, "y": 2, "w": 3, "h": 2 } }
+      ],
+      "charts": [
+        {
+          "chartId": "c1-gdp-trend",
+          "type": "line",
+          "title": "全国 GDP 趋势（当月值柱 · 累计同比增速线，双轴）",
+          "position": { "x": 0, "y": 4, "w": 7, "h": 6 },
+          "dataset": {
+            "metrics": ["MACRO.GDP.VA0001", "MACRO.GDP.GR0001"],
+            "dimensions": [{ "dim": "time", "granularity": "time_month" }],
+            "time": { "grain": "month", "range": ["2025-01", "2026-10"], "compare": ["yoy"] },
+            "limit": 1000
+          },
+          "optionOverride": { "series": [{ "type": "bar", "yAxisIndex": 0 }, { "type": "line", "yAxisIndex": 1 }] },
+          "drill": { "dims": [], "initialPath": {}, "maxDepth": 2 },
+          "emits": [],
+          "subscribes": [{ "dim": "region", "action": "filter" }, { "dim": "industry", "action": "filter" }],
+          "dataSource": "query"
+        },
+        {
+          "chartId": "c2-prov-rank",
+          "type": "bar",
+          "title": "省域 GDP 累计同比增速排名（垫底标警，点击下钻，J1 第 2/3 步）",
+          "position": { "x": 7, "y": 4, "w": 5, "h": 6 },
+          "dataset": {
+            "metrics": ["MACRO.GDP.GR0001", "MACRO.GDP.VA0001"],
+            "dimensions": [{ "dim": "region", "granularity": "province" }],
+            "time": { "grain": "month", "range": ["2026-10", "2026-10"], "compare": ["yoy"] },
+            "sort": [{ "by": "MACRO.GDP.GR0001", "order": "desc" }],
+            "limit": 50
+          },
+          "drill": { "dims": ["region"], "initialPath": { "region": "ROOT" }, "maxDepth": 2 },
+          "emits": [{ "event": "drill:nav", "dim": "region", "op": "descendantOf" }],
+          "subscribes": [{ "dim": "industry", "action": "filter" }, { "dim": "time", "action": "filter" }],
+          "dataSource": "query"
+        },
+        {
+          "chartId": "c3-alert-table",
+          "type": "table",
+          "title": "异常预警引用（规上工业分省同比，负增长月标红；前端预埋 A1/A2/A3）",
+          "position": { "x": 0, "y": 10, "w": 12, "h": 4 },
+          "dataset": {
+            "metrics": ["MACRO.IND.VA0002"],
+            "dimensions": [{ "dim": "region", "granularity": "province" }, { "dim": "time", "granularity": "time_month" }],
+            "time": { "grain": "month", "range": ["2026-06", "2026-10"], "compare": ["yoy"] },
+            "sort": [{ "by": "MACRO.IND.VA0002", "order": "desc" }],
+            "limit": 50
+          },
+          "optionOverride": { "columns": ["省份", "月份", "规上工业增加值", "同比"] },
+          "drill": { "dims": ["region"], "initialPath": { "region": "ROOT" }, "maxDepth": 2 },
+          "emits": [{ "event": "drill:nav", "dim": "region", "op": "descendantOf" }],
+          "subscribes": [{ "dim": "industry", "action": "filter" }],
+          "dataSource": "query"
+        }
+      ]
+    },
+    {
+      "dashboardId": "dash-macro",
+      "version": "1.0.0",
+      "title": "宏观经济主题看板",
+      "domain": "macro",
+      "layout": { "cols": 12, "rowHeight": 64, "note": "主题看板：全局筛选带 + 六卡 + 环形/柱线/明细表（PRD §5.2）" },
+      "globalFilters": [
+        { "id": "gf-time", "dim": "time", "op": "time_range", "label": "时间", "component": "month-range", "default": { "range": ["2025-01", "2026-10"] } },
+        { "id": "gf-region", "dim": "region", "op": "descendantOf", "label": "地区", "component": "dim-tree", "default": { "value": "000000" } },
+        { "id": "gf-industry", "dim": "industry", "op": "in", "label": "行业", "component": "dim-multi-select", "default": { "values": [] } }
+      ],
+      "cards": [
+        { "cardId": "card-gdp", "metric": "MACRO.GDP.VA0001", "compare": ["yoy"], "timeMode": "latest", "position": { "x": 0, "y": 0, "w": 2, "h": 2 } },
+        { "cardId": "card-gdp-gr", "metric": "MACRO.GDP.GR0001", "compare": ["yoy"], "timeMode": "latest", "position": { "x": 2, "y": 0, "w": 2, "h": 2 } },
+        { "cardId": "card-ind", "metric": "MACRO.IND.VA0002", "compare": ["yoy"], "timeMode": "latest", "position": { "x": 4, "y": 0, "w": 2, "h": 2 } },
+        { "cardId": "card-cpi", "metric": "MACRO.CPI.IDX0003", "compare": ["yoy"], "timeMode": "latest", "position": { "x": 6, "y": 0, "w": 2, "h": 2 } },
+        { "cardId": "card-inv", "metric": "MACRO.INV.CU0004", "compare": ["yoy"], "timeMode": "latest", "position": { "x": 8, "y": 0, "w": 2, "h": 2 } },
+        { "cardId": "card-cons", "metric": "MACRO.CON.VA0005", "compare": ["yoy"], "timeMode": "latest", "position": { "x": 10, "y": 0, "w": 2, "h": 2 } }
+      ],
+      "charts": [
+        {
+          "chartId": "c1-industry-donut",
+          "type": "pie",
+          "title": "行业构成（门类环形图，单击扇区联动全板，J1 第 4 步 D14）",
+          "position": { "x": 0, "y": 4, "w": 4, "h": 6 },
+          "dataset": {
+            "metrics": ["MACRO.GDP.VA0001"],
+            "dimensions": [{ "dim": "industry", "granularity": "industry_c1" }],
+            "time": { "grain": "month", "range": ["2026-10", "2026-10"], "compare": ["yoy"] },
+            "limit": 50
+          },
+          "drill": { "dims": ["industry"], "initialPath": { "industry": "ROOT" }, "maxDepth": 2 },
+          "emits": [{ "event": "filter:click", "dim": "industry", "op": "in" }],
+          "subscribes": [{ "dim": "region", "action": "filter" }],
+          "dataSource": "query"
+        },
+        {
+          "chartId": "c2-cat-trend",
+          "type": "bar",
+          "title": "行业门类/大类 · 月度趋势（堆叠柱 + 合计同比线，J1 第 4 步断崖可见）",
+          "position": { "x": 4, "y": 4, "w": 8, "h": 6 },
+          "dataset": {
+            "metrics": ["MACRO.GDP.VA0001"],
+            "dimensions": [{ "dim": "industry", "granularity": "industry_c1" }, { "dim": "time", "granularity": "time_month" }],
+            "time": { "grain": "month", "range": ["2025-01", "2026-10"], "compare": ["yoy"] },
+            "limit": 1000
+          },
+          "optionOverride": { "series": [{ "type": "bar", "stack": "total" }, { "type": "line", "yAxisIndex": 1 }] },
+          "drill": { "dims": ["industry"], "initialPath": { "industry": "ROOT" }, "maxDepth": 2 },
+          "emits": [{ "event": "drill:nav", "dim": "industry", "op": "in" }],
+          "subscribes": [{ "dim": "region", "action": "filter" }, { "dim": "industry", "action": "filter" }],
+          "dataSource": "query"
+        },
+        {
+          "chartId": "c3-region-table",
+          "type": "table",
+          "title": "省域/市级明细表（行点击下钻，右键查看逐月明细，J1 第 5 步）",
+          "position": { "x": 0, "y": 10, "w": 12, "h": 6 },
+          "dataset": {
+            "metrics": ["MACRO.GDP.VA0001"],
+            "dimensions": [{ "dim": "region", "granularity": "province" }],
+            "time": { "grain": "month", "range": ["2026-10", "2026-10"], "compare": ["yoy"] },
+            "sort": [{ "by": "MACRO.GDP.VA0001", "order": "desc" }],
+            "limit": 50
+          },
+          "optionOverride": { "columns": ["地区", "GDP 当月值", "同比"] },
+          "drill": { "dims": ["region"], "initialPath": { "region": "ROOT" }, "maxDepth": 2 },
+          "emits": [{ "event": "drill:nav", "dim": "region", "op": "descendantOf" }],
+          "subscribes": [{ "dim": "region", "action": "drill" }, { "dim": "industry", "action": "filter" }],
+          "dataSource": "query"
+        }
+      ]
+    },
+    {
+      "dashboardId": "dash-tech",
+      "version": "1.0.0",
+      "title": "科技创新主题看板",
+      "domain": "tech",
+      "layout": { "cols": 12, "rowHeight": 64, "note": "与 dash-macro 同一模板换参数渲染（看板即 JSON，PRD §5.2）" },
+      "globalFilters": [
+        { "id": "gf-time", "dim": "time", "op": "time_range", "label": "时间", "component": "month-range", "default": { "range": ["2025-01", "2026-10"] } },
+        { "id": "gf-region", "dim": "region", "op": "descendantOf", "label": "地区", "component": "dim-tree", "default": { "value": "000000" } },
+        { "id": "gf-industry", "dim": "industry", "op": "in", "label": "行业", "component": "dim-multi-select", "default": { "values": [] } }
+      ],
+      "cards": [
+        { "cardId": "card-rd-cu", "metric": "TECH.RD.CU0001", "compare": ["yoy"], "timeMode": "latest", "position": { "x": 0, "y": 0, "w": 2, "h": 2 } },
+        { "cardId": "card-rd-int", "metric": "TECH.RD.INT0002", "compare": ["yoy"], "timeMode": "latest", "position": { "x": 2, "y": 0, "w": 2, "h": 2 } },
+        { "cardId": "card-pat-va", "metric": "TECH.PAT.VA0003", "compare": ["yoy"], "timeMode": "latest", "position": { "x": 4, "y": 0, "w": 2, "h": 2 } },
+        { "cardId": "card-pat-sh", "metric": "TECH.PAT.SH0004", "compare": ["yoy"], "timeMode": "latest", "position": { "x": 6, "y": 0, "w": 2, "h": 2 } },
+        { "cardId": "card-hti", "metric": "TECH.HTI.VA0005", "compare": ["yoy"], "timeMode": "latest", "position": { "x": 8, "y": 0, "w": 2, "h": 2 } },
+        { "cardId": "card-rdp", "metric": "TECH.RDP.SN0006", "compare": ["yoy"], "timeMode": "latest", "position": { "x": 10, "y": 0, "w": 2, "h": 2 } }
+      ],
+      "charts": [
+        {
+          "chartId": "c1-industry-donut",
+          "type": "pie",
+          "title": "行业构成（门类环形图，单击扇区联动全板）",
+          "position": { "x": 0, "y": 4, "w": 4, "h": 6 },
+          "dataset": {
+            "metrics": ["TECH.PAT.VA0003"],
+            "dimensions": [{ "dim": "industry", "granularity": "industry_c1" }],
+            "time": { "grain": "month", "range": ["2026-10", "2026-10"], "compare": ["yoy"] },
+            "limit": 50
+          },
+          "drill": { "dims": ["industry"], "initialPath": { "industry": "ROOT" }, "maxDepth": 2 },
+          "emits": [{ "event": "filter:click", "dim": "industry", "op": "in" }],
+          "subscribes": [{ "dim": "region", "action": "filter" }],
+          "dataSource": "query"
+        },
+        {
+          "chartId": "c2-cat-trend",
+          "type": "bar",
+          "title": "行业门类/大类 · 月度趋势（堆叠柱 + 合计同比线）",
+          "position": { "x": 4, "y": 4, "w": 8, "h": 6 },
+          "dataset": {
+            "metrics": ["TECH.PAT.VA0003"],
+            "dimensions": [{ "dim": "industry", "granularity": "industry_c1" }, { "dim": "time", "granularity": "time_month" }],
+            "time": { "grain": "month", "range": ["2025-01", "2026-10"], "compare": ["yoy"] },
+            "limit": 1000
+          },
+          "optionOverride": { "series": [{ "type": "bar", "stack": "total" }, { "type": "line", "yAxisIndex": 1 }] },
+          "drill": { "dims": ["industry"], "initialPath": { "industry": "ROOT" }, "maxDepth": 2 },
+          "emits": [{ "event": "drill:nav", "dim": "industry", "op": "in" }],
+          "subscribes": [{ "dim": "region", "action": "filter" }, { "dim": "industry", "action": "filter" }],
+          "dataSource": "query"
+        },
+        {
+          "chartId": "c3-region-table",
+          "type": "table",
+          "title": "省域/市级明细表（行点击下钻，右键查看逐月明细）",
+          "position": { "x": 0, "y": 10, "w": 12, "h": 6 },
+          "dataset": {
+            "metrics": ["TECH.PAT.VA0003"],
+            "dimensions": [{ "dim": "region", "granularity": "province" }],
+            "time": { "grain": "month", "range": ["2026-10", "2026-10"], "compare": ["yoy"] },
+            "sort": [{ "by": "TECH.PAT.VA0003", "order": "desc" }],
+            "limit": 50
+          },
+          "optionOverride": { "columns": ["地区", "专利授权量", "同比"] },
+          "drill": { "dims": ["region"], "initialPath": { "region": "ROOT" }, "maxDepth": 2 },
+          "emits": [{ "event": "drill:nav", "dim": "region", "op": "descendantOf" }],
+          "subscribes": [{ "dim": "region", "action": "drill" }, { "dim": "industry", "action": "filter" }],
+          "dataSource": "query"
+        }
+      ]
+    }
+  ]
+}

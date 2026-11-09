@@ -1,0 +1,95 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "date": "2026-11-09",
+    "task": "T02 维度树（种子冻结版）",
+    "note": "地区两级（GB/T 2260）+ 行业两级（GB/T 4754-2017 门类/大类）+ 月粒度时间。path 物化，子树过滤一条 LIKE 搞定（RLS：path LIKE '/320000/%'）",
+    "path_rule": "节点 path = 父 path + code + '/'；全国 path='/'；根节点 parent=null",
+    "counts": { "region": 26, "industry": 13, "time_months": 22 }
+  },
+  "region": {
+    "levels": [
+      { "level": 0, "name": "country", "label": "全国" },
+      { "level": 1, "name": "prov", "label": "省" },
+      { "level": 2, "name": "city", "label": "市" }
+    ],
+    "nodes": [
+      { "code": "000000", "name": "全国", "short": "全国", "parent": null, "level": 0, "path": "/" },
+      { "code": "320000", "name": "江苏省", "short": "江苏", "parent": "000000", "level": 1, "path": "/320000/" },
+      { "code": "320100", "name": "南京市", "short": "南京", "parent": "320000", "level": 2, "path": "/320000/320100/" },
+      { "code": "320200", "name": "无锡市", "short": "无锡", "parent": "320000", "level": 2, "path": "/320000/320200/" },
+      { "code": "320500", "name": "苏州市", "short": "苏州", "parent": "320000", "level": 2, "path": "/320000/320500/" },
+      { "code": "320600", "name": "南通市", "short": "南通", "parent": "320000", "level": 2, "path": "/320000/320600/" },
+      { "code": "440000", "name": "广东省", "short": "广东", "parent": "000000", "level": 1, "path": "/440000/" },
+      { "code": "440100", "name": "广州市", "short": "广州", "parent": "440000", "level": 2, "path": "/440000/440100/" },
+      { "code": "440300", "name": "深圳市", "short": "深圳", "parent": "440000", "level": 2, "path": "/440000/440300/" },
+      { "code": "440400", "name": "珠海市", "short": "珠海", "parent": "440000", "level": 2, "path": "/440000/440400/" },
+      { "code": "440600", "name": "佛山市", "short": "佛山", "parent": "440000", "level": 2, "path": "/440000/440600/" },
+      { "code": "330000", "name": "浙江省", "short": "浙江", "parent": "000000", "level": 1, "path": "/330000/" },
+      { "code": "330100", "name": "杭州市", "short": "杭州", "parent": "330000", "level": 2, "path": "/330000/330100/" },
+      { "code": "330200", "name": "宁波市", "short": "宁波", "parent": "330000", "level": 2, "path": "/330000/330200/" },
+      { "code": "330300", "name": "温州市", "short": "温州", "parent": "330000", "level": 2, "path": "/330000/330300/" },
+      { "code": "330400", "name": "嘉兴市", "short": "嘉兴", "parent": "330000", "level": 2, "path": "/330000/330400/" },
+      { "code": "370000", "name": "山东省", "short": "山东", "parent": "000000", "level": 1, "path": "/370000/" },
+      { "code": "370100", "name": "济南市", "short": "济南", "parent": "370000", "level": 2, "path": "/370000/370100/" },
+      { "code": "370200", "name": "青岛市", "short": "青岛", "parent": "370000", "level": 2, "path": "/370000/370200/" },
+      { "code": "370600", "name": "烟台市", "short": "烟台", "parent": "370000", "level": 2, "path": "/370000/370600/" },
+      { "code": "370700", "name": "潍坊市", "short": "潍坊", "parent": "370000", "level": 2, "path": "/370000/370700/" },
+      { "code": "520000", "name": "贵州省", "short": "贵州", "parent": "000000", "level": 1, "path": "/520000/" },
+      { "code": "520100", "name": "贵阳市", "short": "贵阳", "parent": "520000", "level": 2, "path": "/520000/520100/" },
+      { "code": "520200", "name": "六盘水市", "short": "六盘水", "parent": "520000", "level": 2, "path": "/520000/520200/" },
+      { "code": "520300", "name": "遵义市", "short": "遵义", "parent": "520000", "level": 2, "path": "/520000/520300/" },
+      { "code": "520400", "name": "安顺市", "short": "安顺", "parent": "520000", "level": 2, "path": "/520000/520400/" }
+    ]
+  },
+  "industry": {
+    "levels": [
+      { "level": 1, "name": "c1", "label": "门类" },
+      { "level": 2, "name": "c2", "label": "大类" }
+    ],
+    "nodes": [
+      { "code": "C", "name": "制造业", "parent": null, "level": 1, "path": "/C/" },
+      { "code": "13", "name": "农副食品加工业", "parent": "C", "level": 2, "path": "/C/13/" },
+      { "code": "26", "name": "化学原料和化学制品制造业", "parent": "C", "level": 2, "path": "/C/26/" },
+      { "code": "34", "name": "通用设备制造业", "parent": "C", "level": 2, "path": "/C/34/" },
+      { "code": "39", "name": "计算机、通信和其他电子设备制造业", "parent": "C", "level": 2, "path": "/C/39/" },
+      { "code": "I", "name": "信息传输、软件和信息技术服务业", "parent": null, "level": 1, "path": "/I/" },
+      { "code": "63", "name": "电信、广播电视和卫星传输服务", "parent": "I", "level": 2, "path": "/I/63/" },
+      { "code": "64", "name": "互联网和相关服务", "parent": "I", "level": 2, "path": "/I/64/" },
+      { "code": "65", "name": "软件和信息技术服务业", "parent": "I", "level": 2, "path": "/I/65/" },
+      { "code": "M", "name": "科学研究和技术服务业", "parent": null, "level": 1, "path": "/M/" },
+      { "code": "73", "name": "研究和试验发展", "parent": "M", "level": 2, "path": "/M/73/" },
+      { "code": "74", "name": "专业技术服务业", "parent": "M", "level": 2, "path": "/M/74/" },
+      { "code": "75", "name": "科技推广和应用服务业", "parent": "M", "level": 2, "path": "/M/75/" }
+    ]
+  },
+  "time": {
+    "grain": "month",
+    "from": "2025-01",
+    "to": "2026-10",
+    "months": [
+      { "month": "2025-01", "year": 2025, "quarter": 1 },
+      { "month": "2025-02", "year": 2025, "quarter": 1 },
+      { "month": "2025-03", "year": 2025, "quarter": 1 },
+      { "month": "2025-04", "year": 2025, "quarter": 2 },
+      { "month": "2025-05", "year": 2025, "quarter": 2 },
+      { "month": "2025-06", "year": 2025, "quarter": 2 },
+      { "month": "2025-07", "year": 2025, "quarter": 3 },
+      { "month": "2025-08", "year": 2025, "quarter": 3 },
+      { "month": "2025-09", "year": 2025, "quarter": 3 },
+      { "month": "2025-10", "year": 2025, "quarter": 4 },
+      { "month": "2025-11", "year": 2025, "quarter": 4 },
+      { "month": "2025-12", "year": 2025, "quarter": 4 },
+      { "month": "2026-01", "year": 2026, "quarter": 1 },
+      { "month": "2026-02", "year": 2026, "quarter": 1 },
+      { "month": "2026-03", "year": 2026, "quarter": 1 },
+      { "month": "2026-04", "year": 2026, "quarter": 2 },
+      { "month": "2026-05", "year": 2026, "quarter": 2 },
+      { "month": "2026-06", "year": 2026, "quarter": 2 },
+      { "month": "2026-07", "year": 2026, "quarter": 3 },
+      { "month": "2026-08", "year": 2026, "quarter": 3 },
+      { "month": "2026-09", "year": 2026, "quarter": 3 },
+      { "month": "2026-10", "year": 2026, "quarter": 4 }
+    ]
+  }
+}

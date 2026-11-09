@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StatVista · 统计数据可视表平台</title>
+<meta name="description" content="StatVista —— 元数据驱动的统计数据可视表平台：指标先行、维度树下钻联动、行级权限（RLS）与五种同环比策略的纯前端交互体验站。">
+<style>
+  :root {
+    --bg0: #050b1a;
+    --bg1: #0a1428;
+    --ink: #d9e6ff;
+    --ink-dim: #8aa2c8;
+    --cyan: #4cc9f0;
+    --blue: #4361ee;
+    --violet: #7b6cf6;
+    --line: rgba(120, 160, 255, .18);
+    --card: rgba(16, 30, 58, .72);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+    background:
+      radial-gradient(1100px 520px at 15% -5%, rgba(67, 97, 238, .28), transparent 60%),
+      radial-gradient(900px 480px at 85% 0%, rgba(123, 108, 246, .22), transparent 55%),
+      radial-gradient(800px 700px at 50% 110%, rgba(76, 201, 240, .12), transparent 60%),
+      linear-gradient(180deg, var(--bg0), var(--bg1) 55%, var(--bg0));
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  /* 星野 */
+  .stars {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .55;
+    background-image:
+      radial-gradient(1px 1px at 12% 22%, #cfe4ff 50%, transparent 51%),
+      radial-gradient(1px 1px at 28% 64%, #9fc0ff 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 44% 12%, #ffffff 50%, transparent 51%),
+      radial-gradient(1px 1px at 61% 42%, #b8d4ff 50%, transparent 51%),
+      radial-gradient(1px 1px at 77% 18%, #e2eeff 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 88% 58%, #a9c6ff 50%, transparent 51%),
+      radial-gradient(1px 1px at 8% 82%, #cfe4ff 50%, transparent 51%),
+      radial-gradient(1px 1px at 93% 86%, #b8d4ff 50%, transparent 51%),
+      radial-gradient(1px 1px at 35% 90%, #9fc0ff 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 68% 78%, #ffffff 50%, transparent 51%);
+    background-size: 100% 100%;
+  }
+  .wrap { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* ===== 顶部导航 ===== */
+  header.top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 0; border-bottom: 1px solid var(--line);
+  }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: .5px; }
+  .logo .mark {
+    width: 30px; height: 30px; border-radius: 8px; flex: none;
+    background: conic-gradient(from 210deg, var(--cyan), var(--blue), var(--violet), var(--cyan));
+    box-shadow: 0 0 18px rgba(76, 201, 240, .45);
+    position: relative;
+  }
+  .logo .mark::after {
+    content: ""; position: absolute; inset: 7px; border-radius: 4px; background: var(--bg0);
+    border: 1px solid rgba(140, 180, 255, .5);
+  }
+  header.top .links a { color: var(--ink-dim); text-decoration: none; margin-left: 22px; font-size: 14px; transition: color .2s; }
+  header.top .links a:hover { color: var(--cyan); }
+
+  /* ===== Hero ===== */
+  .hero { text-align: center; padding: 84px 0 60px; }
+  .badge {
+    display: inline-block; padding: 6px 14px; border-radius: 999px; font-size: 12.5px;
+    color: #9fe3ff; border: 1px solid rgba(76, 201, 240, .4);
+    background: rgba(76, 201, 240, .08); letter-spacing: 1px;
+  }
+  .hero h1 {
+    margin: 22px 0 10px; font-size: 54px; line-height: 1.15; letter-spacing: 2px;
+    background: linear-gradient(92deg, #eaf3ff 20%, var(--cyan) 55%, var(--violet) 90%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    text-shadow: 0 0 42px rgba(76, 201, 240, .25);
+  }
+  .hero .en { color: var(--ink-dim); font-size: 15px; letter-spacing: 3px; text-transform: uppercase; }
+  .hero .slogan { margin: 18px auto 0; max-width: 720px; color: var(--ink-dim); font-size: 16.5px; line-height: 1.9; }
+  .hero .slogan b { color: var(--ink); font-weight: 600; }
+  .cta {
+    display: inline-block; margin-top: 38px; padding: 16px 44px; border-radius: 14px;
+    font-size: 19px; font-weight: 700; color: #04101f; text-decoration: none; letter-spacing: 1px;
+    background: linear-gradient(94deg, var(--cyan), var(--blue) 60%, var(--violet));
+    box-shadow: 0 8px 34px rgba(67, 97, 238, .45), 0 0 0 1px rgba(160, 200, 255, .35) inset;
+    transition: transform .18s ease, box-shadow .18s ease;
+  }
+  .cta:hover { transform: translateY(-2px); box-shadow: 0 14px 44px rgba(76, 201, 240, .55); }
+  .cta-sub { margin-top: 14px; color: var(--ink-dim); font-size: 12.5px; }
+  .hero .stats { margin-top: 46px; display: flex; justify-content: center; gap: 44px; flex-wrap: wrap; }
+  .hero .stats div { text-align: center; }
+  .hero .stats .num { font-size: 26px; font-weight: 700; color: var(--cyan); }
+  .hero .stats .lab { margin-top: 4px; font-size: 12.5px; color: var(--ink-dim); }
+
+  /* ===== 通用 section ===== */
+  section { padding: 56px 0; }
+  section > h2 { font-size: 26px; letter-spacing: 1px; margin-bottom: 6px; }
+  section > .sub { color: var(--ink-dim); font-size: 14px; margin-bottom: 28px; }
+
+  /* ===== 截图墙 ===== */
+  .shots { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .shot {
+    border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+    background: var(--card); backdrop-filter: blur(6px);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .shot:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(40, 80, 180, .35); }
+  .shot img { display: block; width: 100%; height: auto; }
+  .shot figcaption { padding: 12px 16px; font-size: 13.5px; color: var(--ink-dim); border-top: 1px solid var(--line); }
+  .shot figcaption b { color: var(--ink); margin-right: 8px; }
+
+  /* ===== 功能亮点 ===== */
+  .feats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .feat {
+    border: 1px solid var(--line); border-radius: 14px; padding: 22px 20px;
+    background: linear-gradient(180deg, rgba(30, 52, 96, .5), rgba(14, 26, 52, .55));
+    position: relative; overflow: hidden;
+  }
+  .feat::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--cyan), var(--violet)); opacity: .8;
+  }
+  .feat .ico { font-size: 24px; }
+  .feat h3 { margin: 12px 0 8px; font-size: 16.5px; }
+  .feat p { color: var(--ink-dim); font-size: 13px; line-height: 1.8; }
+
+  /* ===== 文档区 ===== */
+  .docs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .doc-card {
+    display: block; padding: 20px; border: 1px solid var(--line); border-radius: 14px;
+    text-decoration: none; color: var(--ink); background: var(--card);
+    transition: border-color .2s, transform .2s;
+  }
+  .doc-card:hover { border-color: var(--cyan); transform: translateY(-3px); }
+  .doc-card .tag { font-size: 11px; color: #9fe3ff; letter-spacing: 1px; }
+  .doc-card h3 { margin: 8px 0 6px; font-size: 15.5px; }
+  .doc-card p { color: var(--ink-dim); font-size: 12.5px; line-height: 1.7; }
+
+  /* ===== 架构一句话 ===== */
+  .arch {
+    border: 1px dashed rgba(120, 160, 255, .35); border-radius: 14px; padding: 20px 24px;
+    color: var(--ink-dim); font-size: 13.5px; line-height: 2;
+    background: rgba(10, 22, 44, .5);
+  }
+  .arch code {
+    color: #9fe3ff; background: rgba(76, 201, 240, .1); border: 1px solid rgba(76, 201, 240, .25);
+    border-radius: 6px; padding: 1px 7px; font-size: 12.5px;
+  }
+
+  footer {
+    margin-top: 40px; padding: 30px 0 42px; border-top: 1px solid var(--line);
+    text-align: center; color: var(--ink-dim); font-size: 13px; line-height: 2;
+  }
+  footer a { color: var(--ink-dim); }
+  footer .lic { display: inline-block; padding: 4px 12px; border: 1px solid var(--line); border-radius: 999px; font-size: 12px; }
+
+  @media (max-width: 860px) {
+    .hero h1 { font-size: 38px; }
+    .shots, .feats, .docs-grid { grid-template-columns: 1fr; }
+    .hero .stats { gap: 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="stars"></div>
+
+<div class="wrap">
+  <header class="top">
+    <div class="logo"><span class="mark"></span>StatVista</div>
+    <nav class="links">
+      <a href="#screens">截图</a>
+      <a href="#features">特性</a>
+      <a href="#docs">文档</a>
+      <a href="./demo/">体验站</a>
+    </nav>
+  </header>
+
+  <!-- Hero：项目名 + 中英标语 + 入口按钮 -->
+  <div class="hero">
+    <span class="badge">METADATA-DRIVEN · DSL · RLS · PURE STATIC DEMO</span>
+    <h1>统计数据可视表平台</h1>
+    <div class="en">StatVista — Statistics Visual Table Platform</div>
+    <p class="slogan">
+      以<b>指标</b>为第一公民：语义层 DSL 取数、维度树<b>下钻联动</b>、服务端<b>行级权限（RLS）</b>裁剪、
+      <b>五种同环比策略</b>裁决，零后端即可完整体验。
+    </p>
+    <a class="cta" href="./demo/">🚀 进入交互体验站</a>
+    <div class="cta-sub">纯静态版 · 无需登录 · 默认身份 leader，可切换江苏 / 广东 RLS 视角</div>
+    <div class="stats">
+      <div><div class="num">16</div><div class="lab">注册指标</div></div>
+      <div><div class="num">5 省 × 20 市</div><div class="lab">叶子事实（22 个月）</div></div>
+      <div><div class="num">4,840</div><div class="lab">原子事实行</div></div>
+      <div><div class="num">5 种</div><div class="lab">同环比策略</div></div>
+      <div><div class="num">0 后端</div><div class="lab">本地引擎应答</div></div>
+    </div>
+  </div>
+
+  <!-- 截图墙 -->
+  <section id="screens">
+    <h2>界面一览</h2>
+    <p class="sub">驾驶舱 / 主题看板 / 指标字典 / 任务控制台，四张实景截图</p>
+    <div class="shots">
+      <figure class="shot">
+        <img src="screenshots/cockpit.png" alt="宏观经济运行驾驶舱" loading="lazy">
+        <figcaption><b>驾驶舱</b>指标卡带 + 省级排名 / 月度趋势 / 行业构成 / 异常预警</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="screenshots/theme-board.png" alt="宏观主题看板" loading="lazy">
+        <figcaption><b>主题看板</b>同一模板换参数：点击联动、维度下钻、URL 终态可分享</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="screenshots/metric-dict.png" alt="指标字典" loading="lazy">
+        <figcaption><b>指标字典</b>元数据驱动渲染：口径 / 单位 / 策略 / 责任处室一站式检索</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="screenshots/mission-control.png" alt="任务控制台" loading="lazy">
+        <figcaption><b>任务控制台</b>多智能体开发过程管控与实时进度上报</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 功能亮点 -->
+  <section id="features">
+    <h2>核心特性</h2>
+    <p class="sub">体验站与后端语义层逐位对账（黄金查询 6 组，容差 ±0.05）</p>
+    <div class="feats">
+      <div class="feat">
+        <div class="ico">📊</div>
+        <h3>指标先行</h3>
+        <p>16 个注册指标全部由元数据驱动渲染；请求只允许指标编码，禁止裸 SQL，语义层统一裁决口径。</p>
+      </div>
+      <div class="feat">
+        <div class="ico">🔎</div>
+        <h3>下钻联动</h3>
+        <p>省 → 市、门类 → 大类维度树下钻；filter:click 事件总线跨图联动，URL 终态可分享可回放。</p>
+      </div>
+      <div class="feat">
+        <div class="ico">🛡️</div>
+        <h3>行级权限 RLS</h3>
+        <p>X-Role 编译期注入 path 前缀谓词：leader 全量、prov-js / prov-gd 只见本省；越权返回空集不泄露。</p>
+      </div>
+      <div class="feat">
+        <div class="ico">📈</div>
+        <h3>同环比策略</h3>
+        <p>direct / compare_then_compute / cumulative / snapshot / window_sum 五策略；累计禁环比自动 403。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 文档链接 -->
+  <section id="docs">
+    <h2>文档</h2>
+    <p class="sub">设计方案与 MVP 全过程文档（仓库内 Markdown）</p>
+    <div class="docs-grid">
+      <a class="doc-card" href="统计数据可视表平台设计方案.md">
+        <div class="tag">DESIGN</div>
+        <h3>平台设计方案</h3>
+        <p>总体架构、语义层 / DSL / RLS / 同环比策略的完整设计说明。</p>
+      </a>
+      <a class="doc-card" href="mvp/01-PRD.md">
+        <div class="tag">MVP · PRD</div>
+        <h3>产品需求文档</h3>
+        <p>MVP 范围、种子数据口径、演示叙事（预埋异常清单）。</p>
+      </a>
+      <a class="doc-card" href="mvp/03-DSL与API契约.md">
+        <div class="tag">MVP · API</div>
+        <h3>DSL 与 API 契约</h3>
+        <p>/api/v1 端点、QueryRequest Schema、错误码与缓存键规则。</p>
+      </a>
+      <a class="doc-card" href="mvp/02-数据字典与种子数据.md">
+        <div class="tag">MVP · DATA</div>
+        <h3>数据字典与种子数据</h3>
+        <p>指标编码 / 原子字段族 / 维度树 / 角色绑定的冻结版字典。</p>
+      </a>
+      <a class="doc-card" href="mvp/04-UI交互规范.md">
+        <div class="tag">MVP · UX</div>
+        <h3>UI 交互规范</h3>
+        <p>三态渲染、红涨绿跌、联动信封与页面终态规则。</p>
+      </a>
+      <a class="doc-card" href="mvp/05-测试报告.md">
+        <div class="tag">MVP · QA</div>
+        <h3>测试报告</h3>
+        <p>语义层冒烟与对账测试的执行记录与结论。</p>
+      </a>
+    </div>
+    <div class="arch" style="margin-top:22px">
+      体验站原理：拦截 <code>window.fetch</code>，URL 含 <code>/api/v1/</code> 的请求全部由内置查询引擎 <code>api-shim.js</code> 本地应答——
+      从 <code>mvp/server/index.js</code> 等价移植的 <code>normalizeQuery / executeQuery / buildSql</code> 语义，
+      叶子事实（市 × 大类 × 月）聚合上卷出省 / 全国值；事实数据为列式精简版 <code>data/facts-lite.json</code>（约 360KB）。
+    </div>
+  </section>
+
+  <footer>
+    <div>StatVista · 统计数据可视表平台 — 元数据驱动 · DSL 取数 · RLS · 五种同环比策略</div>
+    <div><span class="lic">Apache-2.0 License</span></div>
+  </footer>
+</div>
+</body>
+</html>

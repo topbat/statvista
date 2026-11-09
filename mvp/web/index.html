@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>统计数据可视表平台</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!-- 页头：平台名 + 三入口 tab + 身份切换器（04 规范 §4.7/§5.4） -->
+<header id="page-header">
+  <div class="brand" data-href="#/cockpit" title="返回驾驶舱">统计数据可视表平台</div>
+  <nav id="nav-tabs">
+    <a href="#/cockpit" data-nav="cockpit">驾驶舱</a>
+    <a href="#/theme/macro" data-nav="theme">主题看板</a>
+    <a href="#/dict" data-nav="dict">指标字典</a>
+  </nav>
+  <div class="header-right">
+    <button id="cache-debug-btn" title="缓存调试：查看最近查询命中与版本因子，bump 即时失效（D10/D11 演示）">缓存调试</button>
+    <label class="role-label" for="role-switch">身份</label>
+    <select id="role-switch" title="切换演示身份（RLS 由服务端按 X-Role 注入）">
+      <option value="leader">leader（全国）</option>
+      <option value="prov-js">prov-js（江苏）</option>
+      <option value="prov-gd">prov-gd（广东）</option>
+    </select>
+  </div>
+</header>
+<div id="toast" role="status"></div>
+<main id="app"></main>
+<!-- 本地 ECharts（禁止 CDN），零构建 vanilla JS -->
+<script src="assets/echarts.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

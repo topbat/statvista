@@ -1,0 +1,1648 @@
+{
+  "project": "统计数据可视表平台 · 多智能体作战指挥台",
+  "v": 56,
+  "iteration": {
+    "lap": 1,
+    "version": "v0.1.0",
+    "tag": "v0.1.0",
+    "deployedAt": "2026-11-09T15:10:00+08:00",
+    "commit": "77b26b3"
+  },
+  "phases": [
+    {
+      "id": "P0",
+      "name": "产品策划",
+      "color": "#6CB2FF",
+      "icon": "📋"
+    },
+    {
+      "id": "P1",
+      "name": "设计",
+      "color": "#AC8BFF",
+      "icon": "🎨"
+    },
+    {
+      "id": "P2",
+      "name": "研发",
+      "color": "#2CE0F5",
+      "icon": "⚙️"
+    },
+    {
+      "id": "P3",
+      "name": "测试",
+      "color": "#F6CB7D",
+      "icon": "🧪"
+    },
+    {
+      "id": "P4",
+      "name": "安全性能",
+      "color": "#FF9F6B",
+      "icon": "🛡️"
+    },
+    {
+      "id": "P5",
+      "name": "部署交付",
+      "color": "#6BE39A",
+      "icon": "🚀"
+    },
+    {
+      "id": "P6",
+      "name": "开源发布",
+      "color": "#7DE9FF",
+      "icon": "🌐"
+    }
+  ],
+  "agents": [
+    {
+      "id": "A0",
+      "name": "总协调",
+      "role": "orchestrator",
+      "avatar": "🛰️",
+      "tasks": [
+        "T00",
+        "T10",
+        "T11"
+      ],
+      "tokens": 0,
+      "toolUses": 0,
+      "status": "on_duty",
+      "note": "流水线编排 / 验收 / 指挥台"
+    },
+    {
+      "id": "A1",
+      "name": "产品经理",
+      "role": "pm",
+      "avatar": "📐",
+      "tasks": [
+        "T01"
+      ],
+      "tokens": 79,
+      "toolUses": 16,
+      "status": "idle",
+      "note": "PRD · 17条DoD"
+    },
+    {
+      "id": "A2",
+      "name": "数据设计师",
+      "role": "data",
+      "avatar": "🗃️",
+      "tasks": [
+        "T02"
+      ],
+      "tokens": 349,
+      "toolUses": 37,
+      "status": "idle",
+      "note": "16指标 · 4840行种子"
+    },
+    {
+      "id": "A3",
+      "name": "架构师",
+      "role": "arch",
+      "avatar": "🏗️",
+      "tasks": [
+        "T03"
+      ],
+      "tokens": 85,
+      "toolUses": 17,
+      "status": "idle",
+      "note": "DSL/API契约 982行"
+    },
+    {
+      "id": "A4",
+      "name": "交互设计师",
+      "role": "ux",
+      "avatar": "🎨",
+      "tasks": [
+        "T04"
+      ],
+      "tokens": 139,
+      "toolUses": 27,
+      "status": "idle",
+      "note": "UI规范 · 六组件"
+    },
+    {
+      "id": "A5",
+      "name": "后端工程师",
+      "role": "be",
+      "avatar": "🔌",
+      "tasks": [
+        "T05"
+      ],
+      "tokens": 242,
+      "toolUses": 27,
+      "status": "idle",
+      "note": "语义层 · smoke 21/21"
+    },
+    {
+      "id": "A6",
+      "name": "前端工程师",
+      "role": "fe",
+      "avatar": "🖥️",
+      "tasks": [
+        "T06"
+      ],
+      "tokens": 326,
+      "toolUses": 34,
+      "status": "idle",
+      "note": "看板前端 · mock 30/30"
+    },
+    {
+      "id": "A7",
+      "name": "全栈工程师",
+      "role": "fs",
+      "avatar": "🔗",
+      "tasks": [
+        "T07"
+      ],
+      "tokens": 529,
+      "toolUses": 43,
+      "status": "idle",
+      "note": "联调 · J1五步打通"
+    },
+    {
+      "id": "A8",
+      "name": "测试工程师",
+      "role": "qa",
+      "avatar": "🧪",
+      "tasks": [
+        "T08"
+      ],
+      "tokens": 339,
+      "toolUses": 37,
+      "status": "idle",
+      "note": "49断言 · DoD 17/17"
+    },
+    {
+      "id": "A9",
+      "name": "体验官",
+      "role": "uxfix",
+      "avatar": "🩺",
+      "tasks": [
+        "T09"
+      ],
+      "tokens": 1451,
+      "toolUses": 87,
+      "status": "idle",
+      "note": "修4缺陷+7UI · 回归49/49"
+    },
+    {
+      "id": "A10",
+      "name": "视觉验收官",
+      "role": "judge",
+      "avatar": "👁️",
+      "tasks": [
+        "T10"
+      ],
+      "tokens": 64,
+      "toolUses": 18,
+      "status": "idle",
+      "note": "截图验收通过"
+    },
+    {
+      "id": "A11",
+      "name": "安全扫描官",
+      "role": "sec",
+      "avatar": "🛡️",
+      "tasks": [
+        "T12"
+      ],
+      "tokens": 0,
+      "toolUses": 0,
+      "status": "on_duty",
+      "note": "mimosa 深度扫描"
+    },
+    {
+      "id": "A12",
+      "name": "性能工程师",
+      "role": "perf",
+      "avatar": "⚡",
+      "tasks": [
+        "T13"
+      ],
+      "tokens": 0,
+      "toolUses": 0,
+      "status": "idle",
+      "note": "API 压测"
+    },
+    {
+      "id": "A13",
+      "name": "发布工程师",
+      "role": "pub",
+      "avatar": "🚢",
+      "tasks": [
+        "T19",
+        "T20"
+      ],
+      "tokens": 0,
+      "toolUses": 0,
+      "status": "on_duty",
+      "note": "GitHub API 发布器 · 授权页"
+    },
+    {
+      "id": "A14",
+      "name": "文档工程师",
+      "role": "doc",
+      "avatar": "📝",
+      "tasks": [
+        "T16"
+      ],
+      "tokens": 0,
+      "toolUses": 0,
+      "status": "on_duty",
+      "note": "README / CHANGELOG / LICENSE"
+    },
+    {
+      "id": "A15",
+      "name": "体验站工程师",
+      "role": "web",
+      "avatar": "🌍",
+      "tasks": [
+        "T18"
+      ],
+      "tokens": 0,
+      "toolUses": 0,
+      "status": "idle",
+      "note": "浏览器端语义层 · Pages 落地页"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "T00",
+      "phase": "P0",
+      "title": "项目启动：实时进度指挥中心搭建",
+      "agent": "总协调",
+      "depends": [],
+      "status": "done",
+      "progress": 100,
+      "note": "指挥中心上线：环形任务环 + SSE 实时推送"
+    },
+    {
+      "id": "T01",
+      "phase": "P0",
+      "title": "MVP 需求梳理与 P0 范围冻结",
+      "agent": "产品经理",
+      "depends": [],
+      "status": "done",
+      "progress": 100,
+      "note": "PRD 定稿"
+    },
+    {
+      "id": "T02",
+      "phase": "P1",
+      "title": "领域模型与指标字典 + 种子数据设计",
+      "agent": "数据设计师",
+      "depends": [
+        "T01"
+      ],
+      "status": "done",
+      "progress": 100,
+      "note": "16指标/4840行/3组预埋异常"
+    },
+    {
+      "id": "T03",
+      "phase": "P1",
+      "title": "查询 DSL 与 API 契约设计",
+      "agent": "架构师",
+      "depends": [
+        "T01"
+      ],
+      "status": "done",
+      "progress": 100,
+      "note": "982行契约 · DoD覆盖矩阵"
+    },
+    {
+      "id": "T04",
+      "phase": "P1",
+      "title": "看板 UI 与交互规范设计",
+      "agent": "交互设计师",
+      "depends": [
+        "T01"
+      ],
+      "status": "done",
+      "progress": 100,
+      "note": "637行规范 · 六组件契约"
+    },
+    {
+      "id": "T05",
+      "phase": "P2",
+      "title": "语义层服务研发（DSL→查询→同环比→RLS→缓存）",
+      "agent": "后端工程师",
+      "depends": [
+        "T02",
+        "T03"
+      ],
+      "status": "done",
+      "progress": 100,
+      "note": "零依赖Node · smoke 21/21"
+    },
+    {
+      "id": "T06",
+      "phase": "P2",
+      "title": "看板前端研发（指标卡/图表/下钻/联动总线）",
+      "agent": "前端工程师",
+      "depends": [
+        "T03",
+        "T04"
+      ],
+      "status": "done",
+      "progress": 100,
+      "note": "三页面 · mock 30/30"
+    },
+    {
+      "id": "T07",
+      "phase": "P2",
+      "title": "前后端集成联调与演示看板配置",
+      "agent": "全栈工程师",
+      "depends": [
+        "T05",
+        "T06"
+      ],
+      "status": "done",
+      "progress": 100,
+      "note": "11处fetch对账 · J1五步打通"
+    },
+    {
+      "id": "T08",
+      "phase": "P3",
+      "title": "功能测试：DoD 逐项验证",
+      "agent": "测试工程师",
+      "depends": [
+        "T07"
+      ],
+      "status": "done",
+      "progress": 100,
+      "note": "断言49 · DoD 17/17"
+    },
+    {
+      "id": "T09",
+      "phase": "P3",
+      "title": "体验走查与问题修复",
+      "agent": "体验官",
+      "depends": [
+        "T08"
+      ],
+      "status": "done",
+      "progress": 100,
+      "note": "修4缺陷+7UI · 回归49/49"
+    },
+    {
+      "id": "T10",
+      "phase": "P3",
+      "title": "验收演示与交付打包",
+      "agent": "总协调",
+      "depends": [
+        "T09"
+      ],
+      "status": "done",
+      "progress": 100,
+      "note": "验收通过：全链路演示就绪"
+    },
+    {
+      "id": "T11",
+      "phase": "P5",
+      "title": "部署：v0.1.0 基线发布",
+      "agent": "总协调",
+      "depends": [
+        "T10"
+      ],
+      "status": "done",
+      "progress": 100,
+      "note": "git tag v0.1.0 · 双服务运行"
+    },
+    {
+      "id": "T12",
+      "phase": "P4",
+      "title": "安全扫描：项目深度安全检测",
+      "agent": "安全扫描官",
+      "depends": [
+        "T11"
+      ],
+      "status": "done",
+      "progress": 100,
+      "note": "安全扫描完成：3高危1中危，门禁红阻断部署",
+      "doneAt": 1794208914025
+    },
+    {
+      "id": "T13",
+      "phase": "P4",
+      "title": "性能验证：API 压测 P50/P95/P99",
+      "agent": "性能工程师",
+      "depends": [
+        "T11"
+      ],
+      "status": "done",
+      "progress": 100,
+      "note": "API压测完成：热P95 1ms / 1328rps",
+      "doneAt": 1794208650199
+    },
+    {
+      "id": "T14",
+      "phase": "P5",
+      "title": "版本 v0.2 规划：生产化 backlog",
+      "agent": "总协调",
+      "depends": [
+        "T12",
+        "T13"
+      ],
+      "status": "pending",
+      "progress": 0,
+      "note": "v0.2 backlog：①修复5项安全发现(门禁转绿) ②Doris ③地图 ④大屏暗色 ⑤导出"
+    },
+    {
+      "id": "T15",
+      "phase": "P0",
+      "title": "第 2 圈：v0.2 需求池",
+      "agent": "产品经理",
+      "depends": [
+        "T14"
+      ],
+      "status": "pending",
+      "progress": 0,
+      "note": "环进入第 2 圈迭代"
+    },
+    {
+      "id": "T16",
+      "phase": "P6",
+      "title": "文档三件套：README / CHANGELOG / LICENSE",
+      "agent": "文档工程师",
+      "depends": [
+        "T10"
+      ],
+      "status": "done",
+      "progress": 100,
+      "note": "README267行/CHANGELOG83行/LICENSE全文",
+      "doneAt": 1794221204969
+    },
+    {
+      "id": "T17",
+      "phase": "P6",
+      "title": "运行截图采集与精选",
+      "agent": "总协调",
+      "depends": [
+        "T10"
+      ],
+      "status": "done",
+      "progress": 100,
+      "note": "4张运行截图已采集入 docs/screenshots",
+      "startedAt": 1794219471325,
+      "doneAt": 1794219541949
+    },
+    {
+      "id": "T18",
+      "phase": "P6",
+      "title": "静态体验站（浏览器端语义层 + Pages 落地页）",
+      "agent": "体验站工程师",
+      "depends": [
+        "T17"
+      ],
+      "status": "done",
+      "progress": 100,
+      "note": "体验站6/6黄金对账+静态渲染验证通过",
+      "startedAt": 1794219542092,
+      "doneAt": 1794221205054
+    },
+    {
+      "id": "T19",
+      "phase": "P6",
+      "title": "GitHub 发布器与授权页",
+      "agent": "发布工程师",
+      "depends": [
+        "T16"
+      ],
+      "status": "done",
+      "progress": 100,
+      "note": "发布器+授权页就绪，等待令牌",
+      "doneAt": 1794221205140
+    },
+    {
+      "id": "T20",
+      "phase": "P6",
+      "title": "用户授权 · 创建公开仓库并推送",
+      "agent": "总协调 + 用户",
+      "depends": [
+        "T18",
+        "T19"
+      ],
+      "status": "in_progress",
+      "progress": 15,
+      "note": "等待用户在授权页粘贴令牌"
+    },
+    {
+      "id": "T21",
+      "phase": "P6",
+      "title": "启用 Pages · 公网体验入口验证",
+      "agent": "总协调",
+      "depends": [
+        "T20"
+      ],
+      "status": "pending",
+      "progress": 0,
+      "note": "docs/ 站点 · 构建约 1–3 分钟"
+    }
+  ],
+  "gates": {
+    "tests": {
+      "status": "green",
+      "pass": 49,
+      "total": 49,
+      "ts": "2026-11-09T07:17:30.873Z",
+      "src": "指挥台指令 · node tests.js",
+      "label": "功能测试"
+    },
+    "security": {
+      "label": "安全扫描",
+      "ts": "2026-11-09T08:05:19.044Z",
+      "status": "amber",
+      "findings": {
+        "critical": 0,
+        "high": 0,
+        "medium": 1,
+        "low": 0,
+        "tool": "mimosa 复扫",
+        "note": "高危已清零；1中危为已转义字段误报，CSP兜底"
+      },
+      "detail": {
+        "summary": "复扫5→1：3高危(动态require×2/路径穿越)已修复；剩1中危为静态分析对esc()转义字段的误报，CSP+nosniff兜底，登记v0.2引入DOMPurify",
+        "files": [
+          {
+            "path": "mvp/server/index.js",
+            "op": "M",
+            "plus": 42,
+            "minus": 8
+          },
+          {
+            "path": "mvp/server/smoke.js",
+            "op": "M",
+            "plus": 2,
+            "minus": 4
+          },
+          {
+            "path": "mvp/server/tests.js",
+            "op": "M",
+            "plus": 2,
+            "minus": 3
+          },
+          {
+            "path": "mvp/web/app.js",
+            "op": "M",
+            "plus": 1,
+            "minus": 1
+          },
+          {
+            "path": "docs/mvp/08-安全修复报告.md",
+            "op": "A",
+            "plus": 52,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "发现",
+            "5→1"
+          ],
+          [
+            "高危",
+            "0"
+          ],
+          [
+            "护栏",
+            "五重+4安全头"
+          ],
+          [
+            "回归",
+            "49/49"
+          ]
+        ]
+      }
+    },
+    "perf": {
+      "status": "green",
+      "ts": "2026-11-09T07:17:09.593Z",
+      "src": "指挥台指令 · API 压测",
+      "label": "性能验证",
+      "p50": 0.7,
+      "p95": 1,
+      "p99": 1.5,
+      "cold": {
+        "p50": 0.9,
+        "p95": 9.2,
+        "p99": 41
+      },
+      "rps": 1328,
+      "samples": 240
+    }
+  },
+  "events": [
+    {
+      "t": "2026-11-09T11:12:56.065Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 5/61（dashboard/server.js）"
+    },
+    {
+      "t": "2026-11-09T11:12:51.899Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "📂 收集交付文件 61 个（共 28016 KB）"
+    },
+    {
+      "t": "2026-11-09T11:12:51.393Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🌱 空仓库已引导基线提交"
+    },
+    {
+      "t": "2026-11-09T11:12:48.712Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "ℹ️ 仓库已存在，复用：topbat/statvista"
+    },
+    {
+      "t": "2026-11-09T11:12:46.547Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "✅ 账号验证通过：topbat（topbat）"
+    },
+    {
+      "t": "2026-11-09T11:12:46.049Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🔑 校验令牌与账号…"
+    },
+    {
+      "t": "2026-11-09T11:08:03.395Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "❌ 发布失败：GitHub API 409: Git Repository is empty."
+    },
+    {
+      "t": "2026-11-09T11:08:02.578Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "📂 收集交付文件 61 个（共 28014 KB）"
+    },
+    {
+      "t": "2026-11-09T11:08:02.570Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "📦 公开仓库已创建：topbat/statvista"
+    },
+    {
+      "t": "2026-11-09T11:07:58.122Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "✅ 账号验证通过：topbat（topbat）"
+    },
+    {
+      "t": "2026-11-09T11:07:57.599Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🔑 校验令牌与账号…"
+    },
+    {
+      "t": "2026-11-09T10:46:45.140Z",
+      "taskId": "T19",
+      "type": "status:done",
+      "note": "发布器+授权页就绪，等待令牌",
+      "detail": {
+        "summary": "server.js新增 /api/gh/verify|publish|status：Git Data API单提交推送/建仓/简介/20关键词/Pages启用；auth.html 四步授权引导，令牌仅驻内存",
+        "files": [
+          {
+            "path": "dashboard/server.js",
+            "op": "M",
+            "plus": 150,
+            "minus": 2
+          },
+          {
+            "path": "dashboard/auth.html",
+            "op": "A",
+            "plus": 165,
+            "minus": 0
+          },
+          {
+            "path": "dashboard/index.html",
+            "op": "M",
+            "plus": 2,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "API",
+            "Git Data API"
+          ],
+          [
+            "关键词",
+            "20"
+          ],
+          [
+            "令牌",
+            "仅驻内存"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T10:46:45.054Z",
+      "taskId": "T18",
+      "type": "status:done",
+      "note": "体验站6/6黄金对账+静态渲染验证通过",
+      "detail": {
+        "summary": "浏览器端语义层等价移植（五策略/RLS/过滤消解）；55断言0失败；纯静态渲染卡值与真后端一致；demo全目录1.66MB",
+        "files": [
+          {
+            "path": "docs/demo/api-shim.js",
+            "op": "A",
+            "plus": 820,
+            "minus": 0
+          },
+          {
+            "path": "docs/demo/data/facts-lite.json",
+            "op": "A",
+            "plus": 1,
+            "minus": 0,
+            "note": "367KB列式精简"
+          },
+          {
+            "path": "docs/index.html",
+            "op": "A",
+            "plus": 180,
+            "minus": 0,
+            "note": "Pages落地页"
+          },
+          {
+            "path": "mvp/tools/test-demo-shim.node.js",
+            "op": "A",
+            "plus": 210,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "对账",
+            "6/6组55断言"
+          ],
+          [
+            "体积",
+            "1.66MB"
+          ],
+          [
+            "app.js",
+            "零改动"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T10:46:44.969Z",
+      "taskId": "T16",
+      "type": "status:done",
+      "note": "README267行/CHANGELOG83行/LICENSE全文",
+      "detail": {
+        "summary": "README含4截图/背景/架构mermaid/快速开始/质量门禁/路线图；CHANGELOG按Keep-a-Changelog；Apache-2.0官方全文",
+        "files": [
+          {
+            "path": "README.md",
+            "op": "A",
+            "plus": 267,
+            "minus": 0
+          },
+          {
+            "path": "CHANGELOG.md",
+            "op": "A",
+            "plus": 83,
+            "minus": 0
+          },
+          {
+            "path": "LICENSE",
+            "op": "A",
+            "plus": 202,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "README",
+            "267行"
+          ],
+          [
+            "版本",
+            "0.1.0+0.1.1"
+          ],
+          [
+            "协议",
+            "Apache-2.0"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T10:42:12.618Z",
+      "taskId": "T18",
+      "type": "progress",
+      "note": "落地页完成：全自检通过"
+    },
+    {
+      "t": "2026-11-09T10:35:02.501Z",
+      "taskId": "T18",
+      "type": "progress",
+      "note": "黄金对账通过：6组55断言"
+    },
+    {
+      "t": "2026-11-09T10:33:31.057Z",
+      "taskId": "T18",
+      "type": "progress",
+      "note": "引擎移植完成：QE冒烟通过"
+    },
+    {
+      "t": "2026-11-09T10:27:39.226Z",
+      "taskId": "T16",
+      "type": "progress",
+      "note": "三件自检完成，截图与日期全对"
+    },
+    {
+      "t": "2026-11-09T10:27:03.791Z",
+      "taskId": "T16",
+      "type": "progress",
+      "note": "LICENSE完成，官方全文逐字"
+    },
+    {
+      "t": "2026-11-09T10:26:48.604Z",
+      "taskId": "T16",
+      "type": "progress",
+      "note": "CHANGELOG完成，两版本齐备"
+    },
+    {
+      "t": "2026-11-09T10:25:49.192Z",
+      "taskId": "T16",
+      "type": "progress",
+      "note": "README完成，全文317行"
+    },
+    {
+      "t": "2026-11-09T10:25:27.917Z",
+      "taskId": "T18",
+      "type": "progress",
+      "note": "shim数据就绪：facts精简列式367KB"
+    },
+    {
+      "t": "2026-11-09T10:24:16.604Z",
+      "taskId": "T18",
+      "type": "progress",
+      "note": "脚手架完成：静态资源已复制"
+    },
+    {
+      "t": "2026-11-09T10:21:31.140Z",
+      "taskId": "T18",
+      "type": "progress",
+      "note": "开工：探索MVP结构"
+    },
+    {
+      "t": "2026-11-09T10:21:02.462Z",
+      "taskId": "T16",
+      "type": "progress",
+      "note": "T16开工，项目事实核验完成"
+    },
+    {
+      "t": "2026-11-09T10:19:02.092Z",
+      "taskId": "T18",
+      "type": "status:in_progress",
+      "note": "体验站开工：阅读契约与前端代码"
+    },
+    {
+      "t": "2026-11-09T10:19:01.949Z",
+      "taskId": "T17",
+      "type": "status:done",
+      "note": "4张运行截图已采集入 docs/screenshots",
+      "detail": {
+        "summary": "无头Chrome虚拟时间终态：驾驶舱8指标卡/主题看板/指标字典/作战指挥台，均已验证渲染完整",
+        "files": [
+          {
+            "path": "docs/screenshots/cockpit.png",
+            "op": "A",
+            "plus": 0,
+            "minus": 0
+          },
+          {
+            "path": "docs/screenshots/theme-board.png",
+            "op": "A",
+            "plus": 0,
+            "minus": 0
+          },
+          {
+            "path": "docs/screenshots/metric-dict.png",
+            "op": "A",
+            "plus": 0,
+            "minus": 0
+          },
+          {
+            "path": "docs/screenshots/mission-control.png",
+            "op": "A",
+            "plus": 0,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "截图",
+            "4"
+          ],
+          [
+            "来源",
+            "3000/8787 实时页面"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T10:17:51.325Z",
+      "taskId": "T17",
+      "type": "status:in_progress",
+      "note": "无头Chrome采集驾驶舱/主题/字典/指挥台截图"
+    },
+    {
+      "t": "2026-11-09T08:05:19.044Z",
+      "taskId": "SYS",
+      "type": "gate",
+      "note": "门禁更新：安全扫描 → amber",
+      "detail": {
+        "summary": "复扫5→1：3高危(动态require×2/路径穿越)已修复；剩1中危为静态分析对esc()转义字段的误报，CSP+nosniff兜底，登记v0.2引入DOMPurify",
+        "files": [
+          {
+            "path": "mvp/server/index.js",
+            "op": "M",
+            "plus": 42,
+            "minus": 8
+          },
+          {
+            "path": "mvp/server/smoke.js",
+            "op": "M",
+            "plus": 2,
+            "minus": 4
+          },
+          {
+            "path": "mvp/server/tests.js",
+            "op": "M",
+            "plus": 2,
+            "minus": 3
+          },
+          {
+            "path": "mvp/web/app.js",
+            "op": "M",
+            "plus": 1,
+            "minus": 1
+          },
+          {
+            "path": "docs/mvp/08-安全修复报告.md",
+            "op": "A",
+            "plus": 52,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "发现",
+            "5→1"
+          ],
+          [
+            "高危",
+            "0"
+          ],
+          [
+            "护栏",
+            "五重+4安全头"
+          ],
+          [
+            "回归",
+            "49/49"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T07:21:54.121Z",
+      "taskId": "T14",
+      "type": "progress",
+      "note": "v0.2 backlog：①修复5项安全发现(门禁转绿) ②Doris ③地图 ④大屏暗色 ⑤导出"
+    },
+    {
+      "t": "2026-11-09T07:21:54.025Z",
+      "taskId": "T12",
+      "type": "status:done",
+      "note": "安全扫描完成：3高危1中危，门禁红阻断部署",
+      "detail": {
+        "summary": "mimosa normal深度扫描，5项发现：3高危(测试脚本命令注入×2、静态服务路径穿越)+1中危(跨文件innerHTML污点)；封印sha256:4b0cb7…；报告docs/mvp/07",
+        "files": [
+          {
+            "path": "docs/mvp/07-安全扫描报告.md",
+            "op": "A",
+            "plus": 34,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "发现",
+            "5"
+          ],
+          [
+            "高危",
+            "3"
+          ],
+          [
+            "中危",
+            "1"
+          ],
+          [
+            "门禁",
+            "红·阻断"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T07:21:53.932Z",
+      "taskId": "SYS",
+      "type": "gate",
+      "note": "门禁更新：安全扫描 → red",
+      "detail": {
+        "summary": "静态深度扫描完成：3高危(命令注入×2/路径穿越)+1中危(innerHTML污点)；按门禁规则阻断部署，修复列入T14首位",
+        "files": [],
+        "metrics": [
+          [
+            "高危",
+            "3"
+          ],
+          [
+            "中危",
+            "1"
+          ],
+          [
+            "低危",
+            "0"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T07:17:30.873Z",
+      "taskId": "SYS",
+      "type": "gate",
+      "note": "✅ 功能测试门禁通过 49/49",
+      "detail": {
+        "summary": "[PASS] ERRe-粒度×维度错配→400 DSL_SCHEMA_INVALID  [status=400] ｜  ｜ [tests] 结果：49/49 通过（全部通过）",
+        "files": [
+          {
+            "path": "mvp/server/tests.js",
+            "op": "R",
+            "plus": 0,
+            "minus": 0,
+            "note": "执行"
+          }
+        ],
+        "metrics": [
+          [
+            "通过",
+            49
+          ],
+          [
+            "失败",
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T07:17:30.312Z",
+      "taskId": "SYS",
+      "type": "action",
+      "note": "▶ 功能测试套件启动（node tests.js）",
+      "detail": {
+        "summary": "随机端口拉起被测服务，执行 49 条断言",
+        "files": [],
+        "metrics": []
+      }
+    },
+    {
+      "t": "2026-11-09T07:17:30.199Z",
+      "taskId": "T13",
+      "type": "status:done",
+      "note": "API压测完成：热P95 1ms / 1328rps",
+      "detail": {
+        "summary": "240样本两轮：冷测(绕缓存)P95 9.2ms，热测(命中缓存)P95 1ms；语义层内存聚合+四因子缓存达标",
+        "files": [],
+        "metrics": [
+          [
+            "热P95",
+            "1ms"
+          ],
+          [
+            "吞吐",
+            "1328 rps"
+          ],
+          [
+            "冷P95",
+            "9.2ms"
+          ],
+          [
+            "样本",
+            "240"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T07:17:09.593Z",
+      "taskId": "SYS",
+      "type": "gate",
+      "note": "⚡ 性能门禁达成：热测 P95 1ms（P50 0.7 / P99 1.5 / 1328 rps）",
+      "detail": {
+        "summary": "冷测（绕缓存）P95 9.2ms；热测（命中缓存）P95 1ms；共 240 样本",
+        "files": [],
+        "metrics": [
+          [
+            "热P50",
+            "0.7ms"
+          ],
+          [
+            "热P95",
+            "1ms"
+          ],
+          [
+            "热P99",
+            "1.5ms"
+          ],
+          [
+            "吞吐",
+            "1328 rps"
+          ],
+          [
+            "冷P95",
+            "9.2ms"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T07:17:09.325Z",
+      "taskId": "SYS",
+      "type": "action",
+      "note": "⚡ 性能压测启动（冷 40 次 + 热 200 次）",
+      "detail": {
+        "summary": "对 /api/v1/query 真实施压：冷测轮换时间窗绕缓存，热测同一查询命中缓存",
+        "files": [],
+        "metrics": []
+      }
+    },
+    {
+      "t": "2026-11-09T15:10:00+08:00",
+      "taskId": "SYS",
+      "type": "deploy",
+      "note": "🚀 铸造版本 v0.1.0（git tag，基线提交 77b26b3）",
+      "detail": {
+        "summary": "全部 MVP 产出纳入版本管理，作为第 1 圈基线",
+        "files": [
+          {
+            "path": "(全部 20 个交付文件)",
+            "op": "A",
+            "plus": 7657,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "提交",
+            "77b26b3"
+          ],
+          [
+            "交付文件",
+            "20"
+          ],
+          [
+            "代码+文档行数",
+            "7657"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T14:58:00+08:00",
+      "taskId": "T10",
+      "type": "status:done",
+      "note": "验收通过：驾驶舱数据/预警/下钻全链路演示就绪",
+      "detail": {
+        "summary": "无头浏览器虚拟时间终态验证：8指标卡真实数值、22月趋势、江苏3.88%垫底标红、负增长预警在列",
+        "files": [],
+        "metrics": [
+          [
+            "验收项",
+            "5/5 通过"
+          ],
+          [
+            "GDP当月",
+            "9638亿 ▲3.9%"
+          ],
+          [
+            "江苏增速",
+            "3.88% 垫底"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T14:44:00+08:00",
+      "taskId": "T09",
+      "type": "status:done",
+      "note": "修复4缺陷+7项UI走查，回归49/49",
+      "detail": {
+        "summary": "BUG-01 SQL列名契约化、BUG-02 空态语义对齐、BUG-03/04 文档登记；UI：联动去饱和、标签裁剪、hash重定向等",
+        "files": [
+          {
+            "path": "mvp/server/index.js",
+            "op": "M",
+            "plus": 24,
+            "minus": 9
+          },
+          {
+            "path": "mvp/web/app.js",
+            "op": "M",
+            "plus": 61,
+            "minus": 22
+          },
+          {
+            "path": "mvp/web/style.css",
+            "op": "M",
+            "plus": 18,
+            "minus": 6
+          },
+          {
+            "path": "mvp/data/metrics.json",
+            "op": "M",
+            "plus": 4,
+            "minus": 4
+          },
+          {
+            "path": "docs/mvp/06-走查与修复.md",
+            "op": "A",
+            "plus": 75,
+            "minus": 0
+          },
+          {
+            "path": "docs/mvp/03-DSL与API契约.md",
+            "op": "M",
+            "plus": 6,
+            "minus": 2
+          },
+          {
+            "path": "docs/mvp/01-PRD.md",
+            "op": "M",
+            "plus": 5,
+            "minus": 1
+          }
+        ],
+        "metrics": [
+          [
+            "缺陷修复",
+            "4"
+          ],
+          [
+            "UI修复",
+            "7"
+          ],
+          [
+            "回归",
+            "49/49"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T14:20:00+08:00",
+      "taskId": "T08",
+      "type": "status:done",
+      "note": "DoD 17/17 通过，断言 48/49，4缺陷移交",
+      "detail": {
+        "summary": "49条断言随机端口自启自停三轮一致；RLS越权空集、缓存分键、compare_then_compute 正确性差 4.95pct 全部验证",
+        "files": [
+          {
+            "path": "mvp/server/tests.js",
+            "op": "A",
+            "plus": 473,
+            "minus": 0
+          },
+          {
+            "path": "docs/mvp/05-测试报告.md",
+            "op": "A",
+            "plus": 77,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "自动断言",
+            "48/49"
+          ],
+          [
+            "DoD",
+            "17/17"
+          ],
+          [
+            "缺陷",
+            "1一般+3建议"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T14:05:00+08:00",
+      "taskId": "T07",
+      "type": "status:done",
+      "note": "联调完成：11处fetch对账一致，J1五步API级打通",
+      "detail": {
+        "summary": "补齐 dash-tech 看板配置、驾驶舱卡带对齐PRD、清理残留进程；J1：全国9638亿→江苏垫底3.88%→4市→制造业联动→负增长明细",
+        "files": [
+          {
+            "path": "mvp/data/dashboards.json",
+            "op": "A",
+            "plus": 234,
+            "minus": 0
+          },
+          {
+            "path": "mvp/README.md",
+            "op": "A",
+            "plus": 83,
+            "minus": 0
+          },
+          {
+            "path": "mvp/server/index.js",
+            "op": "M",
+            "plus": 12,
+            "minus": 5
+          }
+        ],
+        "metrics": [
+          [
+            "fetch对账",
+            "11/11"
+          ],
+          [
+            "修复项",
+            "3"
+          ],
+          [
+            "江苏制造业同比",
+            "−4.5pct 连续5月"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T13:45:00+08:00",
+      "taskId": "T06",
+      "type": "status:done",
+      "note": "看板前端完成：三页面+联动总线+三态",
+      "detail": {
+        "summary": "hash路由三页、X-Role身份切换、drill:nav/filter:click事件总线、胶囊与漏斗角标、URL终态同步、ECharts实例防泄漏",
+        "files": [
+          {
+            "path": "mvp/web/app.js",
+            "op": "A",
+            "plus": 1689,
+            "minus": 0
+          },
+          {
+            "path": "mvp/web/style.css",
+            "op": "A",
+            "plus": 498,
+            "minus": 0
+          },
+          {
+            "path": "mvp/web/index.html",
+            "op": "A",
+            "plus": 34,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "页面",
+            "3"
+          ],
+          [
+            "mock冒烟",
+            "30/30"
+          ],
+          [
+            "代码行",
+            "2221"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T13:35:00+08:00",
+      "taskId": "T05",
+      "type": "status:done",
+      "note": "语义层服务完成：smoke 21/21",
+      "detail": {
+        "summary": "DSL校验→RLS编译期注入→内存聚合上卷→同环比五策略→sha256四因子缓存；watermark bump即失效",
+        "files": [
+          {
+            "path": "mvp/server/index.js",
+            "op": "A",
+            "plus": 1183,
+            "minus": 0
+          },
+          {
+            "path": "mvp/server/smoke.js",
+            "op": "A",
+            "plus": 228,
+            "minus": 0
+          },
+          {
+            "path": "mvp/server/README.md",
+            "op": "A",
+            "plus": 66,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "端点",
+            "7"
+          ],
+          [
+            "smoke",
+            "21/21"
+          ],
+          [
+            "黄金值",
+            "GR0001=3.88"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T13:15:00+08:00",
+      "taskId": "T04",
+      "type": "status:done",
+      "note": "UI交互规范定稿：637行",
+      "detail": {
+        "summary": "政务蓝设计令牌、三页面线框、drill:nav全时序、六组件契约（MetricCard/BreadcrumbNav/FilterPill/ChartCard/AlertList/DrillTable）",
+        "files": [
+          {
+            "path": "docs/mvp/04-UI交互规范.md",
+            "op": "A",
+            "plus": 637,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "组件",
+            "6"
+          ],
+          [
+            "路由",
+            "3"
+          ],
+          [
+            "DoD映射",
+            "全覆盖"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T13:12:00+08:00",
+      "taskId": "T03",
+      "type": "status:done",
+      "note": "DSL与API契约定稿：982行",
+      "detail": {
+        "summary": "QueryRequest Schema五粒度、递归过滤树+sourceChartId last-wins、10错误码、缓存键公式、看板JSON Schema、四大场景curl示例",
+        "files": [
+          {
+            "path": "docs/mvp/03-DSL与API契约.md",
+            "op": "A",
+            "plus": 982,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "JSON块",
+            "11"
+          ],
+          [
+            "错误码",
+            "10"
+          ],
+          [
+            "演示场景",
+            "4"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T13:05:00+08:00",
+      "taskId": "T02",
+      "type": "status:done",
+      "note": "数据字典与种子数据：16指标/4840行",
+      "detail": {
+        "summary": "FNV-1a确定性生成（重跑MD5一致）；预埋江苏制造业转负、能耗逆指标转负、江苏垫底三组异常；ratio型只存分子分母原子",
+        "files": [
+          {
+            "path": "mvp/data/metrics.json",
+            "op": "A",
+            "plus": 403,
+            "minus": 0
+          },
+          {
+            "path": "mvp/data/dims.json",
+            "op": "A",
+            "plus": 95,
+            "minus": 0
+          },
+          {
+            "path": "mvp/data/facts.json",
+            "op": "A",
+            "plus": 4840,
+            "minus": 0,
+            "note": "1.14MB 单行JSON"
+          },
+          {
+            "path": "mvp/data/roles.json",
+            "op": "A",
+            "plus": 63,
+            "minus": 0
+          },
+          {
+            "path": "mvp/tools/gen-facts.js",
+            "op": "A",
+            "plus": 338,
+            "minus": 0
+          },
+          {
+            "path": "docs/mvp/02-数据字典与种子数据.md",
+            "op": "A",
+            "plus": 160,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "指标",
+            "16"
+          ],
+          [
+            "事实行",
+            "4840"
+          ],
+          [
+            "预埋异常",
+            "3"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T13:02:00+08:00",
+      "taskId": "T01",
+      "type": "status:done",
+      "note": "PRD定稿：17条DoD+零构建原型路线",
+      "detail": {
+        "summary": "P0范围冻结（2主题域/16指标/3页面/2角色）、17条给定-当-则DoD、原型↔生产技术映射、J1五步演示脚本",
+        "files": [
+          {
+            "path": "docs/mvp/01-PRD.md",
+            "op": "A",
+            "plus": 339,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "DoD",
+            "17"
+          ],
+          [
+            "指标",
+            "16"
+          ],
+          [
+            "不做清单",
+            "13项"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T12:40:00+08:00",
+      "taskId": "T00",
+      "type": "status:done",
+      "note": "指挥中心 v2 上线：环形任务环 + SSE 推送"
+    }
+  ],
+  "now": "2026-11-09T11:12:51.900Z",
+  "uptimeSec": 2886
+}

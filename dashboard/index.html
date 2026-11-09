@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>多智能体作战指挥台 · 统计数据可视表平台</title>
+<style>
+:root{
+  --bg0:#050A14; --bg1:#081226; --panel:rgba(10,24,46,.62); --line:rgba(110,160,220,.16);
+  --ink:#E9F2FC; --ink2:#9DB4D0; --ink3:#5E7694;
+  --cyan:#2CE0F5; --cyanD:#0E7490; --gold:#F6CB7D; --violet:#AC8BFF; --blue:#6CB2FF;
+  --ok:#3BE0A0; --warn:#FFB454; --bad:#FF7B72; --deploy:#6BE39A; --shield:#FF9F6B;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{min-height:100%}
+body{font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;color:var(--ink);overflow-x:hidden;
+  background:
+    radial-gradient(1400px 700px at 50% -18%, rgba(44,224,245,.10), transparent 62%),
+    radial-gradient(900px 600px at -10% 108%, rgba(172,139,255,.07), transparent 60%),
+    radial-gradient(900px 600px at 110% 100%, rgba(246,203,125,.05), transparent 60%),
+    linear-gradient(180deg,#050A14 0%,#081226 55%,#050A14 100%);
+  background-attachment:fixed;}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(160,220,255,.022) 0 1px, transparent 1px 4px),
+    linear-gradient(rgba(120,170,230,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(120,170,230,.045) 1px,transparent 1px);
+  background-size:100% 4px,52px 52px,52px 52px;
+  mask-image:radial-gradient(90% 80% at 50% 30%,#000 40%,transparent 100%);}
+.wrap{position:relative;z-index:1;max-width:1620px;margin:0 auto;padding:18px 22px 24px}
+
+/* ===== 顶栏 ===== */
+header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-size:21px;flex:none;
+  background:radial-gradient(circle at 32% 28%,#123B54,#0A1E33 70%);border:1px solid rgba(44,224,245,.55);
+  box-shadow:0 0 18px rgba(44,224,245,.35), inset 0 0 12px rgba(44,224,245,.25)}
+h1{font-size:19px;font-weight:700;letter-spacing:.03em}
+h1 small{display:block;font-size:10px;font-weight:400;color:var(--ink2);letter-spacing:.26em;margin-top:3px}
+.chipbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.conn{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--ink2);padding:5px 12px;border-radius:20px;background:var(--panel);border:1px solid var(--line)}
+.conn .d{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);animation:pulse 2s infinite}
+.conn.off .d{background:var(--bad);box-shadow:0 0 8px var(--bad)}
+.verchip{font-family:Consolas,monospace;font-size:12px;color:var(--deploy);padding:5px 12px;border-radius:20px;background:rgba(107,227,154,.08);border:1px solid rgba(107,227,154,.35)}
+.clock{font-family:Consolas,monospace;font-size:13px;color:var(--cyan);letter-spacing:.1em;padding:5px 12px;border-radius:20px;background:var(--panel);border:1px solid var(--line)}
+.spacer{flex:1}
+.stats{display:flex;gap:8px}
+.stat{min-width:80px;padding:6px 12px;border-radius:12px;background:var(--panel);border:1px solid var(--line);text-align:center;position:relative;overflow:hidden}
+.stat::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent,var(--sc),transparent);opacity:.8}
+.stat b{display:block;font-size:20px;font-weight:700;line-height:1.1;color:var(--sc)}
+.stat span{font-size:9.5px;color:var(--ink2);letter-spacing:.14em}
+
+/* ===== 主体 ===== */
+.main{display:grid;grid-template-columns:262px minmax(0,1fr) 372px;gap:12px;align-items:stretch}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px;position:relative;backdrop-filter:blur(3px)}
+.hud::before,.hud::after{content:"";position:absolute;width:16px;height:16px;border:2px solid rgba(44,224,245,.55);pointer-events:none}
+.hud::before{left:-1px;top:-1px;border-right:none;border-bottom:none;border-radius:6px 0 0 0}
+.hud::after{right:-1px;bottom:-1px;border-left:none;border-top:none;border-radius:0 0 6px 0}
+.p-title{font-size:11.5px;letter-spacing:.2em;color:var(--ink2);display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.p-title::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+
+/* 左列 */
+.leftcol{display:flex;flex-direction:column;gap:12px}
+.phaseList{display:flex;flex-direction:column;gap:7px}
+.ph{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:11px;background:rgba(12,28,54,.5);border:1px solid var(--line);transition:.4s}
+.ph.on{border-color:color-mix(in srgb,var(--pc) 60%,transparent);box-shadow:0 0 18px -6px color-mix(in srgb,var(--pc) 70%,transparent)}
+.donut{position:relative;width:48px;height:48px;flex:none}
+.donut svg{transform:rotate(-90deg)}
+.donut b{position:absolute;inset:0;display:grid;place-items:center;font-size:10.5px;color:var(--pc)}
+.ph .nm{font-size:12.5px;font-weight:600}
+.ph .sub{font-size:10px;color:var(--ink2);margin-top:2px}
+.ph .st{margin-left:auto;font-size:9.5px;color:var(--pc);border:1px solid color-mix(in srgb,var(--pc) 45%,transparent);padding:1px 7px;border-radius:9px;flex:none}
+.ph .st.run{animation:pulse 1.6s infinite}
+/* 编队 */
+.fleet{display:flex;flex-direction:column;gap:5px;max-height:238px;overflow:auto}
+.ag{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:9px;background:rgba(12,28,54,.4);border:1px solid rgba(110,160,220,.1)}
+.ag .av{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:14px;background:rgba(110,160,220,.1);flex:none}
+.ag .nm{font-size:11.5px;font-weight:600}
+.ag .nt{font-size:9.5px;color:var(--ink3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:150px}
+.ag .meta{margin-left:auto;text-align:right;font-size:9px;color:var(--ink3);line-height:1.35;flex:none}
+.ag .duty{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--ink3);margin-right:4px;vertical-align:0}
+.ag.on .duty{background:var(--cyan);box-shadow:0 0 7px var(--cyan);animation:pulse 1.6s infinite}
+
+/* 中列 */
+.stage{display:flex;flex-direction:column;align-items:center;min-height:660px;overflow:hidden}
+#loop{width:min(100%,660px);aspect-ratio:1/1;display:block}
+.legend{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:4px;font-size:10px;color:var(--ink3)}
+.legend i{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:-1px}
+
+/* 右列：战报流 */
+.mission{display:flex;flex-direction:column;min-height:0}
+.mfilters{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.mf{font-size:10px;color:var(--ink2);padding:3px 10px;border-radius:12px;border:1px solid var(--line);cursor:pointer;user-select:none;background:transparent}
+.mf.on{color:#031521;background:var(--cyan);border-color:var(--cyan);font-weight:700}
+.mlist{flex:1;overflow:auto;max-height:646px;padding-right:2px}
+.ev{border-radius:11px;background:rgba(12,28,54,.5);border:1px solid rgba(110,160,220,.12);margin-bottom:6px;overflow:hidden;animation:evin .4s ease}
+@keyframes evin{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:none}}
+.ev-h{display:flex;gap:8px;align-items:center;padding:7px 9px;cursor:pointer}
+.ev-h:hover{background:rgba(44,224,245,.05)}
+.ev .t{font-family:Consolas,monospace;color:var(--ink3);flex:none;font-size:9.5px}
+.ev .b{flex:none;width:7px;height:7px;border-radius:50%;box-shadow:0 0 7px var(--ec);background:var(--ec)}
+.ev .id{color:var(--ink2);font-weight:700;flex:none;font-size:11px}
+.ev .n{color:var(--ink2);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.ev.fresh .n{color:var(--ink)}
+.ev .cnt{flex:none;font-size:9px;color:var(--ink3);background:rgba(110,160,220,.12);padding:1px 6px;border-radius:8px}
+.ev .caret{flex:none;color:var(--ink3);font-size:9px;transition:transform .3s}
+.ev.open .caret{transform:rotate(90deg)}
+.ev-b{max-height:0;transition:max-height .35s ease;border-top:0 dashed transparent}
+.ev.open .ev-b{max-height:340px;border-top:1px dashed rgba(110,160,220,.15)}
+.ev-inner{padding:8px 10px 9px}
+.ev-sum{font-size:10.5px;color:var(--ink2);line-height:1.6;margin-bottom:6px}
+.mchips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:7px}
+.mc{font-size:9.5px;color:var(--cyan);background:rgba(44,224,245,.08);border:1px solid rgba(44,224,245,.25);padding:1px 8px;border-radius:9px}
+.mc b{color:var(--ink)}
+.ftable{width:100%;border-collapse:collapse;font-size:9.8px}
+.ftable td{padding:3px 5px;border-bottom:1px solid rgba(110,160,220,.08);color:var(--ink2)}
+.ftable tr:last-child td{border-bottom:none}
+.fop{font-family:Consolas,monospace;font-weight:700;width:22px}
+.fop.A{color:var(--ok)} .fop.M{color:var(--gold)} .fop.D{color:var(--bad)} .fop.R{color:var(--blue)}
+.fpath{font-family:Consolas,monospace;word-break:break-all}
+.fpm{width:86px;text-align:right;white-space:nowrap}
+.fpm .p{color:var(--ok)} .fpm .m{color:var(--bad)}
+.fnote{color:var(--ink3)}
+
+/* 底部 */
+.bottom{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:12px;margin-top:12px}
+.gates{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.gate{border-radius:12px;background:rgba(12,28,54,.55);border:1px solid var(--line);padding:10px 12px;position:relative;overflow:hidden;transition:.4s}
+.gate::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gc,#5E7694)}
+.gate.green{--gc:var(--ok);box-shadow:inset 0 0 24px -14px var(--ok)}
+.gate.amber{--gc:var(--warn)} .gate.red{--gc:var(--bad)} .gate.unknown{--gc:#5E7694}
+.gate.scanning{--gc:var(--cyan)} .gate.scanning .gval{animation:pulse 1.4s infinite}
+.gh{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink2);margin-bottom:5px}
+.gh .gst{margin-left:auto;font-size:9px;padding:1px 7px;border-radius:9px;border:1px solid var(--gc,#5E7694);color:var(--gc,#5E7694)}
+.gval{font-size:19px;font-weight:700;color:var(--ink)}
+.gsub{font-size:9.5px;color:var(--ink3);margin-top:3px}
+/* 指令台 */
+.console .btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cmd{border-radius:11px;border:1px solid rgba(44,224,245,.4);background:linear-gradient(180deg,rgba(20,44,78,.8),rgba(10,24,46,.8));color:var(--ink);
+  padding:10px 8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:.25s;position:relative;overflow:hidden}
+.cmd small{display:block;font-weight:400;font-size:9.5px;color:var(--ink3);margin-top:2px}
+.cmd:hover:not(:disabled){border-color:var(--cyan);box-shadow:0 0 16px -4px rgba(44,224,245,.6);transform:translateY(-1px)}
+.cmd:disabled{opacity:.45;cursor:wait}
+.cmd .spin{display:inline-block;width:10px;height:10px;border:2px solid rgba(44,224,245,.25);border-top-color:var(--cyan);border-radius:50%;animation:rot .8s linear infinite;vertical-align:-1px;margin-right:6px}
+@keyframes rot{to{transform:rotate(360deg)}}
+.cnote{font-size:9.5px;color:var(--ink3);margin-top:8px;line-height:1.6}
+/* 任务卡 */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:10px;margin-top:12px}
+.card{position:relative;border-radius:12px;padding:11px 13px;background:linear-gradient(180deg,rgba(16,36,66,.72),rgba(9,20,40,.72));border:1px solid var(--line);overflow:hidden}
+.card.live{border-color:rgba(44,224,245,.5);animation:cardGlow 2.2s ease-in-out infinite}
+.card.live::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--cyan),#0E7490 50%,var(--cyan));background-size:100% 300%;animation:edgeFlow 2.2s linear infinite}
+@keyframes cardGlow{0%,100%{box-shadow:0 0 16px -6px rgba(44,224,245,.4)}50%{box-shadow:0 0 30px -4px rgba(44,224,245,.75)}}
+@keyframes edgeFlow{to{background-position:0 -300%}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.c-top{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.c-id{font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--ink3);background:rgba(110,160,220,.13);padding:2px 8px;border-radius:6px}
+.c-st{margin-left:auto;font-size:10px;color:var(--sc);display:flex;gap:6px;align-items:center}
+.spin2{width:10px;height:10px;border-radius:50%;border:2px solid rgba(44,224,245,.25);border-top-color:var(--cyan);animation:rot .8s linear infinite}
+.c-title{font-size:13px;font-weight:600;line-height:1.45;margin-bottom:6px}
+.c-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:7px}
+.agent{font-size:10px;color:var(--gold);background:rgba(246,203,125,.1);border:1px solid rgba(246,203,125,.28);padding:1px 8px;border-radius:6px}
+.pbar{height:5px;border-radius:3px;background:rgba(110,160,220,.13);overflow:hidden;margin-bottom:6px}
+.pbar i{display:block;height:100%;width:0;border-radius:3px;background:var(--sc);transition:width .9s ease}
+.card.live .pbar i{background:linear-gradient(90deg,#0E7490,var(--cyan),#0E7490);background-size:200% 100%;animation:shimmer 1.4s linear infinite}
+@keyframes shimmer{to{background-position:-200% 0}}
+.c-note{font-size:10.5px;color:var(--ink2);line-height:1.55}
+footer{margin-top:12px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;color:var(--ink3);font-size:10px}
+.flowseg{stroke-dasharray:9 91;stroke-dashoffset:100;animation:dashflow 2.4s linear infinite;opacity:0;transition:opacity .6s}
+.flowseg.on{opacity:.95}
+@keyframes dashflow{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
+.arcflow{stroke-dasharray:5 95;stroke-dashoffset:100;animation:dashflow 3.2s linear infinite;opacity:0;transition:opacity .6s}
+.arcflow.on{opacity:.9}
+@media (max-width:1300px){.main{grid-template-columns:1fr 1fr}.stage{grid-column:1/-1;min-height:540px}.mlist{max-height:320px}.bottom{grid-template-columns:1fr}}
+@media (max-width:780px){.main{grid-template-columns:1fr}.bottom{grid-template-columns:1fr}.gates{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo">🛰</div>
+      <h1>多智能体作战指挥台<small>MISSION CONTROL · PLAN → DESIGN → BUILD → TEST → SHIELD → DEPLOY</small></h1>
+    </div>
+    <div class="conn" id="conn"><span class="d"></span><span id="connTxt">连接中</span></div>
+    <div class="verchip" id="verchip">v0.1.0</div>
+    <div class="clock" id="clock">--:--:--</div>
+    <div class="spacer"></div>
+    <div class="stats">
+      <div class="stat" style="--sc:var(--ok)"><b id="sDone">0</b><span>已完成</span></div>
+      <div class="stat" style="--sc:var(--cyan)"><b id="sRun">0</b><span>进行中</span></div>
+      <div class="stat" style="--sc:var(--ink2)"><b id="sPend">0</b><span>待办</span></div>
+      <div class="stat" style="--sc:var(--bad)"><b id="sFail">0</b><span>失败</span></div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="leftcol">
+      <aside class="panel hud">
+        <div class="p-title">阶段进度 · 环形</div>
+        <div class="phaseList" id="phaseList"></div>
+      </aside>
+      <aside class="panel hud">
+        <div class="p-title">智能体编队</div>
+        <div class="fleet" id="fleet"></div>
+      </aside>
+    </div>
+
+    <section class="panel hud stage">
+      <svg id="loop" viewBox="0 0 760 760" aria-label="任务环"></svg>
+      <div class="legend">
+        <span><i style="background:#5E7694"></i>待办</span>
+        <span><i style="background:#2CE0F5"></i>执行中（沿环流动）</span>
+        <span><i style="background:#3BE0A0"></i>已完成</span>
+        <span><i style="background:#FF7B72"></i>失败</span>
+        <span>六阶段顺时针闭环 · 转一圈 = 铸造一个版本</span>
+      </div>
+    </section>
+
+    <aside class="panel hud mission">
+      <div class="p-title">战报流 · 点开看文件清单</div>
+      <div class="mfilters" id="mfilters">
+        <button class="mf on" data-f="all">全部</button>
+        <button class="mf" data-f="files">📄 含文件</button>
+        <button class="mf" data-f="gate">🚦 门禁</button>
+        <button class="mf" data-f="deploy">🚀 部署</button>
+      </div>
+      <div class="mlist" id="mlist"></div>
+    </aside>
+  </div>
+
+  <div class="bottom">
+    <aside class="panel hud">
+      <div class="p-title">质量门禁 · 三道闸</div>
+      <div class="gates" id="gates"></div>
+    </aside>
+    <aside class="panel hud console">
+      <div class="p-title">指挥指令台</div>
+      <div class="btns">
+        <button class="cmd" data-act="run_tests">▶ 运行测试<small>node tests.js · 49 断言</small></button>
+        <button class="cmd" data-act="perf">⚡ 性能压测<small>240 样本 · P50/P95/P99</small></button>
+        <button class="cmd" data-act="scan">🛡 安全扫描登记<small>mimosa 深度扫描回填</small></button>
+        <button class="cmd" data-act="deploy">🚀 铸造版本<small>git 快照 · 版本+1</small></button>
+        <button class="cmd" style="grid-column:1/-1" onclick="window.open('/auth.html','_blank')">🔑 GitHub 开源发布<small>授权 · 建仓 · 推送 · Pages 公网体验站</small></button>
+      </div>
+      <div class="cnote">指令真实执行：测试/压测在服务端拉起进程真跑；安全扫描由编排者调用 mimosa 扫描器后回填门禁；铸造版本登记 git 快照。执行状态实时推送到战报流。</div>
+    </aside>
+  </div>
+
+  <div class="cards" id="cards"></div>
+
+  <footer>
+    <span>总进度 <b id="fPct" style="color:var(--cyan)">0%</b></span>
+    <span id="stamp">—</span>
+    <span class="spacer" style="flex:1"></span>
+    <span>SSE 推送 · 空闲零轮询 · 兜底 180s</span>
+  </footer>
+</div>
+
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const fmtT = iso => { const d = new Date(iso); return isNaN(d) ? '' : [d.getHours(),d.getMinutes(),d.getSeconds()].map(x=>String(x).padStart(2,'0')).join(':'); };
+const CX = 380, CY = 380;
+const polar = (r, deg) => { const a = deg * Math.PI / 180; return [CX + r * Math.sin(a), CY - r * Math.cos(a)]; };
+function arcPath(r, a0, a1) {
+  const [x0, y0] = polar(r, a0), [x1, y1] = polar(r, a1);
+  return `M ${x0.toFixed(2)} ${y0.toFixed(2)} A ${r} ${r} 0 ${(a1 - a0) > 180 ? 1 : 0} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`;
+}
+const STC = { pending:'#5E7694', in_progress:'#2CE0F5', done:'#3BE0A0', failed:'#FF7B72' };
+const STT = { pending:'待办', in_progress:'执行中', done:'已完成', failed:'失败' };
+const NS = 'http://www.w3.org/2000/svg';
+function el(name, attrs, parent) {
+  const e = document.createElementNS(NS, name);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+const refs = { arcProg: [], arcFlow: [], nodes: {}, phaseLbl: [], donutArc: [], donutTxt: [], phRow: [] };
+let built = false, evFilter = 'all', openSet = new Set(), prevGateTs = {};
+
+function buildLoop(st) {
+  const svg = $('loop'); svg.innerHTML = '';
+  const defs = el('defs', {}, svg);
+  defs.innerHTML =
+    '<linearGradient id="gradC" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2CE0F5"/><stop offset="1" stop-color="#6BE39A"/></linearGradient>' +
+    '<filter id="glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="4.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>';
+  const gTick = el('g', {}, svg);
+  el('circle', { cx: CX, cy: CY, r: 352, fill: 'none', stroke: 'rgba(110,170,230,.28)', 'stroke-width': 1.4, 'stroke-dasharray': '2 11' }, gTick);
+  el('animateTransform', { attributeName: 'transform', type: 'rotate', from: `0 ${CX} ${CY}`, to: `360 ${CX} ${CY}`, dur: '80s', repeatCount: 'indefinite' }, gTick);
+  const gHud = el('g', {}, svg);
+  el('circle', { cx: CX, cy: CY, r: 318, fill: 'none', stroke: 'rgba(44,224,245,.16)', 'stroke-width': 1, 'stroke-dasharray': '30 14 6 14' }, gHud);
+  el('animateTransform', { attributeName: 'transform', type: 'rotate', from: `360 ${CX} ${CY}`, to: `0 ${CX} ${CY}`, dur: '120s', repeatCount: 'indefinite' }, gHud);
+
+  const total = st.tasks.length, GAP = 8, usable = 360 - GAP * st.phases.length;
+  let ang = GAP / 2;
+  st.phases.forEach((p, i) => {
+    const ts = st.tasks.filter(t => t.phase === p.id);
+    const span = usable * ts.length / total;
+    const a0 = ang, a1 = ang + span, mid = (a0 + a1) / 2;
+    el('path', { d: arcPath(278, a0, a1), fill: 'none', stroke: p.color, 'stroke-opacity': .16, 'stroke-width': 16, 'stroke-linecap': 'round' }, svg);
+    refs.arcProg[i] = el('path', { d: arcPath(278, a0, a1), fill: 'none', stroke: p.color, 'stroke-width': 16, 'stroke-linecap': 'round', pathLength: 100, 'stroke-dasharray': '0 100', filter: 'url(#glow)', style: 'transition:stroke-dasharray .9s ease' }, svg);
+    refs.arcFlow[i] = el('path', { d: arcPath(278, a0, a1), fill: 'none', stroke: '#BFF6FF', 'stroke-width': 16, 'stroke-linecap': 'round', pathLength: 100, class: 'arcflow' }, svg);
+    const [gx, gy] = polar(278, a1 + GAP / 2);
+    el('path', { d: `M ${gx - 4} ${gy - 6} L ${gx + 6} ${gy} L ${gx - 4} ${gy + 6} Z`, fill: 'rgba(150,200,240,.4)', transform: `rotate(${a1 + GAP / 2} ${gx} ${gy})` }, svg);
+    const [lx, ly] = polar(224, mid);
+    const lbl = el('text', { x: lx, y: ly - 3, 'text-anchor': 'middle', fill: p.color, 'font-size': 13, 'font-weight': 700, 'letter-spacing': 1.5 }, svg);
+    lbl.textContent = p.name;
+    refs.phaseLbl[i] = el('text', { x: lx, y: ly + 13, 'text-anchor': 'middle', fill: 'rgba(157,180,208,.85)', 'font-size': 9.5 }, svg);
+    ts.forEach((t, j) => {
+      const a = a0 + span * (j + 0.5) / ts.length;
+      const [nx, ny] = polar(278, a);
+      const halo = el('circle', { cx: nx, cy: ny, r: 9, fill: 'none', stroke: STC.in_progress, 'stroke-width': 2, filter: 'url(#glow)', display: 'none' }, svg);
+      el('animate', { attributeName: 'r', values: '9;18;9', dur: '1.6s', repeatCount: 'indefinite' }, halo);
+      el('animate', { attributeName: 'opacity', values: '.9;.15;.9', dur: '1.6s', repeatCount: 'indefinite' }, halo);
+      const dot = el('circle', { cx: nx, cy: ny, r: 7, fill: STC.pending, stroke: '#0A1B33', 'stroke-width': 2.5, style: 'transition:fill .5s' }, svg);
+      const [tx, ty] = polar(313, a);
+      const idt = el('text', { x: tx, y: ty + 3, 'text-anchor': 'middle', fill: 'rgba(157,180,208,.7)', 'font-size': 9, 'font-weight': 700, 'font-family': 'Consolas,monospace' }, svg);
+      idt.textContent = t.id;
+      refs.nodes[t.id] = { dot, halo, idt };
+    });
+    ang = a1 + GAP;
+  });
+  const circPath = arcPath(278, 0.01, 359.99);
+  [[22,-2,'#7DE9FF',3.4],[22,-8,'#7DE9FF',2.8],[26,-5,'#6BE39A',2.6],[30,-14,'#FF9F6B',2.4],[34,-20,'#AC8BFF',2.2]].forEach(([dur, begin, c, r]) => {
+    const pt = el('circle', { r, fill: c, opacity: .7, filter: 'url(#glow)' }, svg);
+    el('animateMotion', { dur: dur + 's', begin: begin + 's', repeatCount: 'indefinite', path: circPath }, pt);
+  });
+  const gCenter = el('g', {}, svg);
+  el('circle', { cx: CX, cy: CY, r: 182, fill: 'none', stroke: 'rgba(110,170,230,.14)', 'stroke-width': 1 }, gCenter);
+  el('circle', { cx: CX, cy: CY, r: 164, fill: 'none', stroke: 'rgba(110,170,230,.2)', 'stroke-width': 15 }, gCenter);
+  refs.centerArc = el('circle', { cx: CX, cy: CY, r: 164, fill: 'none', stroke: 'url(#gradC)', 'stroke-width': 15, 'stroke-linecap': 'round', 'stroke-dasharray': '0 1030', transform: `rotate(-90 ${CX} ${CY})`, filter: 'url(#glow)', style: 'transition:stroke-dasharray .9s ease' }, gCenter);
+  const t1 = el('text', { x: CX, y: CY - 44, 'text-anchor': 'middle', fill: '#9DB4D0', 'font-size': 10.5, 'letter-spacing': 4 }, gCenter); t1.textContent = '总体进度';
+  refs.centerPct = el('text', { x: CX, y: CY + 6, 'text-anchor': 'middle', fill: '#E9F2FC', 'font-size': 44, 'font-weight': 800, 'font-family': 'Consolas,monospace' }, gCenter);
+  refs.centerSub = el('text', { x: CX, y: CY + 30, 'text-anchor': 'middle', fill: 'rgba(157,180,208,.85)', 'font-size': 10 }, gCenter);
+  refs.centerVer = el('text', { x: CX, y: CY + 52, 'text-anchor': 'middle', fill: '#6BE39A', 'font-size': 12, 'font-weight': 700, 'font-family': 'Consolas,monospace' }, gCenter);
+
+  const list = $('phaseList'); list.innerHTML = '';
+  st.phases.forEach((p, i) => {
+    const div = document.createElement('div');
+    div.className = 'ph'; div.style.setProperty('--pc', p.color);
+    div.innerHTML =
+      `<div class="donut"><svg width="48" height="48" viewBox="0 0 48 48">
+        <circle cx="24" cy="24" r="20" fill="none" stroke="rgba(110,170,230,.16)" stroke-width="6"/>
+        <circle class="dp" cx="24" cy="24" r="20" fill="none" stroke="${p.color}" stroke-width="6" stroke-linecap="round" pathLength="100" stroke-dasharray="0 100" style="transition:stroke-dasharray .9s ease"/>
+      </svg><b class="pv">0%</b></div>
+      <div><div class="nm">${esc(p.icon)} ${esc(p.name)}</div><div class="sub">—</div></div>
+      <span class="st">—</span>`;
+    list.appendChild(div);
+    refs.donutArc[i] = div.querySelector('.dp');
+    refs.donutTxt[i] = { v: div.querySelector('.pv'), sub: div.querySelector('.sub'), st: div.querySelector('.st') };
+    refs.phRow[i] = div;
+  });
+  built = true;
+}
+
+/* ===== 战报流 ===== */
+function evColor(e) {
+  if (e.type === 'deploy') return '#6BE39A';
+  if (e.type === 'gate') return '#FFB454';
+  if (e.type === 'action') return '#6CB2FF';
+  if (e.type === 'status:done') return '#3BE0A0';
+  if (e.type === 'status:in_progress') return '#2CE0F5';
+  if (e.type === 'status:failed') return '#FF7B72';
+  return '#5E7694';
+}
+function evPass(e) {
+  if (evFilter === 'files') return e.detail && e.detail.files && e.detail.files.length;
+  if (evFilter === 'gate') return e.type === 'gate';
+  if (evFilter === 'deploy') return e.type === 'deploy';
+  return true;
+}
+function renderFeed(st) {
+  const el2 = $('mlist');
+  const evs = (st.events || []).filter(evPass).slice(0, 60);
+  if (!evs.length) { el2.innerHTML = '<div style="color:var(--ink3);font-size:11px;text-align:center;padding:16px 0">该筛选下暂无动态</div>'; return; }
+  el2.innerHTML = evs.map((e, idx) => {
+    const c = evColor(e);
+    const d = e.detail || null;
+    const nFiles = d && d.files ? d.files.length : 0;
+    const isOpen = openSet.has(e.t + e.taskId + idx);
+    let inner = '';
+    if (d) {
+      inner = `<div class="ev-inner">` +
+        (d.summary ? `<div class="ev-sum">${esc(d.summary)}</div>` : '') +
+        ((d.metrics && d.metrics.length) ? `<div class="mchips">${d.metrics.map(m => `<span class="mc">${esc(m[0])} <b>${esc(String(m[1]))}</b></span>`).join('')}</div>` : '') +
+        ((d.files && d.files.length) ? `<table class="ftable">${d.files.map(f =>
+          `<tr><td class="fop ${f.op}">${f.op}</td><td class="fpath">${esc(f.path)}${f.note ? ` <span class="fnote">· ${esc(f.note)}</span>` : ''}</td>` +
+          `<td class="fpm">${f.plus != null ? `<span class="p">+${f.plus}</span>` : ''} ${f.minus ? `<span class="m">-${f.minus}</span>` : ''}</td></tr>`).join('')}</table>`
+          : `<div class="fnote" style="font-size:10px">（运行时验证 · 无文件变更）</div>`) +
+        `</div>`;
+    }
+    return `<div class="ev ${idx === 0 ? 'fresh' : ''} ${isOpen ? 'open' : ''}" data-k="${esc(e.t + e.taskId)}${idx}">
+      <div class="ev-h"><span class="t">${fmtT(e.t)}</span><span class="b" style="--ec:${c};background:${c}"></span><span class="id">${esc(e.taskId)}</span><span class="n">${esc(e.note)}</span>
+      ${nFiles ? `<span class="cnt">📄 ${nFiles}</span>` : ''}${d ? `<span class="caret">▶</span>` : ''}</div>
+      ${d ? `<div class="ev-b">${inner}</div>` : ''}</div>`;
+  }).join('');
+  el2.querySelectorAll('.ev-h').forEach(h => h.addEventListener('click', () => {
+    const box = h.parentElement; const k = box.dataset.k;
+    box.classList.toggle('open');
+    if (box.classList.contains('open')) openSet.add(k); else openSet.delete(k);
+  }));
+}
+
+/* ===== 门禁 ===== */
+function gateHtml(g) {
+  if (!g) return '';
+  const stt = { green: '通过', amber: '警示', red: '未过', unknown: '待测', scanning: '扫描中', error: '异常' }[g.status] || g.status;
+  let val = '—', sub = g.src || '';
+  if (g.label === '功能测试' && g.total) { val = `${g.pass}/${g.total}`; sub = `${g.src || ''}`; }
+  else if (g.label === '性能验证' && g.p95 != null) { val = `P95 ${g.p95}ms`; sub = `P50 ${g.p50} / P99 ${g.p99}ms · ${g.rps || '—'} rps`; }
+  else if (g.label === '性能验证' && g.status === 'error') { val = '不可达'; sub = g.msg || ''; }
+  else if (g.label === '安全扫描') {
+    if (g.status === 'scanning') val = '扫描中…';
+    else if (g.findings) { const f = g.findings; val = `${(f.critical || 0) + (f.high || 0)} 高危 / ${(f.medium || 0) + (f.low || 0)} 其他`; sub = f.tool ? `${f.tool} · ${f.note || ''}` : sub; }
+    else val = '待回填';
+  }
+  const icon = g.label === '功能测试' ? '🧪' : g.label === '安全扫描' ? '🛡️' : '⚡';
+  return `<div class="gate ${g.status}">
+    <div class="gh">${icon} ${esc(g.label)}<span class="gst">${stt}</span></div>
+    <div class="gval">${esc(val)}</div>
+    <div class="gsub">${esc(sub)}${g.ts ? ' · ' + fmtT(g.ts) : ''}</div>
+  </div>`;
+}
+
+/* ===== 编队 ===== */
+function renderFleet(st) {
+  const el2 = $('fleet');
+  if (!st.agents) { el2.innerHTML = ''; return; }
+  el2.innerHTML = st.agents.map(a => `<div class="ag ${a.status === 'on_duty' ? 'on' : ''}">
+    <span class="av">${esc(a.avatar || '🤖')}</span>
+    <div style="min-width:0"><div class="nm">${esc(a.name)}${a.status === 'on_duty' ? ' <span class="duty"></span>' : ''}</div><div class="nt">${esc(a.note || '')}</div></div>
+    <div class="meta">${a.tokens ? '🪙' + a.tokens + '万' : ''}<br>${a.toolUses ? '⚒' + a.toolUses : ''}${a.tasks ? ' · ' + a.tasks.length + '任务' : ''}</div>
+  </div>`).join('');
+}
+
+function update(st) {
+  if (!built) buildLoop(st);
+  const C = { pending: 0, in_progress: 0, done: 0, failed: 0 };
+  st.tasks.forEach(t => { if (C[t.status] !== undefined) C[t.status]++; });
+  $('sDone').textContent = C.done; $('sRun').textContent = C.in_progress;
+  $('sPend').textContent = C.pending; $('sFail').textContent = C.failed;
+
+  const overall = st.tasks.length ? Math.round(st.tasks.reduce((a, t) => a + t.progress, 0) / st.tasks.length) : 0;
+  const CIRC = 2 * Math.PI * 164;
+  refs.centerArc.setAttribute('stroke-dasharray', `${(CIRC * overall / 100).toFixed(1)} ${CIRC.toFixed(1)}`);
+  refs.centerPct.textContent = overall + '%';
+  refs.centerSub.textContent = `${C.done + C.in_progress}/${st.tasks.length} 任务 · ${st.phases.length} 阶段`;
+  const it = st.iteration || {};
+  refs.centerVer.textContent = (it.lap ? `第${it.lap}圈 · ` : '') + (it.version || '');
+  $('verchip').textContent = (it.version || 'v0.0.0') + (it.commit ? ' @' + it.commit : '');
+
+  st.phases.forEach((p, i) => {
+    const ts = st.tasks.filter(t => t.phase === p.id);
+    const pct = ts.length ? Math.round(ts.reduce((a, t) => a + t.progress, 0) / ts.length) : 0;
+    const done = ts.filter(t => t.status === 'done').length;
+    const run = ts.some(t => t.status === 'in_progress');
+    const fail = ts.some(t => t.status === 'failed');
+    const fin = ts.length > 0 && ts.every(t => t.status === 'done');
+    if (refs.arcProg[i]) refs.arcProg[i].setAttribute('stroke-dasharray', `${pct} ${100 - pct}`);
+    if (refs.arcFlow[i]) refs.arcFlow[i].classList.toggle('on', run);
+    if (refs.phaseLbl[i]) refs.phaseLbl[i].textContent = `${done}/${ts.length} · ${pct}%`;
+    if (refs.donutArc[i]) refs.donutArc[i].setAttribute('stroke-dasharray', `${pct} ${100 - pct}`);
+    if (refs.donutTxt[i].v) refs.donutTxt[i].v.textContent = pct + '%';
+    if (refs.donutTxt[i].sub) refs.donutTxt[i].sub.textContent = `完成 ${done}/${ts.length} · 执行中 ${ts.filter(t => t.status === 'in_progress').length}`;
+    if (refs.donutTxt[i].st) { refs.donutTxt[i].st.textContent = fail ? '受阻' : run ? '运转中' : fin ? '已收口' : '待命'; refs.donutTxt[i].st.className = 'st' + (run ? ' run' : ''); }
+    if (refs.phRow[i]) refs.phRow[i].classList.toggle('on', run);
+    ts.forEach(t => {
+      const n = refs.nodes[t.id]; if (!n) return;
+      n.dot.setAttribute('fill', STC[t.status] || STC.pending);
+      if (t.status === 'in_progress') { n.dot.setAttribute('r', 9); n.halo.setAttribute('display', ''); n.idt.setAttribute('fill', '#2CE0F5'); }
+      else { n.dot.setAttribute('r', t.status === 'done' ? 6.5 : 5.5); n.halo.setAttribute('display', 'none'); n.idt.setAttribute('fill', t.status === 'done' ? '#7BD8B4' : 'rgba(157,180,208,.6)'); }
+    });
+  });
+
+  renderFeed(st);
+  renderFleet(st);
+  $('gates').innerHTML = ['tests', 'security', 'perf'].map(k => gateHtml(st.gates && st.gates[k])).join('');
+  // 指令按钮：门禁更新即解锁
+  document.querySelectorAll('.cmd').forEach(b => {
+    const map = { run_tests: 'tests', perf: 'perf', scan: 'security', deploy: null };
+    const gk = map[b.dataset.act];
+    if (gk && st.gates && st.gates[gk] && st.gates[gk].ts && st.gates[gk].ts !== prevGateTs[b.dataset.act]) {
+      prevGateTs[b.dataset.act] = st.gates[gk].ts; b.disabled = false; b.innerHTML = b.dataset.html;
+    }
+  });
+
+  const focus = st.tasks.filter(t => t.status === 'in_progress' || t.status === 'failed');
+  const recent = st.tasks.filter(t => t.status === 'done').slice(-2).reverse();
+  const show = focus.length ? focus : recent;
+  $('cards').innerHTML = show.length ? show.map(t => {
+    const s = t.status === 'failed' ? 'bad' : t.status === 'in_progress' ? 'cyan' : 'ok';
+    const cls = t.status === 'in_progress' ? 'live' : t.status === 'failed' ? '' : '';
+    const icon = t.status === 'in_progress' ? '<span class="spin2"></span>' : t.status === 'failed' ? '✕' : '✓';
+    const deps = (t.depends || []).map(d => { const dt = st.tasks.find(x => x.id === d); return `${d}${dt && dt.status === 'done' ? '✓' : ''}`; }).join(' · ');
+    return `<article class="card ${cls}" style="--sc:var(--${s === 'bad' ? 'bad' : s === 'ok' ? 'ok' : 'cyan'})">
+      <div class="c-top"><span class="c-id">${t.id}</span><span class="c-st" style="color:var(--${s === 'bad' ? 'bad' : s === 'ok' ? 'ok' : 'cyan'})">${icon}${STT[t.status] || ''}</span></div>
+      <div class="c-title">${esc(t.title)}</div>
+      <div class="c-meta"><span class="agent">🤖 ${esc(t.agent)}</span><span style="font-size:10px;color:var(--ink3)">依赖 ${deps || '—'}</span></div>
+      <div class="pbar"><i style="width:${t.progress}%"></i></div>
+      <div class="c-note">${esc(t.note || '')}</div>
+    </article>`;
+  }).join('') : `<article class="card" style="--sc:var(--cyan)"><div class="c-title">⏸ 全部任务空闲，等待调度…</div><div class="c-note">指挥台待命中</div></article>`;
+
+  $('fPct').textContent = overall + '%';
+  $('stamp').textContent = `最近推送 ${new Date().toLocaleTimeString('zh-CN')} · v${st.v || 1}`;
+}
+
+setInterval(() => { $('clock').textContent = new Date().toLocaleTimeString('zh-CN', { hour12: false }); }, 1000);
+document.querySelectorAll('.mf').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.mf').forEach(x => x.classList.toggle('on', x === b));
+  evFilter = b.dataset.f; refresh();
+}));
+document.querySelectorAll('.cmd').forEach(b => {
+  b.dataset.html = b.innerHTML;
+  b.addEventListener('click', async () => {
+    b.disabled = true;
+    b.innerHTML = '<span class="spin"></span>执行中…';
+    try { await fetch('/api/action/' + b.dataset.act, { method: 'POST' }); } catch (e) { b.disabled = false; b.innerHTML = b.dataset.html; }
+  });
+});
+
+function markConn(ok, txt) { $('conn').classList.toggle('off', !ok); $('connTxt').textContent = txt; }
+let latestState = null;
+async function refresh() {
+  try { const st = await (await fetch('/api/tasks', { cache: 'no-store' })).json(); latestState = st; update(st); markConn(true, '实时推送已连接'); }
+  catch (e) { markConn(false, '连接中断 · 重试中'); }
+}
+let es;
+try {
+  es = new EventSource('/api/stream');
+  es.onopen = () => markConn(true, '实时推送已连接');
+  es.onmessage = ev => { try { latestState = JSON.parse(ev.data); update(latestState); markConn(true, '实时推送已连接'); } catch (e) { } };
+  es.onerror = () => markConn(false, '推送重连中 · 兜底同步启用');
+} catch (e) { markConn(false, '浏览器不支持SSE · 轮询模式'); }
+setInterval(refresh, 180000);
+refresh();
+</script>
+</body>
+</html>
