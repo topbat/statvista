@@ -84,6 +84,10 @@ input:focus{border-color:var(--cyan);box-shadow:0 0 12px -4px rgba(44,224,245,.5
         <button id="publish" disabled>🚀 开始发布（建仓 + 推送 + Pages）</button>
         <input id="repo" value="statvista" title="仓库名（可改）" style="max-width:200px">
       </div>
+      <p style="font-size:11.5px;color:var(--ink2);margin-top:8px">已发布过？点下方按钮：增量同步本地全部更新 → 打 <code>v0.1.1</code> 标签 → 创建 GitHub Release（附体验站离线包 zip）→ 补全 20 个关键词。</p>
+      <div class="row">
+        <button id="sync" disabled>📦 推送更新 + 发布 Release（CI/CD 已就绪）</button>
+      </div>
     </div>
   </div>
 
@@ -127,6 +131,7 @@ $('verify').onclick = async () => {
       $('vstat').textContent = '✅ 账号验证通过：' + j.login + (j.name ? '（' + j.name + '）' : '') + ' — 可以点击发布';
       $('vstat').className = 'stat ok';
       $('publish').disabled = false;
+      if ($('sync')) $('sync').disabled = false;
     } else {
       $('vstat').textContent = '❌ ' + j.error;
       $('vstat').className = 'stat bad';
@@ -138,27 +143,30 @@ $('verify').onclick = async () => {
   $('verify').disabled = false;
 };
 
-$('publish').onclick = async () => {
-  if (!TOKEN) { $('vstat').textContent = '请先粘贴并验证令牌'; $('vstat').className = 'stat bad'; return; }
-  $('publish').disabled = true;
-  $('prog').style.display = 'block';
-  $('psteps').innerHTML = '<div><b>' + fmt(new Date().toISOString()) + '</b> 正在向服务器发送发布指令…</div>';
-  try {
-    const r = await fetch('/api/gh/publish', {
+  function ghAction(mode) {
+    if (!TOKEN) { $('vstat').textContent = '请先粘贴并验证令牌'; $('vstat').className = 'stat bad'; return; }
+    $('publish').disabled = true;
+    if ($('sync')) $('sync').disabled = true;
+    $('prog').style.display = 'block';
+    $('psteps').innerHTML = '<div><b>' + fmt(new Date().toISOString()) + '</b> 正在向服务器发送' + (mode === 'sync' ? '同步发布' : '发布') + '指令…</div>';
+    fetch('/api/gh/' + mode, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: TOKEN, repo: ($('repo').value || 'statvista').trim() })
+      body: JSON.stringify({ token: TOKEN, repo: ($('repo').value || 'statvista').trim(), tag: 'v0.1.1' })
+    }).then(async r => {
+      if (!r.ok) {
+        const j = await r.json().catch(() => ({}));
+        throw new Error(j.error || ('HTTP ' + r.status));
+      }
+      poll();
+    }).catch(e => {
+      $('psteps').innerHTML += '<div style="color:var(--bad)"><b>❌</b> 指令发送失败：' + esc(String(e.message || e)) + '</div>';
+      $('publish').disabled = false;
+      if ($('sync')) $('sync').disabled = false;
     });
-    if (!r.ok) {
-      const j = await r.json().catch(() => ({}));
-      throw new Error(j.error || ('HTTP ' + r.status));
-    }
-    poll();
-  } catch (e) {
-    $('psteps').innerHTML += '<div style="color:var(--bad)"><b>❌</b> 发布指令发送失败：' + esc(String(e.message || e)) + '</div>';
-    $('publish').disabled = false;
   }
-};
+  $('publish').onclick = () => ghAction('publish');
+  if ($('sync')) $('sync').onclick = () => ghAction('sync');
 
 function poll() {
   fetch('/api/gh/status').then(r => r.json()).then(j => {
@@ -172,10 +180,17 @@ function poll() {
       $('plinks').style.display = 'block';
       $('lRepo').href = j.urls.repo;
       $('lPages').href = j.urls.pages;
+      if (j.urls.release) {
+        const a = document.createElement('a');
+        a.href = j.urls.release; a.target = '_blank'; a.textContent = '🎁 Release（含 demo.zip 资产）';
+        $('plinks').appendChild(a);
+      }
       $('psteps').innerHTML += '<div><b>🎉</b> 全部完成，可关闭本页。指挥中心战报流已记录全程。</div>';
     }
     if (j.status === 'error') {
       $('psteps').innerHTML += '<div style="color:var(--bad)"><b>❌</b> ' + esc(j.error) + ' — 修正后可重新发布</div>';
+      $('publish').disabled = false;
+      if ($('sync')) $('sync').disabled = false;
     }
   }).catch(() => setTimeout(poll, 3000));
 }

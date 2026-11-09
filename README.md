@@ -4,6 +4,7 @@
 
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![Node](https://img.shields.io/badge/node-%3E%3D18-green)
+![CI](https://img.shields.io/badge/CI-GitHub_Actions-2088FF)
 ![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen)
 
 **指标先行的统计数据多维可视表平台：统一口径、多维下钻、联动分析与领导驾驶舱。**
@@ -159,8 +160,10 @@ curl -s -X POST http://127.0.0.1:3000/api/v1/query \
 
 ## 🌐 在线体验
 
-> 待发布：项目将部署静态演示到 **`https://<user>.github.io/statvista/demo/`**，见仓库 Pages。
-> Pages 启用后此处链接自动生效；离线环境请直接按「快速开始」本地运行（无任何外网依赖）。
+**公网体验站已上线**：<https://topbat.github.io/statvista/demo/>
+（GitHub Pages 从 `main` 分支 `/docs` 自动部署，每次推送自动更新；落地页含截图与导航。）
+
+版本发布与打包产物见 [Releases](https://github.com/topbat/statvista/releases)：打 `v*` 标签自动跑全量测试 → 打包体验站 zip → 创建 Release 并附资产。
 
 ---
 

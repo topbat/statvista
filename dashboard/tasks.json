@@ -1,12 +1,12 @@
 {
   "project": "统计数据可视表平台 · 多智能体作战指挥台",
-  "v": 56,
+  "v": 81,
   "iteration": {
-    "lap": 1,
-    "version": "v0.1.0",
-    "tag": "v0.1.0",
-    "deployedAt": "2026-11-09T15:10:00+08:00",
-    "commit": "77b26b3"
+    "lap": 2,
+    "version": "v0.2.0-dev",
+    "tag": null,
+    "deployedAt": null,
+    "commit": null
   },
   "phases": [
     {
@@ -263,6 +263,48 @@
       "toolUses": 0,
       "status": "idle",
       "note": "浏览器端语义层 · Pages 落地页"
+    },
+    {
+      "id": "A16",
+      "name": "安全修复官",
+      "role": "secfix",
+      "avatar": "🩹",
+      "tasks": [
+        "T24"
+      ],
+      "tokens": 0,
+      "toolUses": 0,
+      "status": "idle",
+      "note": "DOMPurify 白名单渲染 · 门禁转绿"
+    },
+    {
+      "id": "A17",
+      "name": "数据工程师",
+      "role": "dataeng",
+      "avatar": "🐬",
+      "tasks": [
+        "T25",
+        "T26",
+        "T29"
+      ],
+      "tokens": 0,
+      "toolUses": 0,
+      "status": "idle",
+      "note": "预警服务端实时计算 · Doris 接入 · 导出端点"
+    },
+    {
+      "id": "A18",
+      "name": "大屏地图工程师",
+      "role": "screenmap",
+      "avatar": "🗺️",
+      "tasks": [
+        "T27",
+        "T28"
+      ],
+      "tokens": 0,
+      "toolUses": 0,
+      "status": "idle",
+      "note": "GeoJSON 省域地图 · 暗色大屏 · 导出前端按钮"
     }
   ],
   "tasks": [
@@ -444,9 +486,10 @@
         "T12",
         "T13"
       ],
-      "status": "pending",
-      "progress": 0,
-      "note": "v0.2 backlog：①修复5项安全发现(门禁转绿) ②Doris ③地图 ④大屏暗色 ⑤导出"
+      "status": "done",
+      "progress": 100,
+      "note": "v0.2 规划定稿:5项目录拆为8任务(T24-T31),波次并行执行",
+      "doneAt": 1794223838848
     },
     {
       "id": "T15",
@@ -456,9 +499,10 @@
       "depends": [
         "T14"
       ],
-      "status": "pending",
-      "progress": 0,
-      "note": "环进入第 2 圈迭代"
+      "status": "done",
+      "progress": 100,
+      "note": "第2圈需求池冻结:三契约先行(alerts/doris-compile/report)",
+      "doneAt": 1794223838906
     },
     {
       "id": "T16",
@@ -523,9 +567,9 @@
         "T18",
         "T19"
       ],
-      "status": "in_progress",
-      "progress": 15,
-      "note": "等待用户在授权页粘贴令牌"
+      "status": "done",
+      "progress": 100,
+      "note": "仓库已推送：https://github.com/topbat/statvista"
     },
     {
       "id": "T21",
@@ -535,9 +579,135 @@
       "depends": [
         "T20"
       ],
+      "status": "done",
+      "progress": 100,
+      "note": "公网入口：https://topbat.github.io/statvista/"
+    },
+    {
+      "id": "T22",
+      "phase": "P6",
+      "title": "工程化：package.json + CI/Release 双工作流 + 文档更新",
+      "agent": "发布工程师",
+      "depends": [
+        "T21"
+      ],
+      "status": "done",
+      "progress": 100,
+      "note": "工程化完成：CI/Release工作流+package清单+文档",
+      "doneAt": 1794223781762
+    },
+    {
+      "id": "T23",
+      "phase": "P6",
+      "title": "Release v0.1.1：tag+Release+demo.zip 资产+补 topics",
+      "agent": "总协调 + 用户",
+      "depends": [
+        "T22"
+      ],
       "status": "pending",
       "progress": 0,
-      "note": "docs/ 站点 · 构建约 1–3 分钟"
+      "note": "待用户在授权页一键同步"
+    },
+    {
+      "id": "T24",
+      "phase": "P4",
+      "title": "中危修复:DOMPurify 白名单渲染",
+      "agent": "安全修复官",
+      "depends": [
+        "T15"
+      ],
+      "status": "pending",
+      "progress": 0,
+      "note": "CSP 兜底项转正修复:全注入点白名单渲染"
+    },
+    {
+      "id": "T25",
+      "phase": "P2",
+      "title": "预警清单服务端实时计算",
+      "agent": "数据工程师",
+      "depends": [
+        "T15"
+      ],
+      "status": "pending",
+      "progress": 0,
+      "note": "前端预埋 PRESET_ALERTS → /api/v1/alerts 实时判定"
+    },
+    {
+      "id": "T26",
+      "phase": "P2",
+      "title": "Doris 接入:方言编译器+双执行后端",
+      "agent": "数据工程师",
+      "depends": [
+        "T15"
+      ],
+      "status": "pending",
+      "progress": 0,
+      "note": "DSL→Doris SQL 编译 · local/doris 双 Executor · compile 端点"
+    },
+    {
+      "id": "T27",
+      "phase": "P2",
+      "title": "GeoJSON 省域地图+下钻同协议",
+      "agent": "大屏地图工程师",
+      "depends": [
+        "T15"
+      ],
+      "status": "pending",
+      "progress": 0,
+      "note": "省域地图图元替代排名条形 · drill:nav 同事件同 URL 终态"
+    },
+    {
+      "id": "T28",
+      "phase": "P2",
+      "title": "暗色大屏:暗色主题+投屏适配",
+      "agent": "大屏地图工程师",
+      "depends": [
+        "T15"
+      ],
+      "status": "pending",
+      "progress": 0,
+      "note": "CSS 变量主题化 · ?theme=dark · 投屏参数与媒体查询"
+    },
+    {
+      "id": "T29",
+      "phase": "P2",
+      "title": "导出:报告导出+指标口径脚注",
+      "agent": "数据工程师 + 大屏地图工程师",
+      "depends": [
+        "T15"
+      ],
+      "status": "pending",
+      "progress": 0,
+      "note": "/api/v1/report 报告 HTML · 口径脚注表自动生成 · 前端导出按钮"
+    },
+    {
+      "id": "T30",
+      "phase": "P3",
+      "title": "v0.2 回归与联调:断言扩展+J2 旅程",
+      "agent": "测试工程师",
+      "depends": [
+        "T24",
+        "T25",
+        "T26",
+        "T27",
+        "T28",
+        "T29"
+      ],
+      "status": "pending",
+      "progress": 0,
+      "note": "tests.js 扩展新端点断言 · 全量回归 · J2 地图下钻旅程"
+    },
+    {
+      "id": "T31",
+      "phase": "P5",
+      "title": "v0.2.0 铸版与交付",
+      "agent": "总协调",
+      "depends": [
+        "T30"
+      ],
+      "status": "pending",
+      "progress": 0,
+      "note": "CHANGELOG · 截图 · git tag v0.2.0"
     }
   ],
   "gates": {
@@ -633,6 +803,292 @@
     }
   },
   "events": [
+    {
+      "t": "2026-11-09T11:31:48.247Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 5/65（dashboard/auth.html）"
+    },
+    {
+      "t": "2026-11-09T11:31:44.469Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "📂 收集交付文件 65 个"
+    },
+    {
+      "t": "2026-11-09T11:31:42.840Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "✅ 账号验证通过：topbat"
+    },
+    {
+      "t": "2026-11-09T11:31:42.305Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🔑 校验令牌与账号…"
+    },
+    {
+      "t": "2026-11-09T11:30:38.906Z",
+      "taskId": "T15",
+      "type": "status:done",
+      "note": "第2圈需求池冻结:三契约先行(alerts/doris-compile/report)",
+      "detail": {
+        "summary": "契约1预警: GET /api/v1/alerts(X-Role) 返回 items[province,region,metricCode,metricName,yoy,level,months],服务端按 ratio指标×省份实时判定(当月同比<0=warning,连续3月负=danger),RLS过滤;契约2编译: POST /api/v1/compile 返回 {sql,dialect,executor,cacheKey},DSL→Doris方言SQL,RLS编译期注入;契约3报告: GET /api/v1/report?dashboard=&asof=&role= 返回可打印HTML,自动带指标口径脚注表(编码/名称/单位/agg_type/compare_policy/公式)",
+        "files": [
+          {
+            "path": "docs/mvp/09-v0.2契约冻结.md",
+            "op": "A",
+            "plus": 120,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "契约",
+            "3"
+          ],
+          [
+            "RLS",
+            "编译期"
+          ],
+          [
+            "口径脚注",
+            "自动"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T11:30:38.848Z",
+      "taskId": "T14",
+      "type": "status:done",
+      "note": "v0.2 规划定稿:5项目录拆为8任务(T24-T31),波次并行执行",
+      "detail": {
+        "summary": "v0.2 生产化 backlog 冻结:①DOMPurify白名单+预警服务端实时计算 ②Doris方言编译器+双Executor ③GeoJSON省域地图 ④暗色大屏 ⑤报告导出+口径脚注;按文件所有权划波次防冲突",
+        "files": [],
+        "metrics": [
+          [
+            "目录项",
+            "5"
+          ],
+          [
+            "执行任务",
+            "8"
+          ],
+          [
+            "波次",
+            "4"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T11:29:41.762Z",
+      "taskId": "T22",
+      "type": "status:done",
+      "note": "工程化完成：CI/Release工作流+package清单+文档",
+      "detail": {
+        "summary": "ci.yml=Node18/20/22矩阵(语法+49断言+6组对账+零exec自检)；release.yml=tag触发(测试→打包体验站zip→gh release附资产)；README加CI徽章与真实体验链接；CHANGELOG补0.1.1条目",
+        "files": [
+          {
+            "path": ".github/workflows/ci.yml",
+            "op": "A",
+            "plus": 40,
+            "minus": 0
+          },
+          {
+            "path": ".github/workflows/release.yml",
+            "op": "A",
+            "plus": 41,
+            "minus": 0
+          },
+          {
+            "path": "package.json",
+            "op": "A",
+            "plus": 44,
+            "minus": 0
+          },
+          {
+            "path": "README.md",
+            "op": "M",
+            "plus": 6,
+            "minus": 3
+          },
+          {
+            "path": "CHANGELOG.md",
+            "op": "M",
+            "plus": 9,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "CI矩阵",
+            "3个Node版本"
+          ],
+          [
+            "触发",
+            "push/PR/tag"
+          ],
+          [
+            "本地自检",
+            "49/49+6/6"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T11:14:11.555Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🚀 发布完成！仓库与公网入口已生成"
+    },
+    {
+      "t": "2026-11-09T11:14:11.555Z",
+      "taskId": "T21",
+      "type": "status:done",
+      "note": "公网体验入口 https://topbat.github.io/statvista/（Pages 构建 1–3 分钟后生效）",
+      "detail": {
+        "summary": "Pages 源 = main 分支 /docs 目录；体验站 = /demo/；落地页含截图与入口",
+        "files": [],
+        "metrics": [
+          [
+            "入口",
+            "https://topbat.github.io/statvista/"
+          ],
+          [
+            "体验站",
+            "https://topbat.github.io/statvista/demo/"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T11:14:11.555Z",
+      "taskId": "T20",
+      "type": "status:done",
+      "note": "公开仓库已创建并推送：topbat/statvista",
+      "detail": {
+        "summary": "单次提交推送 61 个交付文件（28016 KB），main 分支 b99c8f4",
+        "files": [],
+        "metrics": [
+          [
+            "文件",
+            61
+          ],
+          [
+            "仓库",
+            "https://github.com/topbat/statvista"
+          ],
+          [
+            "提交",
+            "b99c8f4"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T11:14:11.553Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🌐 GitHub Pages 已启用（main /docs · 构建 1–3 分钟）"
+    },
+    {
+      "t": "2026-11-09T11:14:10.301Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🏷️ 简介/主页/20 个关键词已设置"
+    },
+    {
+      "t": "2026-11-09T11:14:09.281Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🌿 main → b99c8f4"
+    },
+    {
+      "t": "2026-11-09T11:14:07.856Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "📝 创建提交…"
+    },
+    {
+      "t": "2026-11-09T11:14:05.997Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🌳 构建目录树…"
+    },
+    {
+      "t": "2026-11-09T11:14:05.996Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 61/61（README.md）"
+    },
+    {
+      "t": "2026-11-09T11:14:05.217Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 60/61（mvp/web/style.css）"
+    },
+    {
+      "t": "2026-11-09T11:13:59.779Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 55/61（mvp/tools/gen-facts.js）"
+    },
+    {
+      "t": "2026-11-09T11:13:55.824Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 50/61（mvp/README.md）"
+    },
+    {
+      "t": "2026-11-09T11:13:51.491Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 45/61（mvp/data/dashboards.json）"
+    },
+    {
+      "t": "2026-11-09T11:13:41.963Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 40/61（docs/统计数据可视表平台设计方案-docu.docx）"
+    },
+    {
+      "t": "2026-11-09T11:13:34.569Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 35/61（docs/screenshots/cockpit.png）"
+    },
+    {
+      "t": "2026-11-09T11:13:30.768Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 30/61（docs/mvp/04-UI交互规范.md）"
+    },
+    {
+      "t": "2026-11-09T11:13:26.632Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 25/61（docs/figures/统计数据可视表平台设计方案-docu-09-html.png）"
+    },
+    {
+      "t": "2026-11-09T11:13:18.348Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 20/61（docs/figures/统计数据可视表平台设计方案-docu-04-html.png）"
+    },
+    {
+      "t": "2026-11-09T11:13:05.802Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 15/61（docs/demo/style.css）"
+    },
+    {
+      "t": "2026-11-09T11:13:00.573Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 10/61（docs/demo/data/dims.json）"
+    },
     {
       "t": "2026-11-09T11:12:56.065Z",
       "taskId": "GH",
@@ -1643,6 +2099,6 @@
       "note": "指挥中心 v2 上线：环形任务环 + SSE 推送"
     }
   ],
-  "now": "2026-11-09T11:12:51.900Z",
-  "uptimeSec": 2886
+  "now": "2026-11-09T11:31:44.470Z",
+  "uptimeSec": 9
 }

@@ -1,0 +1,40 @@
+{
+  "name": "statvista",
+  "version": "0.1.1",
+  "description": "指标先行的统计数据多维可视表平台：统一口径、多维下钻、联动分析与领导驾驶舱。",
+  "license": "Apache-2.0",
+  "private": true,
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "start": "node mvp/server/index.js",
+    "test": "node mvp/server/tests.js",
+    "smoke": "node mvp/server/smoke.js",
+    "test:demo": "node mvp/tools/test-demo-shim.node.js",
+    "dashboard": "node dashboard/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/topbat/statvista.git"
+  },
+  "keywords": [
+    "statistics",
+    "data-visualization",
+    "dashboard",
+    "bi",
+    "semantic-layer",
+    "metric-platform",
+    "drill-down",
+    "cross-filter",
+    "echarts",
+    "vanilla-js",
+    "nodejs",
+    "govtech",
+    "open-data",
+    "data-platform",
+    "cockpit",
+    "bigscreen",
+    "rls",
+    "row-level-security",
+    "china"
+  ]
+}

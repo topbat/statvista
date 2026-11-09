@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [18, 20, 22]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Syntax check
+        run: |
+          node --check mvp/server/index.js
+          node --check mvp/server/smoke.js
+          node --check mvp/server/tests.js
+          node --check mvp/web/app.js
+          node --check docs/demo/api-shim.js
+          node --check mvp/tools/test-demo-shim.node.js
+
+      - name: Unit & contract tests (49 assertions)
+        run: node mvp/server/tests.js
+
+      - name: Demo shim golden reconciliation (6 groups / 55 assertions)
+        run: node mvp/tools/test-demo-shim.node.js
+
+      - name: Security self-check (no shell exec in product code)
+        run: |
+          ! grep -rn "child_process\|execSync\|spawnSync" mvp/server mvp/tools docs/demo --include=*.js

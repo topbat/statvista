@@ -7,6 +7,12 @@
 
 ## [0.1.1] - 2026-11-09
 
+### Added
+
+- **CI/CD 流水线**：GitHub Actions 双工作流——`ci.yml`（Node 18/20/22 矩阵：语法检查 + 49 条契约测试 + 体验站 6 组黄金对账 + 产品代码零 shell-exec 自检）；`release.yml`（打 `v*` 标签自动跑测试 → 打包静态体验站 zip → 创建 GitHub Release 并附资产）。
+- **`package.json`**：项目清单与统一脚本（`npm start / test / smoke / test:demo / dashboard`），声明 Node ≥18 引擎要求。
+- **开源发布链路**：GitHub 公开仓库 + 中文简介 + 20 个关键词（topics）+ GitHub Pages 公网体验站（`/docs` 源）。
+
 ### Security
 
 - **静态资源路径穿越五重加固**（`mvp/server/index.js` serveStatic）：
