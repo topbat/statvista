@@ -36,4 +36,6 @@ jobs:
           gh release create "$GITHUB_REF_NAME" \
             --title "StatVista $GITHUB_REF_NAME" \
             --generate-notes \
-            statvista-demo-static-*.zip
+            statvista-demo-static-*.zip \
+          || { echo "release already exists — re-upload assets with --clobber";
+               gh release upload "$GITHUB_REF_NAME" --clobber statvista-demo-static-*.zip; }

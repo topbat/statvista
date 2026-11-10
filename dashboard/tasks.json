@@ -1,6 +1,6 @@
 {
   "project": "统计数据可视表平台 · 多智能体作战指挥台",
-  "v": 200,
+  "v": 225,
   "iteration": {
     "lap": 2,
     "version": "v0.2.0",
@@ -720,8 +720,8 @@
         "T30"
       ],
       "status": "in_progress",
-      "progress": 60,
-      "note": "本地铸版完成(798a89e, tag v0.2.0, 95/95)；待用户授权页点同步推送 GitHub",
+      "progress": 95,
+      "note": "README门面升级完成：LOGO+7截图+Roadmap，待用户同步",
       "doneAt": 1794229185433,
       "startedAt": 1794272045129
     }
@@ -795,6 +795,193 @@
     }
   },
   "events": [
+    {
+      "t": "2026-11-10T01:09:06.100Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 5/74（dashboard/auth.html）"
+    },
+    {
+      "t": "2026-11-10T01:09:03.104Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "📂 收集交付文件 74 个"
+    },
+    {
+      "t": "2026-11-10T01:09:02.018Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "✅ 账号验证通过：topbat"
+    },
+    {
+      "t": "2026-11-10T01:09:01.674Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🔑 校验令牌与账号…"
+    },
+    {
+      "t": "2026-11-10T01:07:51.240Z",
+      "taskId": "T31",
+      "type": "progress",
+      "note": "README门面升级完成：LOGO+7截图+Roadmap，待用户同步"
+    },
+    {
+      "t": "2026-11-10T00:56:34.952Z",
+      "taskId": "T23",
+      "type": "status:done",
+      "note": "CI/CD 触发：73 文件已推送（46f63d3），tag v0.2.0 已打上，Release 流水线启动",
+      "detail": {
+        "summary": "推主干触发 ci.yml（Node 18/20/22 矩阵测试）；打 tag 触发 release.yml（测试→打包体验站 zip→建 Release 附资产）；topics 20 个已补全",
+        "files": [
+          {
+            "path": ".github/workflows/ci.yml",
+            "op": "A",
+            "plus": 40,
+            "minus": 0
+          },
+          {
+            "path": ".github/workflows/release.yml",
+            "op": "A",
+            "plus": 40,
+            "minus": 0
+          },
+          {
+            "path": "package.json",
+            "op": "A",
+            "plus": 44,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "CI",
+            "Node 18/20/22"
+          ],
+          [
+            "Release",
+            "v0.2.0"
+          ],
+          [
+            "topics",
+            "20 个"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-10T00:56:34.951Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🚀 同步完成！Release 由 release.yml 流水线自动构建（跑测试→打包 zip→建 Release 附资产，约 1–2 分钟）"
+    },
+    {
+      "t": "2026-11-10T00:56:33.674Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🏷️ 打标签 v0.2.0 → 触发 release.yml 流水线…"
+    },
+    {
+      "t": "2026-11-10T00:56:33.290Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🏷️ 20 个关键词已通过专用端点设置"
+    },
+    {
+      "t": "2026-11-10T00:56:32.735Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🌿 main → 46f63d3"
+    },
+    {
+      "t": "2026-11-10T00:56:29.754Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🌳 构建目录树与提交…"
+    },
+    {
+      "t": "2026-11-10T00:56:29.749Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 73/73（README.md）"
+    },
+    {
+      "t": "2026-11-10T00:56:27.811Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 70/73（mvp/web/index.html）"
+    },
+    {
+      "t": "2026-11-10T00:56:21.762Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 65/73（mvp/tools/test-demo-shim.node.js）"
+    },
+    {
+      "t": "2026-11-10T00:56:18.118Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 60/73（mvp/server/index.js）"
+    },
+    {
+      "t": "2026-11-10T00:56:14.111Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 55/73（mvp/data/facts.json）"
+    },
+    {
+      "t": "2026-11-10T00:56:08.738Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 50/73（docs/统计数据可视表平台设计方案-docu.md）"
+    },
+    {
+      "t": "2026-11-10T00:55:57.162Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 45/73（docs/screenshots/theme-board.png）"
+    },
+    {
+      "t": "2026-11-10T00:55:50.902Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 40/73（docs/screenshots/dark-cockpit.png）"
+    },
+    {
+      "t": "2026-11-10T00:55:46.932Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 35/73（docs/mvp/07-安全扫描报告.md）"
+    },
+    {
+      "t": "2026-11-10T00:55:43.257Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 30/73（docs/mvp/02-数据字典与种子数据.md）"
+    },
+    {
+      "t": "2026-11-10T00:55:37.512Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 25/73（docs/figures/统计数据可视表平台设计方案-docu-07-infographic.png）"
+    },
+    {
+      "t": "2026-11-10T00:55:27.905Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 20/73（docs/figures/统计数据可视表平台设计方案-docu-02-plantuml.png）"
+    },
+    {
+      "t": "2026-11-10T00:55:20.999Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 15/73（docs/demo/data/roles.json）"
+    },
+    {
+      "t": "2026-11-10T00:55:17.439Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 10/73（docs/demo/app.js）"
+    },
     {
       "t": "2026-11-10T00:55:12.434Z",
       "taskId": "GH",
@@ -3685,6 +3872,6 @@
       "note": "指挥中心 v2 上线：环形任务环 + SSE 推送"
     }
   ],
-  "now": "2026-11-10T00:55:09.502Z",
-  "uptimeSec": 43624
+  "now": "2026-11-10T01:09:03.105Z",
+  "uptimeSec": 44451
 }

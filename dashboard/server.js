@@ -408,7 +408,7 @@ async function ghSync(token, repoName, tag) {
   const tree = await ghApi(token, rr(repo.owner.login) + '/git/trees', { method: 'POST', body: { base_tree: baseTree, tree: treeItems } });
   const commit = await ghApi(token, rr(repo.owner.login) + '/git/commits', {
     method: 'POST',
-    body: { message: 'release: v0.1.1 — CI/CD 双工作流、package.json 清单、README 徽章与体验链接、体验站（6/6 对账）', tree: tree.sha, parents: [baseCommit.sha] }
+    body: { message: 'release: ' + tag + ' — StatVista 全量同步（本地工作区快照，含最新 README/截图/资产）', tree: tree.sha, parents: [baseCommit.sha] }
   });
   await ghApi(token, rr(repo.owner.login) + '/git/refs/heads/' + branch, { method: 'PATCH', body: { sha: commit.sha, force: false } });
   ghStep('🌿 ' + branch + ' → ' + String(commit.sha).slice(0, 7), 78);

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="StatVista logo">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1D3A8A"/>
+      <stop offset="1" stop-color="#0A1E3F"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#2E7CD6"/>
+      <stop offset="1" stop-color="#63B3F5"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="120" height="120" rx="28" fill="url(#bg)"/>
+  <rect x="4" y="4" width="120" height="120" rx="28" fill="none" stroke="rgba(148,197,255,.35)" stroke-width="2"/>
+  <!-- 上升条形：三个蓝阶 + 一个金色高光（第 4 根为"异常/焦点"语义） -->
+  <rect x="28" y="74" width="15" height="26" rx="4" fill="url(#bar)" opacity=".62"/>
+  <rect x="49" y="62" width="15" height="38" rx="4" fill="url(#bar)" opacity=".78"/>
+  <rect x="70" y="48" width="15" height="52" rx="4" fill="url(#bar)"/>
+  <rect x="91" y="32" width="15" height="68" rx="4" fill="#F6CB7D"/>
+  <!-- 同比趋势弧线 + 顶点 -->
+  <path d="M 26 68 C 46 58, 66 42, 90 26" fill="none" stroke="#FFD98A" stroke-width="4.5" stroke-linecap="round" opacity=".95"/>
+  <circle cx="90" cy="26" r="5.5" fill="#FFD98A"/>
+  <!-- 底部基线 -->
+  <line x1="24" y1="102" x2="106" y2="102" stroke="rgba(233,242,252,.55)" stroke-width="2.5" stroke-linecap="round"/>
+</svg>
