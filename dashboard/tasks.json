@@ -1,6 +1,6 @@
 {
   "project": "统计数据可视表平台 · 多智能体作战指挥台",
-  "v": 171,
+  "v": 200,
   "iteration": {
     "lap": 2,
     "version": "v0.2.0",
@@ -606,7 +606,7 @@
       ],
       "status": "done",
       "progress": 100,
-      "note": "tag v0.1.1 已推送，Release 由流水线自动构建"
+      "note": "tag v0.2.0 已推送，Release 由流水线自动构建"
     },
     {
       "id": "T24",
@@ -706,8 +706,8 @@
         "T29"
       ],
       "status": "done",
-      "progress": 100,
-      "note": "95/95全绿+J2双旅程通过+3截图",
+      "progress": 95,
+      "note": "视觉终审3/3：市排名语义色bug已修（负增长才标红）",
       "startedAt": 1794227477269,
       "doneAt": 1794229211138
     },
@@ -719,10 +719,11 @@
       "depends": [
         "T30"
       ],
-      "status": "done",
-      "progress": 100,
-      "note": "v0.2.0 铸版完成:提交 459952f + tag v0.2.0",
-      "doneAt": 1794229185433
+      "status": "in_progress",
+      "progress": 60,
+      "note": "本地铸版完成(798a89e, tag v0.2.0, 95/95)；待用户授权页点同步推送 GitHub",
+      "doneAt": 1794229185433,
+      "startedAt": 1794272045129
     }
   ],
   "gates": {
@@ -777,19 +778,265 @@
       }
     },
     "perf": {
-      "label": "性能验证",
-      "ts": "2026-11-09T12:40:24.299Z",
       "status": "green",
-      "p50": 1,
-      "p95": 2.1,
-      "p99": 2.7,
-      "rps": 909.1,
-      "samples": 80,
-      "src": "T30 性能复测",
-      "note": "query热 P50=1.0 P95=2.1 P99=2.7 RPS=909.1 / alerts现算 P50=3.2 P95=4.4 P99=7.1 RPS=289.9 / compile P50=0.8 P95=1.3 P99=2.2 RPS=1212.1 各80样本 对3000实测 report豁免参考12.7ms"
+      "ts": "2026-11-10T00:51:03.204Z",
+      "src": "指挥台指令 · API 压测",
+      "label": "性能验证",
+      "p50": 1.5,
+      "p95": 2.5,
+      "p99": 4,
+      "cold": {
+        "p50": 2.4,
+        "p95": 19.6,
+        "p99": 22.4
+      },
+      "rps": 622,
+      "samples": 240
     }
   },
   "events": [
+    {
+      "t": "2026-11-10T00:55:12.434Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 5/73（dashboard/auth.html）"
+    },
+    {
+      "t": "2026-11-10T00:55:09.501Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "📂 收集交付文件 73 个"
+    },
+    {
+      "t": "2026-11-10T00:55:08.450Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "✅ 账号验证通过：topbat"
+    },
+    {
+      "t": "2026-11-10T00:55:08.079Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🔑 校验令牌与账号…"
+    },
+    {
+      "t": "2026-11-10T00:54:05.129Z",
+      "taskId": "T31",
+      "type": "status:in_progress",
+      "note": "本地铸版完成(798a89e, tag v0.2.0, 95/95)；待用户授权页点同步推送 GitHub"
+    },
+    {
+      "t": "2026-11-10T00:52:13.731Z",
+      "taskId": "T30",
+      "type": "progress",
+      "note": "视觉终审3/3：市排名语义色bug已修（负增长才标红）"
+    },
+    {
+      "t": "2026-11-10T00:51:45.949Z",
+      "taskId": "T23",
+      "type": "status:done",
+      "note": "CI/CD 触发：76 文件已推送（000bb6b），tag v0.2.0 已打上，Release 流水线启动",
+      "detail": {
+        "summary": "推主干触发 ci.yml（Node 18/20/22 矩阵测试）；打 tag 触发 release.yml（测试→打包体验站 zip→建 Release 附资产）；topics 20 个已补全",
+        "files": [
+          {
+            "path": ".github/workflows/ci.yml",
+            "op": "A",
+            "plus": 40,
+            "minus": 0
+          },
+          {
+            "path": ".github/workflows/release.yml",
+            "op": "A",
+            "plus": 40,
+            "minus": 0
+          },
+          {
+            "path": "package.json",
+            "op": "A",
+            "plus": 44,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "CI",
+            "Node 18/20/22"
+          ],
+          [
+            "Release",
+            "v0.2.0"
+          ],
+          [
+            "topics",
+            "20 个"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-10T00:51:45.944Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🚀 同步完成！Release 由 release.yml 流水线自动构建（跑测试→打包 zip→建 Release 附资产，约 1–2 分钟）"
+    },
+    {
+      "t": "2026-11-10T00:51:45.292Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🏷️ 打标签 v0.2.0 → 触发 release.yml 流水线…"
+    },
+    {
+      "t": "2026-11-10T00:51:44.944Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🏷️ 20 个关键词已通过专用端点设置"
+    },
+    {
+      "t": "2026-11-10T00:51:44.433Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🌿 main → 000bb6b"
+    },
+    {
+      "t": "2026-11-10T00:51:41.133Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🌳 构建目录树与提交…"
+    },
+    {
+      "t": "2026-11-10T00:51:41.129Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 76/76（README.md）"
+    },
+    {
+      "t": "2026-11-10T00:51:39.887Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 75/76（package.json）"
+    },
+    {
+      "t": "2026-11-10T00:51:35.492Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 70/76（mvp/web/assets/echarts.min.js）"
+    },
+    {
+      "t": "2026-11-10T00:51:28.827Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 65/76（mvp/server/smoke.js）"
+    },
+    {
+      "t": "2026-11-10T00:51:25.813Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 60/76（mvp/data/roles.json）"
+    },
+    {
+      "t": "2026-11-10T00:51:20.935Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 55/76（LICENSE）"
+    },
+    {
+      "t": "2026-11-10T00:51:09.619Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 50/76（docs/screenshots$n.png）"
+    },
+    {
+      "t": "2026-11-10T00:51:03.204Z",
+      "taskId": "SYS",
+      "type": "gate",
+      "note": "⚡ 性能门禁达成：热测 P95 2.5ms（P50 1.5 / P99 4 / 622 rps）",
+      "detail": {
+        "summary": "冷测（绕缓存）P95 19.6ms；热测（命中缓存）P95 2.5ms；共 240 样本",
+        "files": [],
+        "metrics": [
+          [
+            "热P50",
+            "1.5ms"
+          ],
+          [
+            "热P95",
+            "2.5ms"
+          ],
+          [
+            "热P99",
+            "4ms"
+          ],
+          [
+            "吞吐",
+            "622 rps"
+          ],
+          [
+            "冷P95",
+            "19.6ms"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-10T00:51:02.703Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 45/76（docs/screenshots/mission-control.png）"
+    },
+    {
+      "t": "2026-11-10T00:51:02.689Z",
+      "taskId": "SYS",
+      "type": "action",
+      "note": "⚡ 性能压测启动（冷 40 次 + 热 200 次）",
+      "detail": {
+        "summary": "对 /api/v1/query 真实施压：冷测轮换时间窗绕缓存，热测同一查询命中缓存",
+        "files": [],
+        "metrics": []
+      }
+    },
+    {
+      "t": "2026-11-10T00:50:54.984Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 40/76（docs/screenshots/dark-cockpit.png）"
+    },
+    {
+      "t": "2026-11-10T00:50:50.156Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 35/76（docs/mvp/07-安全扫描报告.md）"
+    },
+    {
+      "t": "2026-11-10T00:50:46.921Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 30/76（docs/mvp/02-数据字典与种子数据.md）"
+    },
+    {
+      "t": "2026-11-10T00:50:41.786Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 25/76（docs/figures/统计数据可视表平台设计方案-docu-07-infographic.png）"
+    },
+    {
+      "t": "2026-11-10T00:50:29.386Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 20/76（docs/figures/统计数据可视表平台设计方案-docu-02-plantuml.png）"
+    },
+    {
+      "t": "2026-11-10T00:50:22.356Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 15/76（docs/demo/data/roles.json）"
+    },
+    {
+      "t": "2026-11-10T00:50:17.677Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 10/76（docs/demo/app.js）"
+    },
     {
       "t": "2026-11-10T00:50:11.960Z",
       "taskId": "GH",
@@ -3438,6 +3685,6 @@
       "note": "指挥中心 v2 上线：环形任务环 + SSE 推送"
     }
   ],
-  "now": "2026-11-10T00:50:07.537Z",
-  "uptimeSec": 43315
+  "now": "2026-11-10T00:55:09.502Z",
+  "uptimeSec": 43624
 }
