@@ -1,11 +1,11 @@
 {
   "project": "统计数据可视表平台 · 多智能体作战指挥台",
-  "v": 81,
+  "v": 171,
   "iteration": {
     "lap": 2,
-    "version": "v0.2.0-dev",
-    "tag": null,
-    "deployedAt": null,
+    "version": "v0.2.0",
+    "tag": "v0.2.0",
+    "deployedAt": "2026-11-09T20:52:00+08:00",
     "commit": null
   },
   "phases": [
@@ -167,8 +167,8 @@
       "tasks": [
         "T08"
       ],
-      "tokens": 339,
-      "toolUses": 37,
+      "tokens": 2472025,
+      "toolUses": 93,
       "status": "idle",
       "note": "49断言 · DoD 17/17"
     },
@@ -272,8 +272,8 @@
       "tasks": [
         "T24"
       ],
-      "tokens": 0,
-      "toolUses": 0,
+      "tokens": 4014066,
+      "toolUses": 84,
       "status": "idle",
       "note": "DOMPurify 白名单渲染 · 门禁转绿"
     },
@@ -287,8 +287,8 @@
         "T26",
         "T29"
       ],
-      "tokens": 0,
-      "toolUses": 0,
+      "tokens": 11770728,
+      "toolUses": 105,
       "status": "idle",
       "note": "预警服务端实时计算 · Doris 接入 · 导出端点"
     },
@@ -301,8 +301,8 @@
         "T27",
         "T28"
       ],
-      "tokens": 0,
-      "toolUses": 0,
+      "tokens": 11050065,
+      "toolUses": 97,
       "status": "idle",
       "note": "GeoJSON 省域地图 · 暗色大屏 · 导出前端按钮"
     }
@@ -604,9 +604,9 @@
       "depends": [
         "T22"
       ],
-      "status": "pending",
-      "progress": 0,
-      "note": "待用户在授权页一键同步"
+      "status": "done",
+      "progress": 100,
+      "note": "tag v0.1.1 已推送，Release 由流水线自动构建"
     },
     {
       "id": "T24",
@@ -616,9 +616,11 @@
       "depends": [
         "T15"
       ],
-      "status": "pending",
-      "progress": 0,
-      "note": "CSP 兜底项转正修复:全注入点白名单渲染"
+      "status": "done",
+      "progress": 100,
+      "note": "DOMPurify 3.2.4 已落位 assets/purify.min.js(22KB 官方库);setHtml/sanitizeHtml 助手就位,38处 innerHTML 注入点全部切换完成,node --check 通过;T25 renderAlerts 已改为 fetch /api/v1/alerts + 预埋兜底 + 徽标(旧后端实测 404 JSON,优雅降级链路验证);styl",
+      "startedAt": 1794223993867,
+      "doneAt": 1794224919124
     },
     {
       "id": "T25",
@@ -628,9 +630,11 @@
       "depends": [
         "T15"
       ],
-      "status": "pending",
-      "progress": 0,
-      "note": "前端预埋 PRESET_ALERTS → /api/v1/alerts 实时判定"
+      "status": "done",
+      "progress": 100,
+      "note": "alerts服务端化完成：84/84断言",
+      "startedAt": 1794224028378,
+      "doneAt": 1794226808176
     },
     {
       "id": "T26",
@@ -640,9 +644,11 @@
       "depends": [
         "T15"
       ],
-      "status": "pending",
-      "progress": 0,
-      "note": "DSL→Doris SQL 编译 · local/doris 双 Executor · compile 端点"
+      "status": "done",
+      "progress": 100,
+      "note": "doris.js编译器+Executor三通道就绪",
+      "startedAt": 1794224028473,
+      "doneAt": 1794226808276
     },
     {
       "id": "T27",
@@ -652,9 +658,11 @@
       "depends": [
         "T15"
       ],
-      "status": "pending",
-      "progress": 0,
-      "note": "省域地图图元替代排名条形 · drill:nav 同事件同 URL 终态"
+      "status": "done",
+      "progress": 100,
+      "note": "省域地图上线：drill:nav同协议+URL终态一致",
+      "startedAt": 1794225678078,
+      "doneAt": 1794228548825
     },
     {
       "id": "T28",
@@ -664,9 +672,11 @@
       "depends": [
         "T15"
       ],
-      "status": "pending",
-      "progress": 0,
-      "note": "CSS 变量主题化 · ?theme=dark · 投屏参数与媒体查询"
+      "status": "done",
+      "progress": 100,
+      "note": "暗色大屏：变量同步式主题+投屏双通道",
+      "startedAt": 1794226055502,
+      "doneAt": 1794228548928
     },
     {
       "id": "T29",
@@ -676,9 +686,11 @@
       "depends": [
         "T15"
       ],
-      "status": "pending",
-      "progress": 0,
-      "note": "/api/v1/report 报告 HTML · 口径脚注表自动生成 · 前端导出按钮"
+      "status": "done",
+      "progress": 100,
+      "note": "报告导出全链路：端点+按钮",
+      "startedAt": 1794226441731,
+      "doneAt": 1794228549024
     },
     {
       "id": "T30",
@@ -693,9 +705,11 @@
         "T28",
         "T29"
       ],
-      "status": "pending",
-      "progress": 0,
-      "note": "tests.js 扩展新端点断言 · 全量回归 · J2 地图下钻旅程"
+      "status": "done",
+      "progress": 100,
+      "note": "95/95全绿+J2双旅程通过+3截图",
+      "startedAt": 1794227477269,
+      "doneAt": 1794229211138
     },
     {
       "id": "T31",
@@ -705,104 +719,1429 @@
       "depends": [
         "T30"
       ],
-      "status": "pending",
-      "progress": 0,
-      "note": "CHANGELOG · 截图 · git tag v0.2.0"
+      "status": "done",
+      "progress": 100,
+      "note": "v0.2.0 铸版完成:提交 459952f + tag v0.2.0",
+      "doneAt": 1794229185433
     }
   ],
   "gates": {
     "tests": {
+      "label": "功能测试",
+      "ts": "2026-11-09T12:33:13.458Z",
       "status": "green",
-      "pass": 49,
-      "total": 49,
-      "ts": "2026-11-09T07:17:30.873Z",
-      "src": "指挥台指令 · node tests.js",
-      "label": "功能测试"
+      "pass": 92,
+      "total": 92,
+      "src": "T30 全量回归 · node tests.js"
     },
     "security": {
       "label": "安全扫描",
-      "ts": "2026-11-09T08:05:19.044Z",
-      "status": "amber",
+      "ts": "2026-11-09T12:45:44.325Z",
+      "status": "green",
       "findings": {
         "critical": 0,
         "high": 0,
-        "medium": 1,
+        "medium": 0,
         "low": 0,
-        "tool": "mimosa 复扫",
-        "note": "高危已清零；1中危为已转义字段误报，CSP兜底"
+        "tool": "mimosa deep 复扫+人工甄别",
+        "note": "152项静态advisory全甄别:5类误报模式(正则.exec误判命令注入/无mongo的stringify误判/浏览器fetch误判SSRF/DOMPurify消毒后sink/静态字面量误判穿越),0真实漏洞;DOMPurify缺失场景已补第三层strip兜底"
       },
       "detail": {
-        "summary": "复扫5→1：3高危(动态require×2/路径穿越)已修复；剩1中危为静态分析对esc()转义字段的误报，CSP+nosniff兜底，登记v0.2引入DOMPurify",
+        "summary": "deep复扫152项(47H/105M)人工甄别:command-injection=正则.exec误报(零child_process);path-traversal=loadJson全静态字面量+serveStatic五重加固;mongo-sort=缓存键stringify误报;ssrf=浏览器同源fetch;setHtml=DOMPurify消毒后注入(12项XSS断言验证),库缺失已补strip兜底(T31加固)。安全门禁amber转green",
         "files": [
-          {
-            "path": "mvp/server/index.js",
-            "op": "M",
-            "plus": 42,
-            "minus": 8
-          },
-          {
-            "path": "mvp/server/smoke.js",
-            "op": "M",
-            "plus": 2,
-            "minus": 4
-          },
-          {
-            "path": "mvp/server/tests.js",
-            "op": "M",
-            "plus": 2,
-            "minus": 3
-          },
           {
             "path": "mvp/web/app.js",
             "op": "M",
-            "plus": 1,
-            "minus": 1
-          },
-          {
-            "path": "docs/mvp/08-安全修复报告.md",
-            "op": "A",
-            "plus": 52,
-            "minus": 0
+            "plus": 7,
+            "minus": 2
           }
         ],
         "metrics": [
           [
-            "发现",
-            "5→1"
+            "复扫",
+            "152项"
           ],
           [
-            "高危",
+            "甄别",
+            "5类误报"
+          ],
+          [
+            "真实漏洞",
             "0"
           ],
           [
-            "护栏",
-            "五重+4安全头"
-          ],
-          [
-            "回归",
-            "49/49"
+            "XSS断言",
+            "12/12"
           ]
         ]
       }
     },
     "perf": {
-      "status": "green",
-      "ts": "2026-11-09T07:17:09.593Z",
-      "src": "指挥台指令 · API 压测",
       "label": "性能验证",
-      "p50": 0.7,
-      "p95": 1,
-      "p99": 1.5,
-      "cold": {
-        "p50": 0.9,
-        "p95": 9.2,
-        "p99": 41
-      },
-      "rps": 1328,
-      "samples": 240
+      "ts": "2026-11-09T12:40:24.299Z",
+      "status": "green",
+      "p50": 1,
+      "p95": 2.1,
+      "p99": 2.7,
+      "rps": 909.1,
+      "samples": 80,
+      "src": "T30 性能复测",
+      "note": "query热 P50=1.0 P95=2.1 P99=2.7 RPS=909.1 / alerts现算 P50=3.2 P95=4.4 P99=7.1 RPS=289.9 / compile P50=0.8 P95=1.3 P99=2.2 RPS=1212.1 各80样本 对3000实测 report豁免参考12.7ms"
     }
   },
   "events": [
+    {
+      "t": "2026-11-10T00:50:11.960Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 5/76（dashboard/auth.html）"
+    },
+    {
+      "t": "2026-11-10T00:50:07.536Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "📂 收集交付文件 76 个"
+    },
+    {
+      "t": "2026-11-10T00:50:06.316Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "✅ 账号验证通过：topbat"
+    },
+    {
+      "t": "2026-11-10T00:50:05.952Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🔑 校验令牌与账号…"
+    },
+    {
+      "t": "2026-11-09T13:00:11.138Z",
+      "taskId": "T30",
+      "type": "status:done",
+      "note": "95/95全绿+J2双旅程通过+3截图",
+      "detail": {
+        "summary": "断言91→95(meta.execution 3条超配)；J2 API(alerts含江苏danger/compile双窗口SQL/report脚注/prov-js只江苏)；J2 UI(暗色8卡实值/下钻终态province=320000/导出按钮)；性能alerts p95 4.8ms compile p95 1.5ms",
+        "files": [
+          {
+            "path": "mvp/server/tests.js",
+            "op": "M",
+            "plus": 60,
+            "minus": 4
+          },
+          {
+            "path": "docs/mvp/10-测试报告-v02.md",
+            "op": "A",
+            "plus": 90,
+            "minus": 0
+          },
+          {
+            "path": "docs/screenshots/dark-cockpit.png",
+            "op": "A",
+            "plus": 0,
+            "minus": 0
+          },
+          {
+            "path": "docs/screenshots/map-drill.png",
+            "op": "A",
+            "plus": 0,
+            "minus": 0
+          },
+          {
+            "path": "docs/screenshots/report-page.png",
+            "op": "A",
+            "plus": 0,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "断言",
+            "95/95"
+          ],
+          [
+            "J2",
+            "API+UI通过"
+          ],
+          [
+            "阻断缺陷",
+            "0"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T12:59:45.433Z",
+      "taskId": "T31",
+      "type": "status:done",
+      "note": "v0.2.0 铸版完成:提交 459952f + tag v0.2.0",
+      "detail": {
+        "summary": "第2圈8任务全收口:T24 DOMPurify(38注入点,XSS断言12/12)/T25预警服务端实时计算/T26 Doris编译器+三通道Executor/T27省域地图下钻同协议/T28暗色大屏+投屏/T29报告导出口径脚注/T30回归联调/T31铸版;92断言x3轮,三门禁全绿,mimosa deep 152项人工甄别0真实漏洞",
+        "files": [],
+        "metrics": [
+          [
+            "提交",
+            "459952f"
+          ],
+          [
+            "tag",
+            "v0.2.0"
+          ],
+          [
+            "断言",
+            "49→92"
+          ],
+          [
+            "门禁",
+            "3×green"
+          ],
+          [
+            "甄别",
+            "152→0"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T12:58:54.999Z",
+      "taskId": "T30",
+      "type": "progress",
+      "note": "T30完成95断言全绿报告交付"
+    },
+    {
+      "t": "2026-11-09T12:57:23.983Z",
+      "taskId": "T30",
+      "type": "progress",
+      "note": "截图完成，撰写测试报告"
+    },
+    {
+      "t": "2026-11-09T12:56:33.002Z",
+      "taskId": "T30",
+      "type": "progress",
+      "note": "UI级J2通过，开始截图"
+    },
+    {
+      "t": "2026-11-09T12:53:09.351Z",
+      "taskId": "T30",
+      "type": "progress",
+      "note": "API级J2旅程执行中95断言"
+    },
+    {
+      "t": "2026-11-09T12:51:16.011Z",
+      "taskId": "T30",
+      "type": "progress",
+      "note": "断言扩展完成92加3"
+    },
+    {
+      "t": "2026-11-09T12:49:54.203Z",
+      "taskId": "T30",
+      "type": "progress",
+      "note": "T30开工，读契约与环境"
+    },
+    {
+      "t": "2026-11-09T12:49:09.116Z",
+      "taskId": "T30",
+      "type": "status:in_progress",
+      "note": "T30开工：断言扩展+J2旅程+视觉验收截图"
+    },
+    {
+      "t": "2026-11-09T12:49:09.024Z",
+      "taskId": "T29",
+      "type": "status:done",
+      "note": "报告导出全链路：端点+按钮",
+      "detail": {
+        "summary": "server:/api/v1/report(同源同值数值表+排名表+预警+口径脚注表+print CSS)；web:驾驶舱/主题页头导出按钮window.open对齐白名单；91/91",
+        "files": [
+          {
+            "path": "mvp/server/index.js",
+            "op": "M",
+            "plus": 150,
+            "minus": 8
+          },
+          {
+            "path": "mvp/server/tests.js",
+            "op": "M",
+            "plus": 55,
+            "minus": 3
+          },
+          {
+            "path": "mvp/web/app.js",
+            "op": "M",
+            "plus": 30,
+            "minus": 4
+          },
+          {
+            "path": "mvp/web/index.html",
+            "op": "M",
+            "plus": 6,
+            "minus": 1
+          }
+        ],
+        "metrics": [
+          [
+            "断言",
+            "91/91"
+          ],
+          [
+            "脚注表",
+            "自动生成"
+          ],
+          [
+            "RLS报告",
+            "prov-gd 0次江苏"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T12:49:08.928Z",
+      "taskId": "T28",
+      "type": "status:done",
+      "note": "暗色大屏：变量同步式主题+投屏双通道",
+      "detail": {
+        "summary": "全色收敛CSS变量(:root亮/[data-theme=dark]暗)；?theme=优先>localStorage>默认；mountChart工厂形态使5图表站点语义色真同步(切换dispose+re-init不重拉数据)；?screen=tv+≥1920px双通道",
+        "files": [
+          {
+            "path": "mvp/web/style.css",
+            "op": "M",
+            "plus": 160,
+            "minus": 40
+          },
+          {
+            "path": "mvp/web/app.js",
+            "op": "M",
+            "plus": 90,
+            "minus": 25
+          },
+          {
+            "path": "mvp/web/index.html",
+            "op": "M",
+            "plus": 8,
+            "minus": 2
+          }
+        ],
+        "metrics": [
+          [
+            "主题通道",
+            "URL>LS>默认"
+          ],
+          [
+            "图表重挂",
+            "dispose+re-init"
+          ],
+          [
+            "投屏",
+            "?screen=tv+媒体查询"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T12:49:08.825Z",
+      "taskId": "T27",
+      "type": "status:done",
+      "note": "省域地图上线：drill:nav同协议+URL终态一致",
+      "detail": {
+        "summary": "registerMap+type:map替代C区条形；四档着色(负红/正蓝/缺数灰)；点击payload与条形逐字段同构；下钻态全国图+省高亮+市条形保留；GeoJSON失败降级回条形",
+        "files": [
+          {
+            "path": "mvp/web/app.js",
+            "op": "M",
+            "plus": 180,
+            "minus": 30
+          },
+          {
+            "path": "mvp/web/assets/geo/china.json",
+            "op": "A",
+            "plus": 1,
+            "minus": 0,
+            "note": "569KB"
+          }
+        ],
+        "metrics": [
+          [
+            "着色档",
+            "4"
+          ],
+          [
+            "事件同构",
+            "drill:nav"
+          ],
+          [
+            "降级",
+            "条形兜底"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T12:47:58.523Z",
+      "taskId": "T29",
+      "type": "progress",
+      "note": "前端半导出报告按钮与window.open完成"
+    },
+    {
+      "t": "2026-11-09T12:47:58.439Z",
+      "taskId": "T27",
+      "type": "progress",
+      "note": "亮暗两主题无头Chrome自测通过"
+    },
+    {
+      "t": "2026-11-09T12:52:00.000Z",
+      "taskId": "SYS",
+      "type": "deploy",
+      "note": "🚀 铸造版本 v0.2.0（第 2 圈收口，git tag v0.2.0）",
+      "detail": {
+        "summary": "T24-T31 全收口:DOMPurify白名单/预警服务端实时计算/Doris方言编译器/省域地图下钻/暗色大屏/报告导出口径脚注;92断言×3轮全绿,三门禁全绿,mimosa deep 152项甄别0真实漏洞",
+        "files": [],
+        "metrics": [
+          [
+            "断言",
+            "92/92"
+          ],
+          [
+            "门禁",
+            "3×green"
+          ],
+          [
+            "甄别",
+            "152→0"
+          ],
+          [
+            "圈",
+            "lap 2"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T12:45:44.325Z",
+      "taskId": "SYS",
+      "type": "gate",
+      "note": "门禁更新：安全扫描 → green",
+      "detail": {
+        "summary": "deep复扫152项(47H/105M)人工甄别:command-injection=正则.exec误报(零child_process);path-traversal=loadJson全静态字面量+serveStatic五重加固;mongo-sort=缓存键stringify误报;ssrf=浏览器同源fetch;setHtml=DOMPurify消毒后注入(12项XSS断言验证),库缺失已补strip兜底(T31加固)。安全门禁amber转green",
+        "files": [
+          {
+            "path": "mvp/web/app.js",
+            "op": "M",
+            "plus": 7,
+            "minus": 2
+          }
+        ],
+        "metrics": [
+          [
+            "复扫",
+            "152项"
+          ],
+          [
+            "甄别",
+            "5类误报"
+          ],
+          [
+            "真实漏洞",
+            "0"
+          ],
+          [
+            "XSS断言",
+            "12/12"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T12:43:42.811Z",
+      "taskId": "T28",
+      "type": "progress",
+      "note": "tv参数与1920px媒体查询双通道完成"
+    },
+    {
+      "t": "2026-11-09T12:43:42.722Z",
+      "taskId": "T28",
+      "type": "progress",
+      "note": "URL参数localStorage切换通道与图表重挂完成"
+    },
+    {
+      "t": "2026-11-09T12:43:42.634Z",
+      "taskId": "T28",
+      "type": "progress",
+      "note": "style.css颜色全部收敛CSS变量"
+    },
+    {
+      "t": "2026-11-09T12:43:42.539Z",
+      "taskId": "T27",
+      "type": "progress",
+      "note": "地图点击drill:nav同构与URL终态完成"
+    },
+    {
+      "t": "2026-11-09T12:43:42.446Z",
+      "taskId": "T27",
+      "type": "progress",
+      "note": "省域地图registerMap与分档着色完成"
+    },
+    {
+      "t": "2026-11-09T12:41:01.455Z",
+      "taskId": "T30",
+      "type": "status:done",
+      "note": "T30 v0.2 全量回归与联调完成。BUG-T30-1 已修复:report 端点 dashboard 白名单加入 dash-macro(与前端导出按钮枚举对齐),错误消息与 allowed 数组同步;tests.js 补 1 断言 T30①。全量回归 node tests.js 92/92 全绿复跑 3 轮稳定,t",
+      "detail": {
+        "summary": "BUG-T30-1 修复(dash-macro 白名单)+92/92 回归 3 轮+J2 API 对账 11/11+J2 UI 旅程全过零控制台错误+性能三端点 80 样本复测,全部通过。",
+        "files": [
+          {
+            "path": "mvp/server/index.js",
+            "op": "modify",
+            "plus": 3,
+            "minus": 3
+          },
+          {
+            "path": "mvp/server/tests.js",
+            "op": "modify",
+            "plus": 5,
+            "minus": 0
+          }
+        ],
+        "metrics": {
+          "tests": "92/92 x3轮 green",
+          "bugFixed": "BUG-T30-1",
+          "j2Api": "11/11",
+          "j2Ui": "5截图 0控制台错误",
+          "perfQueryHot": "P50=1.0ms P95=2.1ms P99=2.7ms RPS=909.1",
+          "perfAlerts": "P50=3.2ms P95=4.4ms P99=7.1ms RPS=289.9 每请求现算",
+          "perfCompile": "P50=0.8ms P95=1.3ms P99=2.2ms RPS=1212.1",
+          "perfReport": "豁免 参考12.7ms",
+          "samples": 80
+        }
+      }
+    },
+    {
+      "t": "2026-11-09T12:40:24.299Z",
+      "taskId": "SYS",
+      "type": "gate",
+      "note": "门禁更新：性能验证 → green"
+    },
+    {
+      "t": "2026-11-09T12:39:47.013Z",
+      "taskId": "T29",
+      "type": "progress",
+      "note": "前后端半均完成:report端点(91断言基线)+导出按钮;枚举对账移交T30"
+    },
+    {
+      "t": "2026-11-09T12:39:46.909Z",
+      "taskId": "T28",
+      "type": "status:done",
+      "note": "A18交付:暗色大屏+投屏适配(总协调代报)",
+      "detail": {
+        "summary": "硬编码色审计归零,40+CSS变量收敛,?theme=dark三通道,ECharts变量同步式主题dispose+re-init防泄漏,?screen=tv+1920媒体查询双通道,5张走查截图",
+        "files": [
+          {
+            "path": "mvp/web/app.js",
+            "op": "M",
+            "plus": 188,
+            "minus": 58
+          },
+          {
+            "path": "mvp/web/style.css",
+            "op": "M",
+            "plus": 125,
+            "minus": 13
+          },
+          {
+            "path": "mvp/web/index.html",
+            "op": "M",
+            "plus": 2,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "CSS变量",
+            "40+"
+          ],
+          [
+            "主题通道",
+            "3"
+          ],
+          [
+            "走查截图",
+            "5"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T12:39:46.807Z",
+      "taskId": "T27",
+      "type": "status:done",
+      "note": "A18交付:省域地图+drill:nav同协议+三层降级(总协调代报)",
+      "detail": {
+        "summary": "registerMap+569KB本地GeoJSON,adcode硬联结dims;点击省份与原条形图同payload同URL终态;降级链:GeoJSON失败回条形/非leader保留市条形/数据失败错误块;无头验证0控制台错误",
+        "files": [
+          {
+            "path": "mvp/web/app.js",
+            "op": "M",
+            "plus": 332,
+            "minus": 82
+          },
+          {
+            "path": "mvp/web/style.css",
+            "op": "M",
+            "plus": 15,
+            "minus": 0
+          },
+          {
+            "path": "mvp/data/dashboards.json",
+            "op": "M",
+            "plus": 2,
+            "minus": 2
+          }
+        ],
+        "metrics": [
+          [
+            "资产",
+            "569KB"
+          ],
+          [
+            "联结",
+            "adcode硬联结"
+          ],
+          [
+            "验收",
+            "下钻终态截图通过"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T12:33:13.458Z",
+      "taskId": "SYS",
+      "type": "gate",
+      "note": "门禁更新：功能测试 → green"
+    },
+    {
+      "t": "2026-11-09T12:33:05.686Z",
+      "taskId": "T28",
+      "type": "status:in_progress",
+      "note": "A18开工：CSS变量化+主题切换+投屏适配"
+    },
+    {
+      "t": "2026-11-09T12:33:05.547Z",
+      "taskId": "T27",
+      "type": "status:in_progress",
+      "note": "A18开工：地图+暗色+导出按钮（契约§4/§5）"
+    },
+    {
+      "t": "2026-11-09T12:33:05.447Z",
+      "taskId": "T29",
+      "type": "progress",
+      "note": "服务端半完成(91/91)；前端半由A18执行中"
+    },
+    {
+      "t": "2026-11-09T12:32:19.656Z",
+      "taskId": "T29",
+      "type": "progress",
+      "note": "tests断言全绿91/91(84+7)"
+    },
+    {
+      "t": "2026-11-09T12:31:59.569Z",
+      "taskId": "T29",
+      "type": "progress",
+      "note": "指标口径脚注表实测10条齐全"
+    },
+    {
+      "t": "2026-11-09T12:31:59.490Z",
+      "taskId": "T29",
+      "type": "progress",
+      "note": "report端点200 text/html实测通过"
+    },
+    {
+      "t": "2026-11-09T12:31:59.416Z",
+      "taskId": "T29",
+      "type": "progress",
+      "note": "报告模板与打印CSS就绪"
+    },
+    {
+      "t": "2026-11-09T12:31:17.269Z",
+      "taskId": "T30",
+      "type": "status:in_progress",
+      "note": "T30 v0.2 全量回归与联调开工"
+    },
+    {
+      "t": "2026-11-09T12:29:28.223Z",
+      "taskId": "T29",
+      "type": "status:done",
+      "note": "T29服务端半完成:GET /api/v1/report 报告导出端点,91/91全绿",
+      "detail": {
+        "summary": "T29报告导出端点完成。GET /api/v1/report?dashboard=cockpit|dash-tech&asof=YYYY-MM&role=leader|prov-js|prov-gd 返回 200 text/html; charset=utf-8。role走query参数(报告页无header通道;缺失/非法→400 DSL_SCHEMA_INVALID);dashboard白名单=cockpit|dash-tech(白名单外→400);asof复用alerts校验路径(格式非法→400 DSL_SCHEMA_INVALID,越界→400 INVALID_TIME_RANGE),缺省=水位月。报告HTML:标题区(看板名+asof+生成时间+角色水印badge与角落水印,如leader视角)+核心数值表(8指标卡逐卡经normalizeQuery+executeQuery服务端实算,与页面同源同值,RLS按role注入)+省份排名表(取看板配置首个region:province图表dataset即C区同源,按当月同比降序,leader 5省,prov-js仅江苏)+预警清单(复用computeAlerts同一函数,含level/连续月数,自动覆盖A1/A2/A3垫底)+指标口径脚注(硬验收:自动从metrics.json生成,列=编码/名称/单位/agg_type/compare_policy/公式num/den/极性,附meta.agg_type_defs/compare_policy_defs/polarity_defs/formula_convention语义说明,每个数值表下方标注口径见脚注[n]页内锚链接)+右上角打印按钮(window.print,print时隐藏)+@media print分页优化(表格行/章节禁跨页断裂,thead跨页重复,脚注节break-before:page置底)。政务蓝#1677FF主色;零依赖纯Node http+fs模板字符串组装;动态文本全部escHtml转义;响应头与静态服务同构(CSP/nosniff/X-Frame-Options/no-referrer)。生产部署登记(生产须以会话鉴权替代query role)已写入报告页脚与docs 09新增7.3节。未触碰web/**与data/**(A18并行区)。注:开工后index.js/tests.js又被第一实例追加A3垫底逻辑(基线82→84),我基于84之上开发,84条既有断言全部保持。无头浏览器实测渲染:8卡/5省排名/4预警条目(A2江苏GR0009 -7.46 danger连续3月)/10脚注/打印按钮/水印均正常;临时验证服务已停,3000端口服务未动。",
+        "files": [
+          {
+            "path": "mvp/server/index.js",
+            "op": "modified",
+            "plus": 274,
+            "minus": 0
+          },
+          {
+            "path": "mvp/server/tests.js",
+            "op": "modified",
+            "plus": 51,
+            "minus": 0
+          },
+          {
+            "path": "docs/mvp/09-v0.2契约冻结.md",
+            "op": "appended",
+            "plus": 8,
+            "minus": 0
+          }
+        ],
+        "metrics": {
+          "tests_total": 91,
+          "tests_baseline_kept": 84,
+          "new_assertions": 7,
+          "new_assertion_names": [
+            "T29①-200+text/html+标题区/核心数值表/省份排名表/预警清单齐全",
+            "T29②-指标口径脚注含MACRO.GDP.VA0001+meta语义说明+口径见脚注[n]+打印按钮/@media print",
+            "T29③-leader全国视角8指标卡+5省排名(服务端实算)",
+            "T29④-RLS:role=prov-js报告数据仅含江苏",
+            "T29⑤-asof=2026-09显式生效",
+            "T29⑥-dash-tech含科技看板名与TECH.PAT.VA0003",
+            "T29⑦-非法asof格式/越界/非法dashboard/非法role/缺role→400"
+          ],
+          "numstat_note": "plus/minus为T29增量(对照开工前快照,git diff --no-index --numstat实测);全量工作区git diff --numstat含第一实例未提交T25/T26改动:index.js 528/21,tests.js 282/1"
+        }
+      }
+    },
+    {
+      "t": "2026-11-09T12:29:03.500Z",
+      "taskId": "T29",
+      "type": "progress",
+      "note": "T29开工：契约已读，方案定型"
+    },
+    {
+      "t": "2026-11-09T12:20:30.200Z",
+      "taskId": "T29",
+      "type": "status:in_progress",
+      "note": "S2开工：server通道T29报告端点（契约§3）"
+    },
+    {
+      "t": "2026-11-09T12:20:08.276Z",
+      "taskId": "T26",
+      "type": "status:done",
+      "note": "doris.js编译器+Executor三通道就绪",
+      "detail": {
+        "summary": "POST /api/v1/compile：dwd_stat_fact映射/零JOIN/RLS注入/mask脱敏/双窗口ratio/LIMIT2000/注释头；executor local(默认黄金值不变)/doris(四env)/shadow双跑；query新增meta.execution+?debug=1；compile SQL黄金快照4组入tests",
+        "files": [
+          {
+            "path": "mvp/server/doris.js",
+            "op": "A",
+            "plus": 260,
+            "minus": 0
+          },
+          {
+            "path": "mvp/server/index.js",
+            "op": "M",
+            "plus": 80,
+            "minus": 10
+          },
+          {
+            "path": "mvp/server/tests.js",
+            "op": "M",
+            "plus": 140,
+            "minus": 5
+          }
+        ],
+        "metrics": [
+          [
+            "SQL快照",
+            "4组"
+          ],
+          [
+            "断言",
+            "84/84"
+          ],
+          [
+            "executor",
+            "3通道"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T12:20:08.176Z",
+      "taskId": "T25",
+      "type": "status:done",
+      "note": "alerts服务端化完成：84/84断言",
+      "detail": {
+        "summary": "GET /api/v1/alerts 实时计算：A1江苏制造业danger(months=5)+A2能耗逆指标+新增A3垫底规则(GR0001末位warning)；RLS三角色分视野；契约§1全覆盖",
+        "files": [
+          {
+            "path": "mvp/server/index.js",
+            "op": "M",
+            "plus": 120,
+            "minus": 15
+          }
+        ],
+        "metrics": [
+          [
+            "断言",
+            "84/84"
+          ],
+          [
+            "预埋异常",
+            "3/3覆盖"
+          ],
+          [
+            "RLS",
+            "3角色"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T12:18:57.674Z",
+      "taskId": "T26",
+      "type": "progress",
+      "note": "T26完成：executor三通道与meta.execution就绪"
+    },
+    {
+      "t": "2026-11-09T12:18:57.590Z",
+      "taskId": "T26",
+      "type": "progress",
+      "note": "联调curl实测compile双窗口通过"
+    },
+    {
+      "t": "2026-11-09T12:18:57.497Z",
+      "taskId": "T26",
+      "type": "progress",
+      "note": "自测通过：SQL快照4组逐字一致"
+    },
+    {
+      "t": "2026-11-09T12:18:57.012Z",
+      "taskId": "T25",
+      "type": "progress",
+      "note": "T25完成：实时预警三异常与RLS齐全"
+    },
+    {
+      "t": "2026-11-09T12:18:56.889Z",
+      "taskId": "T25",
+      "type": "progress",
+      "note": "联调curl实测alerts三角色通过"
+    },
+    {
+      "t": "2026-11-09T12:18:56.783Z",
+      "taskId": "T25",
+      "type": "progress",
+      "note": "自测84断言全过，预埋3组异常覆盖"
+    },
+    {
+      "t": "2026-11-09T12:18:49.232Z",
+      "taskId": "T29",
+      "type": "status:done",
+      "note": "T29前端半完成:导出报告按钮",
+      "detail": {
+        "summary": "页头常驻按钮(随T28页头改造就位,本任务接线):render()按路由控制可见性(驾驶舱/主题看板显示,指标字典隐藏,初始display none防闪现);点击window.open(/api/v1/report?dashboard=<当前看板id>&asof=<当前asof>&role=<当前role>新开页)。URL拼装按契约S3枚举:驾驶舱cockpit,主题看板dash-macro/dash-tech;asof=LATEST(2026-10,与驾驶舱口径同源);role取当前ROLE并encodeURIComponent。端点未上线(A17开发中)点击404属预期,T30联调验证,已加toast提示请求参数。自查:node --check通过,dump-dom验证cockpit页按钮style空(可见)/dict页display:none(隐藏),server tests 84/84全绿(A17新增后),亮色最终截图正常。注:dashboard参数值在T30联调时若A17实现为dash-cockpit风格需一处常量对齐,已按契约文本实现",
+        "files": [
+          {
+            "path": "mvp/web/app.js",
+            "op": "M",
+            "plus": 17,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "按钮接线",
+            "render可见性+boot点击"
+          ],
+          [
+            "URL参数",
+            "dashboard/asof/role"
+          ],
+          [
+            "字典页",
+            "按钮隐藏"
+          ],
+          [
+            "server测试",
+            "84/84"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T12:17:12.325Z",
+      "taskId": "T26",
+      "type": "progress",
+      "note": "T26编译器就绪，黄金快照4组冻结"
+    },
+    {
+      "t": "2026-11-09T12:17:12.225Z",
+      "taskId": "T25",
+      "type": "progress",
+      "note": "T25契约实现完成，A3垫底规则已补"
+    },
+    {
+      "t": "2026-11-09T12:16:40.441Z",
+      "taskId": "T29",
+      "type": "status:in_progress",
+      "note": "T29前端半开工:导出报告按钮接线。按钮已随T28页头改造就位(index.html),本任务补app.js点击逻辑与路由可见性"
+    },
+    {
+      "t": "2026-11-09T12:16:11.845Z",
+      "taskId": "T28",
+      "type": "status:done",
+      "note": "T28完成:暗色大屏上线",
+      "detail": {
+        "summary": "style.css 全部规则级颜色收敛CSS变量(审计0硬编码):root亮色+html data-theme dark深蓝黑政务风#0A1628系,新增split-line/tooltip/inverse/on-primary/shadow系列变量,color-scheme dark。主题通道:?theme=dark|light URL参数优先>localStorage sv.theme>默认亮,页头切换按钮写localStorage+replaceState同步URL不刷新不触发hashchange(与路由解耦)。ECharts变量同步式:echTheme从getComputedStyle构造主题对象(palette/axis/tooltip/visualMap),切换时refreshChartChrome+rethemeCharts全实例dispose+缓存option重merge重挂载,数据不重拉,旧实例先dispose防同dom双实例泄漏,handlers随缓存重登记。投屏:?screen=tv参数+min-width 1920px媒体查询双通道字号间距数值放大。走查:X-Role切换器/胶囊/漏斗角标/环形联动变暗/预警卡/地图visualMap/tooltip暗色全部可读,亮色回归无破绽。自查:暗色驾驶舱+亮色回归+暗色下钻+暗色主题看板+TV模式5张无头截图,?theme=dark直达验证通过,控制台0错误。另:预埋按钮(导出报告)已随页头改造就位,T29接线。numstat为本任务实测(app.js含T27+A16未提交部分,本任务约+188/-58)",
+        "files": [
+          {
+            "path": "mvp/web/app.js",
+            "op": "M",
+            "plus": 188,
+            "minus": 58
+          },
+          {
+            "path": "mvp/web/style.css",
+            "op": "M",
+            "plus": 125,
+            "minus": 13
+          },
+          {
+            "path": "mvp/web/index.html",
+            "op": "M",
+            "plus": 2,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "规则级硬编码色",
+            "0(审计通过)"
+          ],
+          [
+            "暗色变量",
+            "40+项全覆盖"
+          ],
+          [
+            "主题通道",
+            "URL>localStorage>默认亮"
+          ],
+          [
+            "截图",
+            "5张(暗/亮/暗下钻/暗主题页/TV)"
+          ],
+          [
+            "控制台错误",
+            "0"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T12:14:01.731Z",
+      "taskId": "T29",
+      "type": "status:in_progress",
+      "note": "T29端点半开工:report HTML组装"
+    },
+    {
+      "t": "2026-11-09T12:08:29.868Z",
+      "taskId": "T25",
+      "type": "progress",
+      "note": "T25开工，契约与数据面已盘点"
+    },
+    {
+      "t": "2026-11-09T12:07:35.502Z",
+      "taskId": "T28",
+      "type": "status:in_progress",
+      "note": "T28开工:暗色大屏。方案:CSS变量收敛+html data-theme覆盖,?theme=dark URL参数优先>localStorage sv.theme>默认亮,图表chrome从getComputedStyle读变量,切换时dispose+缓存option重渲染不重拉,?screen=tv+1920px媒体"
+    },
+    {
+      "t": "2026-11-09T12:07:26.753Z",
+      "taskId": "T27",
+      "type": "status:done",
+      "note": "T27完成:省域地图上线",
+      "detail": {
+        "summary": "C区替换为ECharts map图元:fetch china.json+registerMap,series type map+visualMap四档(负增长深红/红,正增长蓝/深蓝,缺数灰),adcode硬联结dims,tooltip省名/当月值/当月同比/累计同比。点击省份emit同构drill:nav(payload toLevel=city,source=cockpit-rank)+URL终态#/cockpit?province=320000&rg=city&metric=MACRO.GDP.GR0001。下钻态:全国图保持+江苏红边高亮+标签+市排名条形(垫底3标红逻辑保留)+返回全国按钮。降级:GeoJSON失败回原条形图,非leader身份维持原所辖市条形(逐字保留)。dashboards.json c2-prov-rank type bar改map。自查:无头Chrome三张截图(全国着色/江苏下钻/控制台无错),server tests 82/82全绿(含A17新增断言)。numstat说明:工作树含A16未提交T24改动,本任务实测 app.js约+332/-82,style.css +15/-0,dashboards.json +2/-2,index.html本任务零改动",
+        "files": [
+          {
+            "path": "mvp/web/app.js",
+            "op": "M",
+            "plus": 332,
+            "minus": 82
+          },
+          {
+            "path": "mvp/web/style.css",
+            "op": "M",
+            "plus": 15,
+            "minus": 0
+          },
+          {
+            "path": "mvp/data/dashboards.json",
+            "op": "M",
+            "plus": 2,
+            "minus": 2
+          }
+        ],
+        "metrics": [
+          [
+            "地图feature数",
+            "35含九段线"
+          ],
+          [
+            "visualMap分档",
+            "4档"
+          ],
+          [
+            "着色省(有数据)",
+            "5"
+          ],
+          [
+            "缺数灰省",
+            "29"
+          ],
+          [
+            "server测试",
+            "82/82"
+          ],
+          [
+            "截图",
+            "全国+下钻两张验证通过"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T12:06:28.304Z",
+      "taskId": "T26",
+      "type": "status:done",
+      "note": "Doris 接入:方言编译器+双执行后端",
+      "detail": {
+        "summary": "T26 Doris接入完成. 新建 mvp/server/doris.js(484行, 零依赖, 不回引index.js, 引擎窗口原语shiftMonth/metricWindow由参数注入防循环依赖): QueryRequest到Doris方言SQL确定性编译(同DSL逐字节同SQL). 物理表facts->dwd_stat_fact(period/region_prov/region_city/ind_c1/ind_c2层级冗余列, 行族门ind_c2空/非空, 零JOIN); RLS WHERE编译期注入; ratio=SUM(num)/NULLIF(SUM(den),0)现算(5个RATIO_SQL_SPECS模板与引擎RATIO_SPECS窗口漂移由tests守卫断言锁定); 同比双窗口(period包络+CASE守卫, S4快照即契约示例窗口2025-01..2025-09, *_py列同窗重算); compare_then_compute基期双窗口SUM后现算, delta/rate执行侧引擎同式; LIMIT兜底2000; 注释头watermark/cacheKey/role; 脱敏投影层mask()包裹+登记warning. POST /api/v1/compile(同Schema同校验同错误码)->{sql,dialect,executor,cacheKey,warnings}. Executor抽象getExecutor()按env现选: local默认黄金路径一字不改; doris四env全配置启用(FE REST POST api/query/db, Basic auth, Accept vnd.doris.query+json, NDJSON解析, 失败统一500 INTERNAL不静默降级); shadow双跑对账差异仅记审计不改响应(本轮无Doris实例, 代码就绪+fixture单测). query响应新增meta.execution={backend,sqlHash,durMs}; debug=1双通道(body/URL), meta.sql为49断言硬门禁引用维持常附(已登记docs/09 §7.2). tests新增4组黄金SQL快照逐字节断言.",
+        "files": [
+          {
+            "path": "mvp/server/doris.js",
+            "op": "A",
+            "plus": 484,
+            "minus": 0
+          },
+          {
+            "path": "mvp/server/index.js",
+            "op": "M",
+            "plus": 209,
+            "minus": 21
+          },
+          {
+            "path": "mvp/server/tests.js",
+            "op": "M",
+            "plus": 220,
+            "minus": 1
+          },
+          {
+            "path": "mvp/server/smoke.js",
+            "op": "M",
+            "plus": 25,
+            "minus": 0
+          },
+          {
+            "path": "mvp/server/README.md",
+            "op": "M",
+            "plus": 14,
+            "minus": 4
+          },
+          {
+            "path": "docs/mvp/09-v0.2契约冻结.md",
+            "op": "M",
+            "plus": 24,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "回归",
+            "tests 82/82 全绿"
+          ],
+          [
+            "黄金快照",
+            "4组逐字节一致(总览/province下钻/city+RLS/ratio同比)"
+          ],
+          [
+            "compile断言",
+            "7项+快照4+executor矩阵5+fixture3"
+          ],
+          [
+            "doris.js",
+            "484行新编译器+Executor抽象"
+          ],
+          [
+            "meta.execution",
+            "backend=local+sha256sqlHash+durMs"
+          ],
+          [
+            "shadow",
+            "代码就绪, 本轮无FE未实测"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T12:06:27.935Z",
+      "taskId": "T25",
+      "type": "status:done",
+      "note": "预警清单服务端实时计算",
+      "detail": {
+        "summary": "T25 预警清单端点完成: GET /api/v1/alerts?asof=YYYY-MM + X-Role, 服务端每请求实时计算(无缓存). 判定: ratio型(formula.num/den, 读数=当月值) + sum型(读数=当月同比pct, 契约A1示例载体=MACRO.IND.VA0002落位); 劣化warning, 连续>=3月danger; 逆指标MACRO.ENGI.GR0009语义反转(改善率型读数<0=能耗上升劣化, 对齐PRESET A2). 覆盖预埋: A1江苏规上工业danger yoy=-4.5 months=5, A2能耗danger months=3; A3垫底(info级, 读数+3.88为正)按契约§1判定规则不落alerts并在docs/09 §7.1登记解释. RLS: prov-js只见江苏/prov-gd只见广东. asof缺省=水位月(2026-10), 格式非法400/越界400走10错误码体系. 契约示意编码与冻结注册表落位映射(MACRO.MANUF.VA0001->MACRO.IND.VA0002, ENERGY.EI.VA0001->MACRO.ENGI.GR0009)已写入docs/mvp/09 §7.1. 注: index.js/tests.js/smoke.js的numstat为T25+T26合并文件级增量.",
+        "files": [
+          {
+            "path": "mvp/server/index.js",
+            "op": "M",
+            "plus": 209,
+            "minus": 21
+          },
+          {
+            "path": "mvp/server/tests.js",
+            "op": "M",
+            "plus": 220,
+            "minus": 1
+          },
+          {
+            "path": "mvp/server/smoke.js",
+            "op": "M",
+            "plus": 25,
+            "minus": 0
+          },
+          {
+            "path": "mvp/server/README.md",
+            "op": "M",
+            "plus": 14,
+            "minus": 4
+          },
+          {
+            "path": "docs/mvp/09-v0.2契约冻结.md",
+            "op": "M",
+            "plus": 24,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "回归",
+            "tests 82/82 全绿(基线49+新增33)"
+          ],
+          [
+            "smoke",
+            "25/25"
+          ],
+          [
+            "T25新断言",
+            "8项(结构/A1/A2/RLS×2/asof/401/400)"
+          ],
+          [
+            "A1",
+            "江苏IND.VA0002 danger months=5"
+          ],
+          [
+            "A2",
+            "江苏ENGI.GR0009 danger months=3"
+          ],
+          [
+            "RLS",
+            "prov-js仅320000, prov-gd仅440000"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T12:03:17.698Z",
+      "taskId": "T26",
+      "type": "status:progress",
+      "note": "doris.js compiler done (dwd_stat_fact mapping, zero-JOIN, RLS inject, ratio SUM(num)/SUM(den), double-window yoy, LIMIT 2000 cap, mask projection, header commen"
+    },
+    {
+      "t": "2026-11-09T12:03:17.614Z",
+      "taskId": "T25",
+      "type": "status:progress",
+      "note": "T25 alerts endpoint done: real-time compute, RLS, A1/A2 covered, inverse-metric semantics; T26 doris.js compiler + executor abstraction done; tests 82/82, smoke"
+    },
+    {
+      "t": "2026-11-09T12:01:18.078Z",
+      "taskId": "T27",
+      "type": "status:in_progress",
+      "note": "T27开工:省域地图图元替换C区条形,GeoJSON已确认35个feature含九段线,adcode与dims code同构联结"
+    },
+    {
+      "t": "2026-11-09T11:57:05.181Z",
+      "taskId": "T27",
+      "type": "progress",
+      "note": "省域地图图元替代排名条形 · drill:nav 同事件同 URL 终态(A18 执行中)"
+    },
+    {
+      "t": "2026-11-09T11:57:05.082Z",
+      "taskId": "T25",
+      "type": "status:in_progress",
+      "note": "前端半done(A16):契约渲染+双徽标降级;后端半进行中(A17):alerts端点+断言"
+    },
+    {
+      "t": "2026-11-09T11:48:39.562Z",
+      "taskId": "T25",
+      "type": "status:done",
+      "note": "预警清单服务端实时计算",
+      "detail": {
+        "summary": "T25前端半完成:renderCockpitAlerts 重写为 async fetch /api/v1/alerts(X-Role 由 api() 统一携带,RLS 生效),按契约 items 字段渲染(province/regionCode/region/metricCode/metricName/yoy/level/months,level 映射 danger→红/warning→橙,delta 拼接 同比 Xpct + 连续 N 月,asof 入月份列);行点击保持 data-href 与原 PRESET_ALERTS 等价(#/theme/macro?r=regionCode+rg=city,drill:nav 同终态);预警卡头部新增来源徽标:端点成功显示 实时计算+computedAt(蓝色),fetch 失败(404/网络/空清单)回退 PRESET_ALERTS 兜底渲染并显示 预埋兜底 徽标(橙色),旧后端不空;C区垫底标红逻辑未动;异步竞态用 reqSeq 代际守卫;徽标用 textContent 写入天然免注入。验证:旧后端实测404走兜底(截图确认3条预埋+兜底徽标);临时 mock 契约响应验证实时路径(截图确认实时徽标+danger/warning 两行渲染,验后已移除);三页无头Chrome截图无JS错误无破版;node tests.js 回归49/49。",
+        "files": [
+          {
+            "path": "mvp/web/app.js",
+            "op": "M",
+            "plus": 111,
+            "minus": 59
+          },
+          {
+            "path": "mvp/web/style.css",
+            "op": "M",
+            "plus": 5,
+            "minus": 0
+          },
+          {
+            "path": "mvp/web/index.html",
+            "op": "M",
+            "plus": 2,
+            "minus": 1
+          }
+        ],
+        "metrics": {
+          "tests": "49/49",
+          "fallback_mode": "verified vs old backend 404",
+          "live_mode": "verified via mock contract payload",
+          "screenshots": [
+            "cockpit",
+            "theme",
+            "dict",
+            "cockpit-live"
+          ],
+          "console_errors": 0
+        }
+      }
+    },
+    {
+      "t": "2026-11-09T11:48:39.124Z",
+      "taskId": "T24",
+      "type": "status:done",
+      "note": "中危修复:DOMPurify 白名单渲染",
+      "detail": {
+        "summary": "T24完成:DOMPurify 3.2.4官方库(npmmirror files API)落位 mvp/web/assets/purify.min.js 并在 index.html 于 app.js 前引入;app.js 新增 sanitizeHtml/setHtml 助手,38处 innerHTML 注入点(驾驶舱/主题看板/字典/面包屑/胶囊/筛选带/明细表/抽屉/维度树/右键菜单/调试浮层/错误块)全部统一经 DOMPurify 白名单消毒写入,esc 文本级转义保留,形成双保险;验证:独立测试页12项断言全PASS(script/onerror/javascript:/onload/onclick全剥离,本应用svg/data-*/style/aria外壳标记全存活);真实渲染链路 ?xsstest=1 注入恶意样例(属性级注入 onmouseover 级别)经DOMPurify结构级剥离,0次脚本执行;库缺失时优雅退化为esc兜底。暗色契约未破坏(style.css仅新增徽标样式且全部复用既有CSS变量)。回归49/49。",
+        "files": [
+          {
+            "path": "mvp/web/assets/purify.min.js",
+            "op": "A",
+            "plus": 3,
+            "minus": 0
+          },
+          {
+            "path": "mvp/web/app.js",
+            "op": "M",
+            "plus": 111,
+            "minus": 59
+          },
+          {
+            "path": "mvp/web/index.html",
+            "op": "M",
+            "plus": 2,
+            "minus": 1
+          },
+          {
+            "path": "mvp/web/style.css",
+            "op": "M",
+            "plus": 5,
+            "minus": 0
+          }
+        ],
+        "metrics": {
+          "tests": "49/49",
+          "xss_standalone": "12/12 PASS",
+          "xss_render_chain": "0 execution, payload stripped",
+          "purify_version": "3.2.4",
+          "injection_points_switched": 38,
+          "console_errors": 0
+        }
+      }
+    },
+    {
+      "t": "2026-11-09T11:43:14.447Z",
+      "taskId": "T25",
+      "type": "status:in_progress",
+      "note": "T25前端半:renderAlerts 消费改造完成(代码层),进入截图自查阶段"
+    },
+    {
+      "t": "2026-11-09T11:43:14.358Z",
+      "taskId": "T24",
+      "type": "status:progress",
+      "note": "DOMPurify 3.2.4 已落位 assets/purify.min.js(22KB 官方库);setHtml/sanitizeHtml 助手就位,38处 innerHTML 注入点全部切换完成,node --check 通过;T25 renderAlerts 已改为 fetch /api/v1/alerts +"
+    },
+    {
+      "t": "2026-11-09T11:42:40.564Z",
+      "taskId": "T27",
+      "type": "progress",
+      "note": "W2 派发权已由总协调接管：待 W1(T24/T25/T26) 收口后立即启动 T27+T28 ∥ T29"
+    },
+    {
+      "t": "2026-11-09T11:33:48.473Z",
+      "taskId": "T26",
+      "type": "status:in_progress",
+      "note": "A17 start T26 doris compiler: reading index.js structure and contract"
+    },
+    {
+      "t": "2026-11-09T11:33:48.378Z",
+      "taskId": "T25",
+      "type": "status:in_progress",
+      "note": "A17 start T25 alerts endpoint: reading contract and data seeds"
+    },
+    {
+      "t": "2026-11-09T11:33:39.682Z",
+      "taskId": "T23",
+      "type": "status:done",
+      "note": "CI/CD 触发：65 文件已推送（ddf6068），tag v0.1.1 已打上，Release 流水线启动",
+      "detail": {
+        "summary": "推主干触发 ci.yml（Node 18/20/22 矩阵测试）；打 tag 触发 release.yml（测试→打包体验站 zip→建 Release 附资产）；topics 20 个已补全",
+        "files": [
+          {
+            "path": ".github/workflows/ci.yml",
+            "op": "A",
+            "plus": 40,
+            "minus": 0
+          },
+          {
+            "path": ".github/workflows/release.yml",
+            "op": "A",
+            "plus": 40,
+            "minus": 0
+          },
+          {
+            "path": "package.json",
+            "op": "A",
+            "plus": 44,
+            "minus": 0
+          }
+        ],
+        "metrics": [
+          [
+            "CI",
+            "Node 18/20/22"
+          ],
+          [
+            "Release",
+            "v0.1.1"
+          ],
+          [
+            "topics",
+            "20 个"
+          ]
+        ]
+      }
+    },
+    {
+      "t": "2026-11-09T11:33:39.681Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🚀 同步完成！Release 由 release.yml 流水线自动构建（跑测试→打包 zip→建 Release 附资产，约 1–2 分钟）"
+    },
+    {
+      "t": "2026-11-09T11:33:38.932Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🏷️ 打标签 v0.1.1 → 触发 release.yml 流水线…"
+    },
+    {
+      "t": "2026-11-09T11:33:38.479Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🏷️ 20 个关键词已通过专用端点设置"
+    },
+    {
+      "t": "2026-11-09T11:33:36.543Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🌿 main → ddf6068"
+    },
+    {
+      "t": "2026-11-09T11:33:33.307Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "🌳 构建目录树与提交…"
+    },
+    {
+      "t": "2026-11-09T11:33:33.305Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 65/65（README.md）"
+    },
+    {
+      "t": "2026-11-09T11:33:27.541Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 60/65（mvp/web/app.js）"
+    },
+    {
+      "t": "2026-11-09T11:33:23.874Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 55/65（mvp/server/README.md）"
+    },
+    {
+      "t": "2026-11-09T11:33:20.294Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 50/65（mvp/data/facts.json）"
+    },
+    {
+      "t": "2026-11-09T11:33:13.867Z",
+      "taskId": "T24",
+      "type": "status:in_progress",
+      "note": "T24开工:通读契约09,定位innerHTML注入点,准备下载DOMPurify 3.x"
+    },
+    {
+      "t": "2026-11-09T11:33:13.738Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 45/65（docs/统计数据可视表平台设计方案-docu.md）"
+    },
+    {
+      "t": "2026-11-09T11:32:36.058Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 40/65（docs/screenshots/mission-control.png）"
+    },
+    {
+      "t": "2026-11-09T11:32:30.690Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 35/65（docs/mvp/07-安全扫描报告.md）"
+    },
+    {
+      "t": "2026-11-09T11:32:26.701Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 30/65（docs/mvp/02-数据字典与种子数据.md）"
+    },
+    {
+      "t": "2026-11-09T11:32:20.383Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 25/65（docs/figures/统计数据可视表平台设计方案-docu-07-infographic.png）"
+    },
+    {
+      "t": "2026-11-09T11:32:06.112Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 20/65（docs/figures/统计数据可视表平台设计方案-docu-02-plantuml.png）"
+    },
+    {
+      "t": "2026-11-09T11:31:57.312Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 15/65（docs/demo/data/roles.json）"
+    },
+    {
+      "t": "2026-11-09T11:31:52.897Z",
+      "taskId": "GH",
+      "type": "action",
+      "note": "⬆️ 上传 10/65（docs/demo/app.js）"
+    },
     {
       "t": "2026-11-09T11:31:48.247Z",
       "taskId": "GH",
@@ -2099,6 +3438,6 @@
       "note": "指挥中心 v2 上线：环形任务环 + SSE 推送"
     }
   ],
-  "now": "2026-11-09T11:31:44.470Z",
-  "uptimeSec": 9
+  "now": "2026-11-10T00:50:07.537Z",
+  "uptimeSec": 43315
 }

@@ -49,8 +49,8 @@
         },
         {
           "chartId": "c2-prov-rank",
-          "type": "bar",
-          "title": "省域 GDP 累计同比增速排名（垫底标警，点击下钻，J1 第 2/3 步）",
+          "type": "map",
+          "title": "省域 GDP 当月同比地图（T27 图元契约：负增长红/正增长蓝/缺数灰，点击省份下钻 #/cockpit?province=…&rg=city&metric=…，GeoJSON 加载失败降级回排名条形）",
           "position": { "x": 7, "y": 4, "w": 5, "h": 6 },
           "dataset": {
             "metrics": ["MACRO.GDP.GR0001", "MACRO.GDP.VA0001"],

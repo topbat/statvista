@@ -16,6 +16,7 @@
  *   ⑧ 行级越权 → 200 空集（D7）
  *   ⑨ 伪造授权参数剥离（与不带该字段响应一致，D9）
  *   ⑩ 静态服务 MIME 正确（echarts.min.js）+ SQL 无 JOIN（D1）+ 缺 X-Role → 401
+ *   ⑪⑫ T25 alerts 实时预警（A1/RLS）+ T26 compile Doris 方言（双窗口）+ query meta.execution（v0.2）
  * ============================================================================
  */
 
@@ -217,6 +218,30 @@ async function main() {
     const no = await fetch(base + '/api/v1/query', { method: 'POST', body: JSON.stringify({ metrics: ['MACRO.GDP.VA0001'], time: { grain: 'month', range: ['2026-10', '2026-10'] } }) });
     const noJson = await no.json();
     check('⑩c 缺 X-Role → 401 UNAUTHENTICATED', no.status === 401 && noJson.error.code === 'UNAUTHENTICATED', `status=${no.status}`);
+  }
+
+  /* ========== ⑪ T25 alerts 实时预警 + ⑫ T26 compile Doris 方言（v0.2 新端点冒烟） ========== */
+  {
+    const al = await fetch(base + '/api/v1/alerts', { headers: { 'X-Role': 'leader' } });
+    const alJ = await al.json();
+    const a1 = (alJ.items || []).find((i) => i.regionCode === '320000' && i.metricCode === 'MACRO.IND.VA0002');
+    check('⑪ T25 alerts：leader 视角含江苏规上工业 danger 且 months≥5（A1 服务端实时算出）',
+      al.status === 200 && alJ.asof === '2026-10' && !!a1 && a1.level === 'danger' && a1.months >= 5,
+      `asof=${alJ.asof} items=${(alJ.items || []).length}`);
+    const pj = await fetch(base + '/api/v1/alerts', { headers: { 'X-Role': 'prov-js' } });
+    const pjJ = await pj.json();
+    check('⑪b T25 alerts RLS：prov-js 仅见江苏', pj.status === 200 && pjJ.items.every((i) => i.regionCode === '320000'),
+      `items=${pjJ.items.length}`);
+    const cp = await fetch(base + '/api/v1/compile', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Role': 'leader' }, body: JSON.stringify({ metrics: ['MACRO.GDP.GR0001'], dimensions: [{ dim: 'region', granularity: 'province' }], time: { grain: 'month', range: ['2026-01', '2026-09'], compare: ['yoy'] } }) });
+    const cpJ = await cp.json();
+    check('⑫ T26 compile：GR0001 同比编译出 dwd_stat_fact 双窗口 SQL（对比期 period 2025-01..2025-09）',
+      cp.status === 200 && cpJ.dialect === 'doris' && /dwd_stat_fact/.test(cpJ.sql) && /period >= '2025-01' AND period <= '2025-09'/.test(cpJ.sql),
+      `executor=${cpJ.executor} warnings=${(cpJ.warnings || []).length}`);
+    const qe = await fetch(base + '/api/v1/query', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Role': 'leader' }, body: JSON.stringify({ metrics: ['MACRO.GDP.VA0001'], time: { grain: 'month', range: ['2026-10', '2026-10'] } }) });
+    const qeJ = await qe.json();
+    check('⑫b query meta.execution：{backend=local, sqlHash, durMs}', qe.status === 200 && qeJ.meta.execution &&
+      qeJ.meta.execution.backend === 'local' && /^sha256:[0-9a-f]{64}$/.test(qeJ.meta.execution.sqlHash) && typeof qeJ.meta.execution.durMs === 'number',
+      `durMs=${qeJ.meta.execution && qeJ.meta.execution.durMs}`);
   }
 
   /* ---- 汇总 ---- */

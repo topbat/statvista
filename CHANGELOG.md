@@ -5,6 +5,29 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)，
 版本号遵循 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
+## [0.2.0] - 2026-11-09
+
+第 2 圈迭代(v0.2 生产化):安全门禁转绿 + Doris 接入 + 省域地图 + 暗色大屏 + 报告导出。
+
+### Added
+
+- **预警清单服务端实时计算**(T25):新端点 `GET /api/v1/alerts`——ratio 型×31 省×当月逐请求实时判定(负增长 warning / 连续 ≥3 月 danger),逆指标语义反转,RLS 全视角过滤;前端预埋 `PRESET_ALERTS` 降级为兜底通道(来源徽标"实时计算 / 预埋兜底")。
+- **Doris 接入**(T26):新建 `mvp/server/doris.js` 方言编译器——DSL→Doris SQL(`dwd_stat_fact` 物理映射、层级冗余列零 JOIN、RLS 编译期注入、ratio=SUM(num)/NULLIF(SUM(den),0)、同比双窗口、LIMIT 2000 兜底、watermark/cacheKey 注释头);Executor 三通道:`local`(默认,黄金值不变)/ `doris`(DORIS_FE 等 4 env 配置即启,FE REST+NDJSON)/ `shadow`(双跑对账);新端点 `POST /api/v1/compile` 使编译 SQL 可观测;`/api/v1/query` 响应附 `meta.execution={backend,sqlHash,durMs}`。
+- **GeoJSON 省域地图**(T27):驾驶舱 C 区图元升级——`registerMap('china')` 接入 569KB 本地省域边界,adcode↔dims code 硬联结,visualMap 四档着色(负增长红系/正增长蓝系/缺数灰);点击省份与原条形图**同事件同 URL 终态**;三层降级链(GeoJSON 失败回条形/非 leader 保留市条形/数据失败错误块)。
+- **暗色大屏**(T28):硬编码色审计归零,40+ CSS 变量收敛,`html[data-theme="dark"]` 深蓝黑政务风;`?theme=dark|light` → localStorage → 页头 ☀️/🌙 三通道切换;ECharts 变量同步式主题(dispose+re-init,数据不重拉);投屏 `?screen=tv` + `@media ≥1920px` 双通道。
+- **报告导出**(T29):新端点 `GET /api/v1/report`——报告 HTML 服务端实算(8 指标卡/省份排名/预警清单与页面同源同值),**指标口径脚注**自动生成(编码/名称/单位/agg_type/compare_policy/公式/极性);打印 CSS 分页优化 + 🖨 打印/另存 PDF;前端驾驶舱/主题看板页头"📄 导出报告"按钮。
+- **契约与联调文档**:`docs/mvp/09-v0.2契约冻结.md`(预警/编译/报告三契约+波次文件所有权+编码落位说明 §7)。
+
+### Changed
+
+- **测试基线 49 → 92 断言**(alerts 8+SQL 黄金快照 4+compile 7+report 7+联调对账,全绿 ×3 轮);smoke 25/25。
+- **性能复测**(3000 实测各 80 样本):query 热 P95 2.1ms / alerts(每请求现算)P95 4.4ms / compile P95 1.3ms。
+- J2 旅程(地图下钻)API 11/11 + UI 无头走查 5 次零控制台错误;新增 4 张 v0.2 截图。
+
+### Security
+
+- **剩余 1 项中危转正修复**(T24):引入 DOMPurify 3.2.4 官方库(`assets/purify.min.js`),`setHtml()` 统一 38 处 innerHTML 注入点白名单渲染;esc() 文本级+DOMPurify 结构级双保险;XSS 样例断言 12/12(`<script>`/`onerror`/`javascript:` href 全剥离,业务标记全存活);门禁预期 amber→green。
+
 ## [0.1.1] - 2026-11-09
 
 ### Added

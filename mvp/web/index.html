@@ -16,7 +16,9 @@
     <a href="#/dict" data-nav="dict">指标字典</a>
   </nav>
   <div class="header-right">
+    <button id="export-report-btn" title="导出当前看板报告（/api/v1/report，T29 前端半）" style="display:none">📄 导出报告</button>
     <button id="cache-debug-btn" title="缓存调试：查看最近查询命中与版本因子，bump 即时失效（D10/D11 演示）">缓存调试</button>
+    <button id="theme-toggle" title="切换暗色/亮色模式（?theme=dark|light URL 参数优先，localStorage 记忆）">🌙</button>
     <label class="role-label" for="role-switch">身份</label>
     <select id="role-switch" title="切换演示身份（RLS 由服务端按 X-Role 注入）">
       <option value="leader">leader（全国）</option>
@@ -27,8 +29,9 @@
 </header>
 <div id="toast" role="status"></div>
 <main id="app"></main>
-<!-- 本地 ECharts（禁止 CDN），零构建 vanilla JS -->
+<!-- 本地 ECharts（禁止 CDN），零构建 vanilla JS；DOMPurify 结构级 XSS 消毒（T24，本地资产） -->
 <script src="assets/echarts.min.js"></script>
+<script src="assets/purify.min.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

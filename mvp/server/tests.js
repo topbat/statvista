@@ -18,7 +18,8 @@
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
-const { startServer } = require('./index.js');
+const { startServer, shiftMonth, metricWindow } = require('./index.js');
+const dorisMod = require('./doris.js'); // T26：编译器/Executor 单元断言用（黄金快照仍走 HTTP 端到端）
 
 /* ==================== 手工期望值计算（独立于服务代码路径） ==================== */
 // 安全：静态字面量路径（不拼接运行时变量），避免动态路径进入模块加载器
@@ -462,6 +463,308 @@ async function main() {
     check('ERRd-跨事实表行族混查→400 DIM_MISMATCH', mixed.status === 400 && mixed.json.error.code === 'DIM_MISMATCH', `status=${mixed.status}`);
     const gran = await q({ metrics: ['MACRO.GDP.VA0001'], dimensions: [{ dim: 'region', granularity: 'industry_c1' }], time: { grain: 'month', range: ['2026-10', '2026-10'] } });
     check('ERRe-粒度×维度错配→400 DSL_SCHEMA_INVALID', gran.status === 400 && gran.json.error.code === 'DSL_SCHEMA_INVALID', `status=${gran.status}`);
+  }
+
+  /* ========== T25 · 预警契约（GET /api/v1/alerts，契约 09 §1） + T26 · Doris 编译契约（POST /api/v1/compile） ==========
+   * 独立全新服务实例：D11 用例会 bump watermark/metricDef/dimTree，而 compile 黄金快照的注释头
+   * 含 watermark/cacheKey（缓存键四因子），必须锚定初始版本状态，逐字节断言才可复现。 */
+  {
+    const app2 = await startServer({ port: 0, quiet: true });
+    const base2 = 'http://127.0.0.1:' + app2.port;
+    try {
+      const get2 = async (p, role) => {
+        const r = await fetch(base2 + p, { headers: role ? { 'X-Role': role } : {} });
+        return { status: r.status, json: await r.json().catch(() => null) };
+      };
+      const post2 = async (p, body, role) => {
+        const r = await fetch(base2 + p, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Role': role || 'leader' }, body: JSON.stringify(body) });
+        return { status: r.status, json: await r.json().catch(() => null) };
+      };
+
+      /* ---- T25 预警清单（服务端实时计算；预埋 A1/A2/A3 必须覆盖） ---- */
+      {
+        const r = await get2('/api/v1/alerts', 'leader');
+        const j = r.json;
+        const items = j.items || [];
+        const jsInd = items.find((i) => i.regionCode === '320000' && i.metricCode === 'MACRO.IND.VA0002');
+        check('T25①-leader默认asof=水位月2026-10且含江苏规上工业danger、months≥5(预埋A1)',
+          r.status === 200 && j.asof === '2026-10' && j.watermark === 'wm-20261108-01' && !isNaN(Date.parse(j.computedAt)) &&
+          !!jsInd && jsInd.level === 'danger' && jsInd.months >= 5 && jsInd.yoy < 0 &&
+          jsInd.province === '江苏省' && jsInd.region === '江苏' && typeof jsInd.metricName === 'string',
+          `asof=${j.asof} items=${items.length} A1=${JSON.stringify(jsInd)}`);
+        const jsEngi = items.find((i) => i.regionCode === '320000' && i.metricCode === 'MACRO.ENGI.GR0009');
+        check('T25②-能耗逆指标预警在列(预埋A2:2026-08起连续3月劣化→danger,逆语义=读数<0)',
+          !!jsEngi && jsEngi.months === 3 && jsEngi.yoy === -7.46 && jsEngi.level === 'danger',
+          `A2=${JSON.stringify(jsEngi)}`);
+        check('T25③-条目结构字段齐全且取值域合法(契约响应Schema)',
+          items.length > 0 && items.every((i) => typeof i.province === 'string' && /^\d{6}$/.test(i.regionCode) &&
+            typeof i.region === 'string' && /^(MACRO|TECH)\.[A-Z0-9_]+\.[A-Z0-9]{6,8}$/.test(i.metricCode) &&
+            typeof i.metricName === 'string' && typeof i.yoy === 'number' &&
+            (i.level === 'danger' || i.level === 'warning') && Number.isInteger(i.months) && i.months >= 1),
+          `items=${items.length}`);
+        /* 预埋 A3：江苏 GDP 累计增速 3.88% 五省严格末位（2026-09 起，2026-08 为广东 4.37）→ 垫底 warning，连续 2 月 */
+        const jsGdp = items.find((i) => i.regionCode === '320000' && i.metricCode === 'MACRO.GDP.GR0001');
+        check('T25③b-预埋A3江苏GDP增速垫底→warning(yoy=3.88,连续垫底2月)',
+          !!jsGdp && jsGdp.level === 'warning' && jsGdp.yoy === 3.88 && jsGdp.months === 2 &&
+          items.filter((i) => i.metricCode === 'MACRO.GDP.GR0001').length === 1,
+          `A3=${JSON.stringify(jsGdp)}`);
+        const pj = await get2('/api/v1/alerts', 'prov-js');
+        check('T25④-RLS:prov-js只见江苏且仍含A1 danger(全国视角同构)',
+          pj.status === 200 && pj.json.items.length > 0 && pj.json.items.every((i) => i.regionCode === '320000') &&
+          pj.json.items.some((i) => i.metricCode === 'MACRO.IND.VA0002' && i.level === 'danger' && i.months >= 5),
+          `items=${pj.json.items.length} 省集=${[...new Set(pj.json.items.map((i) => i.regionCode))].join(',')}`);
+        const pg = await get2('/api/v1/alerts', 'prov-gd');
+        check('T25④b-RLS:prov-gd只见广东', pg.status === 200 && pg.json.items.every((i) => i.regionCode === '440000'),
+          `items=${pg.json.items.length}`);
+        const sep = await get2('/api/v1/alerts?asof=2026-09', 'leader');
+        const s9ind = (sep.json.items || []).find((i) => i.regionCode === '320000' && i.metricCode === 'MACRO.IND.VA0002');
+        const s9engi = (sep.json.items || []).find((i) => i.regionCode === '320000' && i.metricCode === 'MACRO.ENGI.GR0009');
+        check('T25⑤-asof参数生效:2026-09回看A1 months=4仍danger、A2 months=2降级warning',
+          sep.status === 200 && sep.json.asof === '2026-09' && s9ind && s9ind.months === 4 && s9ind.level === 'danger' &&
+          s9engi && s9engi.months === 2 && s9engi.level === 'warning',
+          `IND=${s9ind && s9ind.months}/${s9ind && s9ind.level} ENGI=${s9engi && s9engi.months}/${s9engi && s9engi.level}`);
+        /* A3 回看：2026-09 江苏首月垫底（4.12 严格末位）→ months=1 */
+        const s9gdp = (sep.json.items || []).find((i) => i.regionCode === '320000' && i.metricCode === 'MACRO.GDP.GR0001');
+        check('T25⑤b-2026-09垫底回看:江苏连续垫底1月(yoy=4.12,warning)',
+          !!s9gdp && s9gdp.months === 1 && s9gdp.yoy === 4.12 && s9gdp.level === 'warning',
+          `A3=${JSON.stringify(s9gdp)}`);
+        const no = await fetch(base2 + '/api/v1/alerts');
+        check('T25⑥-缺X-Role→401 UNAUTHENTICATED', no.status === 401 && (await no.json()).error.code === 'UNAUTHENTICATED', `status=${no.status}`);
+        const bad = await get2('/api/v1/alerts?asof=2026-13', 'leader');
+        const oob = await get2('/api/v1/alerts?asof=2027-01', 'leader');
+        check('T25⑦-asof格式非法→400 DSL_SCHEMA_INVALID/越界→400 INVALID_TIME_RANGE(10错误码体系)',
+          bad.status === 400 && bad.json.error.code === 'DSL_SCHEMA_INVALID' && oob.status === 400 && oob.json.error.code === 'INVALID_TIME_RANGE',
+          `fmt=${bad.status}/${bad.json.error && bad.json.error.code} oob=${oob.status}/${oob.json.error && oob.json.error.code}`);
+      }
+
+      /* ---- T26 compile 端点契约 ---- */
+      {
+        const dsl1 = { metrics: ['MACRO.GDP.VA0001'], time: { grain: 'month', range: ['2026-10', '2026-10'] } };
+        const r1 = await post2('/api/v1/compile', dsl1);
+        check('T26①-compile 200:{sql,dialect=doris,executor,cacheKey=sha256:…,warnings[]}',
+          r1.status === 200 && typeof r1.json.sql === 'string' && r1.json.dialect === 'doris' &&
+          ['local', 'doris', 'shadow'].includes(r1.json.executor) && /^sha256:[0-9a-f]{64}$/.test(r1.json.cacheKey) &&
+          Array.isArray(r1.json.warnings), `executor=${r1.json.executor} warnings=${r1.json.warnings.length}`);
+        const r1b = await post2('/api/v1/compile', dsl1);
+        check('T26①b-同DSL重复编译SQL逐字节一致(编译器确定性)',
+          r1b.status === 200 && r1b.json.sql === r1.json.sql && r1b.json.cacheKey === r1.json.cacheKey, `len=${r1.json.sql.length}`);
+        check('T26①c-注释头 /* watermark=… cacheKey=… role=… */',
+          /^\/\* watermark=wm-20261108-01 cacheKey=sha256:[0-9a-f]{64} role=leader \*\/\n/.test(r1.json.sql),
+          r1.json.sql.split('\n')[0]);
+        check('T26①d-物理表映射dwd_stat_fact+period列+LIMIT兜底',
+          /FROM dwd_stat_fact/.test(r1.json.sql) && /period = '2026-10'/.test(r1.json.sql) && /LIMIT 50$/.test(r1.json.sql), '');
+        const noRole = await fetch(base2 + '/api/v1/compile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dsl1) });
+        const badM = await post2('/api/v1/compile', { metrics: ['MACRO.GDP.XX9999'], time: { grain: 'month', range: ['2026-10', '2026-10'] } });
+        const badF = await post2('/api/v1/compile', { metrics: ['MACRO.GDP.VA0001'], time: { grain: 'month', range: ['2026-10', '2026-01'] } });
+        const badC = await post2('/api/v1/compile', { metrics: ['MACRO.INV.CU0004'], time: { grain: 'month', range: ['2026-10', '2026-10'], compare: ['mom'] } });
+        check('T26①e-同Schema同错误码:缺Role→401/未注册→404/时间逆→400/策略冲突→403',
+          noRole.status === 401 && badM.status === 404 && badM.json.error.code === 'METRIC_NOT_FOUND' &&
+          badF.status === 400 && badF.json.error.code === 'INVALID_TIME_RANGE' &&
+          badC.status === 403 && badC.json.error.code === 'COMPARE_POLICY_FORBIDDEN',
+          `401=${noRole.status} 404=${badM.status} 400=${badF.status} 403=${badC.status}`);
+        const pj = await post2('/api/v1/compile', { metrics: ['MACRO.GDP.VA0001'], dimensions: [{ dim: 'region', granularity: 'city' }], time: { grain: 'month', range: ['2026-10', '2026-10'] } }, 'prov-js');
+        check('T26①f-RLS编译期注入(prov-js→region_prov=320000)+层级冗余列零JOIN',
+          pj.status === 200 && /region_prov = '320000'/.test(pj.json.sql) && /GROUP BY region_city/.test(pj.json.sql) && !/\bJOIN\b/i.test(pj.json.sql), '');
+        const lim = await post2('/api/v1/compile', { metrics: ['MACRO.GDP.VA0001'], time: { grain: 'month', range: ['2026-10', '2026-10'] }, limit: 1000 });
+        check('T26①g-body.limit透传SQL LIMIT(1..1000域内)', lim.status === 200 && /LIMIT 1000$/.test(lim.json.sql), lim.json.sql.split('\n').pop());
+      }
+
+      /* ---- T26 黄金 SQL 快照 4 组（固定 DSL → SQL 逐字一致，编译器黄金测试） ---- */
+      {
+        const GOLDEN = [
+          ['S1总览(双sum指标无维度)',
+            { metrics: ['MACRO.GDP.VA0001', 'MACRO.TRADE.VA0006'], time: { grain: 'month', range: ['2026-10', '2026-10'] } }, 'leader',
+            /* S1 */ "/* watermark=wm-20261108-01 cacheKey=sha256:13dd6e01b6d6f34a481972a5f68abe4309a6420676921793d7e0b32743b3f7c0 role=leader */\nSELECT SUM(CASE WHEN period = '2026-10' THEN gdp_va END) AS m1, SUM(CASE WHEN period = '2026-10' THEN trade_va END) AS m2\nFROM dwd_stat_fact\nWHERE ind_c2 IS NOT NULL\n  AND period = '2026-10'\nORDER BY m1 DESC\nLIMIT 50"],
+          ['S2province下钻(descendantOf+显式排序)',
+            { metrics: ['MACRO.GDP.VA0001'], dimensions: [{ dim: 'region', granularity: 'province' }], filters: [{ dim: 'region', op: 'descendantOf', value: '320000' }], time: { grain: 'month', range: ['2026-10', '2026-10'] }, sort: [{ by: 'MACRO.GDP.VA0001', order: 'desc' }] }, 'leader',
+            /* S2 */ "/* watermark=wm-20261108-01 cacheKey=sha256:c4d60e5d0e69c0b86c60ddcf05e43a9c6a10d04539f2721210700b2b3ce7c31e role=leader */\nSELECT region_prov AS dim_region, SUM(CASE WHEN period = '2026-10' THEN gdp_va END) AS m1\nFROM dwd_stat_fact\nWHERE ind_c2 IS NOT NULL\n  AND region_prov = '320000'\n  AND period = '2026-10'\nGROUP BY region_prov\nORDER BY m1 DESC\nLIMIT 50"],
+          ['S3city粒度(prov-js RLS+行业IN过滤)',
+            { metrics: ['MACRO.IND.VA0002'], dimensions: [{ dim: 'region', granularity: 'city' }], filters: [{ dim: 'industry', op: 'in', values: ['C'] }], time: { grain: 'month', range: ['2026-10', '2026-10'] } }, 'prov-js',
+            /* S3 */ "/* watermark=wm-20261108-01 cacheKey=sha256:2506c93f136783a8a5acb00d11696b68238f00f17491f21c87bc4416e7eb445e role=prov-js */\nSELECT region_city AS dim_region, SUM(CASE WHEN period = '2026-10' THEN ind_va END) AS m1\nFROM dwd_stat_fact\nWHERE ind_c2 IS NOT NULL\n  AND region_prov = '320000'\n  AND ind_c1 IN ('C')\n  AND period = '2026-10'\nGROUP BY region_city\nORDER BY region_city ASC, m1 DESC\nLIMIT 50"],
+          ['S4ratio+同比(compare_then_compute双窗口,契约§2示例窗口)',
+            { metrics: ['MACRO.GDP.GR0001'], dimensions: [{ dim: 'region', granularity: 'province' }], time: { grain: 'month', range: ['2026-01', '2026-09'], compare: ['yoy'] } }, 'leader',
+            /* S4 */ "/* watermark=wm-20261108-01 cacheKey=sha256:5f373ebdbfdff85ef26f6b8f3de2be94f49a330dadc02db4d29ff399355531e2 role=leader */\nSELECT region_prov AS dim_region, (SUM(CASE WHEN period >= '2026-01' AND period <= '2026-09' THEN gdp_va END) / NULLIF(SUM(CASE WHEN period >= '2026-01' AND period <= '2026-09' THEN gdp_va_py END), 0) - 1) * 100 AS m1, (SUM(CASE WHEN period >= '2025-01' AND period <= '2025-09' THEN gdp_va END) / NULLIF(SUM(CASE WHEN period >= '2025-01' AND period <= '2025-09' THEN gdp_va_py END), 0) - 1) * 100 AS m1_yoy_base\nFROM dwd_stat_fact\nWHERE ind_c2 IS NOT NULL\n  AND period >= '2025-01' AND period <= '2026-09'\nGROUP BY region_prov\nORDER BY region_prov ASC, m1 DESC\nLIMIT 50"],
+        ];
+        for (const [name, dsl, role, expect] of GOLDEN) {
+          const r = await post2('/api/v1/compile', dsl, role);
+          check('T26②-黄金快照' + name + '逐字一致',
+            r.status === 200 && r.json.sql === expect,
+            r.status === 200 ? (r.json.sql === expect ? '' : '实际=' + JSON.stringify(r.json.sql)) : `status=${r.status}`);
+        }
+      }
+
+      /* ---- T26 meta.execution + debug 双通道 ---- */
+      {
+        const qd = await post2('/api/v1/query', { metrics: ['MACRO.GDP.VA0001'], time: { grain: 'month', range: ['2026-10', '2026-10'] } });
+        const ex = qd.json.meta && qd.json.meta.execution;
+        check('T26③-query响应meta.execution={backend,sqlHash,durMs}',
+          qd.status === 200 && !!ex && ex.backend === 'local' && /^sha256:[0-9a-f]{64}$/.test(ex.sqlHash) &&
+          typeof ex.durMs === 'number' && ex.durMs >= 0, JSON.stringify(ex));
+        const qb = await post2('/api/v1/query', { metrics: ['MACRO.GDP.VA0001'], time: { grain: 'month', range: ['2026-10', '2026-10'] }, debug: 1 });
+        const qu = await fetch(base2 + '/api/v1/query?debug=1', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Role': 'leader' }, body: JSON.stringify({ metrics: ['MACRO.GDP.VA0001'], time: { grain: 'month', range: ['2026-10', '2026-10'] } }) });
+        const quJ = await qu.json();
+        check('T26③b-debug=1双通道(body/URL)→200且meta.sql全文可观测(v0.1兼容常附)',
+          qb.status === 200 && qu.status === 200 && typeof qb.json.meta.sql === 'string' && qb.json.meta.sql.length > 0 &&
+          typeof quJ.meta.sql === 'string' && quJ.meta.sql.length > 0, `body=${qb.status} url=${qu.status}`);
+
+        /* ---- T30 · meta.execution 扩展断言（契约 09 §6：新增 ≥2） ---- */
+        const sqlSha = require('crypto').createHash('sha256').update(qd.json.meta.sql, 'utf8').digest('hex');
+        check('T30②-sqlHash=sha256(实际执行的meta.sql全文)且backend=local(哈希绑定观测SQL,可对账)',
+          /^sha256:[0-9a-f]{64}$/.test(ex.sqlHash) && ex.sqlHash === 'sha256:' + sqlSha && ex.backend === 'local' &&
+          typeof qd.json.meta.sql === 'string' && qd.json.meta.sql.length > 0,
+          `sqlHash=${ex.sqlHash.slice(0, 22)}… 重算=${'sha256:' + sqlSha.slice(0, 22)}…`);
+        const qAgain = await post2('/api/v1/query', { metrics: ['MACRO.GDP.VA0001'], time: { grain: 'month', range: ['2026-10', '2026-10'] } });
+        const qOther = await post2('/api/v1/query', { metrics: ['MACRO.TRADE.VA0006'], time: { grain: 'month', range: ['2026-10', '2026-10'] } });
+        check('T30②b-sqlHash确定性+敏感性:同DSL重复查询同哈希/异DSL哈希互异',
+          qAgain.json.meta.execution.sqlHash === ex.sqlHash && qOther.json.meta.execution.sqlHash !== ex.sqlHash &&
+          /^sha256:[0-9a-f]{64}$/.test(qOther.json.meta.execution.sqlHash),
+          `again=${qAgain.json.meta.execution.sqlHash.slice(0, 18)}… other=${qOther.json.meta.execution.sqlHash.slice(0, 18)}…`);
+        const qRatio = await post2('/api/v1/query', { metrics: ['MACRO.GDP.GR0001'], dimensions: [{ dim: 'region', granularity: 'province' }], time: { grain: 'month', range: ['2026-10', '2026-10'], compare: ['yoy'] } }, 'prov-js');
+        const exR = qRatio.json.meta && qRatio.json.meta.execution;
+        check('T30②c-ratio+RLS形态meta.execution保形:backend=local/durMs数字/hash合法/rlsRole回显',
+          qRatio.status === 200 && !!exR && exR.backend === 'local' && typeof exR.durMs === 'number' && exR.durMs >= 0 &&
+          /^sha256:[0-9a-f]{64}$/.test(exR.sqlHash) && qRatio.json.meta.rlsRole === 'prov-js', JSON.stringify(exR));
+      }
+
+      /* ---- T26 Executor 抽象：env 矩阵（getExecutor 单元断言） ---- */
+      {
+        const saved = {};
+        for (const k of ['DORIS_FE', 'DORIS_USER', 'DORIS_PASS', 'DORIS_DB', 'DORIS_SHADOW']) { saved[k] = process.env[k]; delete process.env[k]; }
+        try {
+          check('T26④①-env缺省→executor=local(黄金路径保底)', dorisMod.getExecutor().mode === 'local', '');
+          process.env.DORIS_FE = 'http://127.0.0.1:8030'; process.env.DORIS_USER = 'u'; process.env.DORIS_PASS = 'p';
+          check('T26④②-三env缺DORIS_DB→仍local(四env全配置才启用doris)', dorisMod.getExecutor().mode === 'local', '');
+          process.env.DORIS_DB = 'dbg';
+          check('T26④③-四env全配置→doris', dorisMod.getExecutor().mode === 'doris', '');
+          process.env.DORIS_SHADOW = '1';
+          check('T26④④-DORIS_SHADOW=1(且FE配置)→shadow双跑对账', dorisMod.getExecutor().mode === 'shadow', '');
+          delete process.env.DORIS_FE;
+          check('T26④⑤-shadow缺FE→回退local', dorisMod.getExecutor().mode === 'local', '');
+        } finally {
+          for (const k of Object.keys(saved)) { if (saved[k] === undefined) delete process.env[k]; else process.env[k] = saved[k]; }
+        }
+      }
+
+      /* ---- T26 NDJSON 解析 + FE 行映射（fixture 单元断言，不依赖真实 FE） ---- */
+      {
+        const nd = dorisMod.parseNdjson('{"dim_region":"320000","m1":10.5,"m1_yoy_base":9.9}\n\n{"dim_region":"440000","m1":null}\n');
+        check('T26⑤-NDJSON逐行解析(空行跳过/容尾换行)', nd.length === 2 && nd[0].m1 === 10.5 && nd[1].m1 === null, `rows=${nd.length}`);
+        const fakeReg = { nodeIdx: { region: new Map([['320000', { code: '320000', name: '江苏省', path: '/320000/' }], ['440000', { code: '440000', name: '广东省', path: '/440000/' }]]) } };
+        const fakeRt = { code: { code: 'MACRO.GDP.VA0001', name: 'GDP（当月值）' }, policy: 'direct', kind: 'sum' };
+        const mapped = dorisMod.mapDorisRows(nd, { reg: fakeReg, rts: [fakeRt], dimensions: [{ dim: 'region', granularity: 'province' }], compares: ['yoy'], aliasMap: dorisMod.aliasMapOf([fakeRt]) });
+        const m0 = mapped[0].metrics['MACRO.GDP.VA0001'];
+        check('T26⑤b-FE行映射→契约形状(维表解码+delta/rate引擎同式现算)',
+          mapped[0].dims.region.name === '江苏省' && mapped[0].dims.region.path === '/320000/' && m0.value === 10.5 &&
+          m0.yoy.base === 9.9 && m0.yoy.delta === 0.6 && Math.abs(m0.yoy.rate - 0.6 / 9.9) < 1e-4,
+          JSON.stringify(m0));
+        check('T26⑤c-当期口径缺失(null)→空同比子对象缺省(引擎同语义)', mapped[1].metrics['MACRO.GDP.VA0001'].yoy === undefined, '');
+      }
+
+      /* ---- T26 窗口漂移守卫：doris.js ratio 模板窗口 === 引擎 metricWindow（防双处维护漂移） ---- */
+      {
+        const specs = dorisMod.getRatioSqlSpecs(shiftMonth);
+        const same4 = ['MACRO.GDP.GR0001', 'MACRO.CPI.IDX0003', 'MACRO.ENGI.GR0009', 'TECH.PAT.SH0004'];
+        let allSame = true;
+        for (const code of same4) {
+          for (const off of [0, -12, -1]) {
+            for (const [m0, m1] of [['2026-10', '2026-10'], ['2026-01', '2026-09'], ['2025-06', '2026-03']]) {
+              const exp = metricWindow({ kind: 'ratio', code: { code } }, m0, m1, off);
+              for (const f of specs[code].fields) {
+                const got = f.win(m0, m1, off);
+                if (got[0] !== exp[0] || got[1] !== exp[1]) allSame = false;
+              }
+            }
+          }
+        }
+        check('T26⑥-窗口漂移守卫:4个ratio模板字段窗口===引擎metricWindow(3月样例×3偏移)', allSame, '');
+        const intSpec = specs['TECH.RD.INT0002'];
+        const e12 = shiftMonth('2026-09', -12);
+        const numOk = JSON.stringify(intSpec.fields[0].win('2026-01', '2026-09', -12)) === JSON.stringify([e12, e12]);
+        const denOk = JSON.stringify(intSpec.fields[1].win('2026-01', '2026-09', -12)) ===
+          JSON.stringify(metricWindow({ kind: 'ratio', code: { code: 'TECH.RD.INT0002' } }, '2026-01', '2026-09', -12));
+        check('T26⑥b-INT0002分子末月单月窗/分母ytd窗与引擎calc窗口一致', numOk && denOk,
+          `num=${JSON.stringify(intSpec.fields[0].win('2026-01', '2026-09', -12))}`);
+      }
+
+      /* ---- T26 编译器直调：LIMIT 兜底 + 脱敏投影层 mask()（契约 §2） ---- */
+      {
+        const rtStub = { kind: 'sum', field: 'gdp_va', policy: 'direct', family: 'ind', code: { code: 'MACRO.GDP.VA0001', data_level: '一般' } };
+        const helpers = { shiftMonth, metricWindow };
+        const out = dorisMod.compileDorisSql({
+          body: { metrics: ['MACRO.GDP.VA0001'], dimensions: [], filters: [], time: { grain: 'month', range: ['2026-01', '2026-09'], compare: ['yoy'] }, sort: [], limit: 5000 },
+          rts: [rtStub], family: 'ind', reg: {}, role: 'leader', roleDef: { rls: { type: 'allow_all' } },
+          watermark: 'wm-test', cacheKey: 'sha256:test', helpers,
+        });
+        check('T26⑦-LIMIT兜底2000(超限截断)+一般数据级无脱敏warning',
+          /LIMIT 2000$/.test(out.sql) && out.warnings.length === 0, `tail=${out.sql.slice(-11)}`);
+        const rtSens = { kind: 'sum', field: 'gdp_va', policy: 'direct', family: 'ind', code: { code: 'MACRO.SEC.VA0001', data_level: '敏感' } };
+        const out2 = dorisMod.compileDorisSql({
+          body: { metrics: ['MACRO.SEC.VA0001'], dimensions: [], filters: [], time: { grain: 'month', range: ['2026-10', '2026-10'], compare: [] }, sort: [], limit: 50 },
+          rts: [rtSens], family: 'ind', reg: {}, role: 'leader', roleDef: { rls: { type: 'allow_all' } },
+          watermark: 'wm-test', cacheKey: 'sha256:t2', helpers,
+        });
+        check('T26⑦b-脱敏在投影层:非一般数据级→mask()包裹+登记warning',
+          /mask\(SUM\(/.test(out2.sql) && out2.warnings.length === 1 && /^MASK_APPLIED:/.test(out2.warnings[0]),
+          out2.warnings.join(';'));
+      }
+    } finally {
+      app2.server.close();
+    }
+  }
+
+  /* ========== T29 · 报告导出端点（GET /api/v1/report，契约 09 §3） ==========
+   * 独立全新服务实例：role 走 query 参数（报告页无 header 通道），不传 X-Role。 */
+  {
+    const app3 = await startServer({ port: 0, quiet: true });
+    const base3 = 'http://127.0.0.1:' + app3.port;
+    try {
+      const rep = async (query) => {
+        const r = await fetch(base3 + '/api/v1/report' + query); // 故意不带 X-Role：报告页 role 只认 query
+        return { status: r.status, text: await r.text(), headers: r.headers };
+      };
+      const r1 = await rep('?dashboard=cockpit&role=leader');
+      const t1 = r1.text;
+      check('T29①-report 200+Content-Type含text/html 且标题区/四大章节齐全(看板名+asof+生成时间+角色水印)',
+        r1.status === 200 && (r1.headers.get('content-type') || '').includes('text/html') &&
+        t1.includes('宏观经济运行驾驶舱') && t1.includes('核心数值表') && t1.includes('省份排名表') &&
+        t1.includes('预警清单') && t1.includes('生成时间') && t1.includes('leader 视角') && t1.includes('2026-10'),
+        `ct=${r1.headers.get('content-type')} bytes=${t1.length}`);
+      check('T29②-指标口径脚注章节:含 MACRO.GDP.VA0001 + meta 语义说明 + 表下口径见脚注[n] + 打印按钮/@media print',
+        t1.includes('指标口径脚注') && t1.includes('MACRO.GDP.VA0001') && t1.includes('口径见脚注') &&
+        t1.includes('agg_type_defs') && t1.includes('compare_policy_defs') &&
+        t1.includes('window.print') && t1.includes('@media print'),
+        `fn锚=${(t1.match(/id="fn-\d+"/g) || []).length}`);
+      check('T29③-leader全国视角:核心数值表8指标卡+省份排名表含5省(服务端实算)',
+        (t1.match(/<tr>/g) || []).length > 10 && t1.includes('江苏省') && t1.includes('广东省') &&
+        t1.includes('浙江省') && t1.includes('山东省') && t1.includes('贵州省'),
+        `tr=${(t1.match(/<tr>/g) || []).length}`);
+      const pj = await rep('?dashboard=cockpit&role=prov-js');
+      check('T29④-RLS:role=prov-js 报告数据仅含江苏(排名表省份集合),其他省不出现',
+        pj.status === 200 && pj.text.includes('江苏省') && pj.text.includes('prov-js 视角') &&
+        !pj.text.includes('广东省') && !pj.text.includes('浙江省') && !pj.text.includes('山东省') && !pj.text.includes('贵州'),
+        `江苏=${pj.text.includes('江苏省')} 广东=${pj.text.includes('广东省')} 浙江=${pj.text.includes('浙江省')}`);
+      const a9 = await rep('?dashboard=cockpit&role=leader&asof=2026-09');
+      check('T29⑤-asof显式传参生效(标题区数据期=2026-09)', a9.status === 200 && a9.text.includes('数据期（asof）：2026-09'), '');
+      const tech = await rep('?dashboard=dash-tech&role=leader');
+      check('T29⑥-dash-tech报告含科技看板名与排名指标 TECH.PAT.VA0003',
+        tech.status === 200 && tech.text.includes('科技创新主题看板') && tech.text.includes('TECH.PAT.VA0003'), '');
+      const macro = await rep('?dashboard=dash-macro&role=leader');
+      check('T30①-BUG-T30-1修复:dash-macro报告200且含宏观经济主题看板名(前端导出按钮联调对齐)',
+        macro.status === 200 && macro.text.includes('宏观经济主题看板') && macro.text.includes('核心数值表'),
+        `status=${macro.status} bytes=${macro.text.length}`);
+      const badA = await rep('?dashboard=cockpit&role=leader&asof=2026-13');
+      const badB = await rep('?dashboard=cockpit&role=leader&asof=2027-01');
+      const badC = await rep('?dashboard=nope&role=leader');
+      const badD = await rep('?dashboard=cockpit&role=admin');
+      const badE = await rep('?dashboard=cockpit');
+      check('T29⑦-非法asof格式/越界/非法dashboard/非法role/缺role→400(DSL_SCHEMA_INVALID|INVALID_TIME_RANGE)',
+        badA.status === 400 && badA.text.includes('DSL_SCHEMA_INVALID') &&
+        badB.status === 400 && badB.text.includes('INVALID_TIME_RANGE') &&
+        badC.status === 400 && badD.status === 400 && badE.status === 400,
+        `fmt=${badA.status} oob=${badB.status} dash=${badC.status} role=${badD.status} noRole=${badE.status}`);
+    } finally {
+      app3.server.close();
+    }
   }
 
   /* ---- 汇总与收尾 ---- */

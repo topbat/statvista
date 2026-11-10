@@ -84,7 +84,7 @@ input:focus{border-color:var(--cyan);box-shadow:0 0 12px -4px rgba(44,224,245,.5
         <button id="publish" disabled>🚀 开始发布（建仓 + 推送 + Pages）</button>
         <input id="repo" value="statvista" title="仓库名（可改）" style="max-width:200px">
       </div>
-      <p style="font-size:11.5px;color:var(--ink2);margin-top:8px">已发布过？点下方按钮：增量同步本地全部更新 → 打 <code>v0.1.1</code> 标签 → 创建 GitHub Release（附体验站离线包 zip）→ 补全 20 个关键词。</p>
+      <p style="font-size:11.5px;color:var(--ink2);margin-top:8px">已发布过？点下方按钮：增量同步本地全部更新 → 打最新版本标签 <code id="tagHint">v0.1.1</code> → 创建 GitHub Release（附体验站离线包 zip）→ 补全 20 个关键词。</p>
       <div class="row">
         <button id="sync" disabled>📦 推送更新 + 发布 Release（CI/CD 已就绪）</button>
       </div>
@@ -118,6 +118,10 @@ $('openGh').onclick = () => window.open('https://github.com/settings/tokens/new?
 $('openHome').onclick = () => window.open('https://github.com/', '_blank');
 
 let TOKEN = '';
+let LATEST_TAG = 'v0.1.1';
+fetch('/api/tasks').then(r => r.json()).then(s => {
+  if (s.iteration && s.iteration.tag) { LATEST_TAG = s.iteration.tag; const h = document.getElementById('tagHint'); if (h) h.textContent = LATEST_TAG; }
+}).catch(() => {});
 $('verify').onclick = async () => {
   TOKEN = $('token').value.trim();
   if (!TOKEN) { $('vstat').textContent = '请先粘贴令牌'; $('vstat').className = 'stat bad'; return; }
@@ -152,7 +156,7 @@ $('verify').onclick = async () => {
     fetch('/api/gh/' + mode, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: TOKEN, repo: ($('repo').value || 'statvista').trim(), tag: 'v0.1.1' })
+      body: JSON.stringify({ token: TOKEN, repo: ($('repo').value || 'statvista').trim(), tag: LATEST_TAG })
     }).then(async r => {
       if (!r.ok) {
         const j = await r.json().catch(() => ({}));

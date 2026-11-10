@@ -14,6 +14,8 @@
   /* 边框 */
   --border: #D9DEE8;
   --border-strong: #8C9BB5;
+  /* 图表网格线 / 坐标轴分隔线（ECharts chrome 读取，T28） */
+  --split-line: #E5EAF2;
   /* 主色（政务蓝） */
   --primary: #1677FF;
   --primary-hover: #4096FF;
@@ -36,6 +38,16 @@
   /* 图表分类色板（8 色循环，刻意不含红绿） */
   --cat-1: #1677FF; --cat-2: #13C2C2; --cat-3: #722ED1; --cat-4: #FA8C16;
   --cat-5: #F759AB; --cat-6: #36CFC9; --cat-7: #597EF7; --cat-8: #FFC53D;
+  /* 省域地图分档着色（T27 图元契约 §4：负增长红 / 正增长蓝 / 缺数灰，T28 暗色在 data-theme 覆盖） */
+  --map-neg: #D32029;
+  --map-neg-deep: #7A0C10;
+  --map-pos: #4096FF;
+  --map-pos-deep: #0958D9;
+  --map-none: #C9CDD4;
+  --map-hover: #AEB8CB;
+  --tooltip-bg: #FFFFFF;
+  --tooltip-border: #D9DEE8;
+  --tooltip-fg: #1F2329;
   /* 骨架屏 */
   --skeleton: linear-gradient(90deg, #F2F3F5 25%, #E8EAEE 37%, #F2F3F5 63%);
   --skeleton-size: 400% 100%;
@@ -57,8 +69,78 @@
   --radius: 4px;
   --radius-pill: 999px;
   --shadow-card: 0 1px 2px rgba(17, 31, 44, .04);
+  --shadow-hover: 0 2px 8px rgba(22, 119, 255, .15);
+  --shadow-pop: 0 2px 8px rgba(17, 31, 44, .15);
+  --shadow-toast: 0 2px 8px rgba(17, 31, 44, .2);
+  --shadow-drawer: -4px 0 12px rgba(17, 31, 44, .12);
   --dur: 300ms;
   --dur-skeleton: 1.2s;
+  /* 反色基底（toast / 漏斗角标气泡：亮色主题=深底白字） */
+  --inverse-bg: #1F2329;
+  --inverse-fg: #FFFFFF;
+  /* 实底按钮/徽标上的前景色（暗色主题反转为深色字，保证对比度） */
+  --on-primary: #FFFFFF;
+  --on-alert: #FFFFFF;
+}
+
+/* ---------- 1b. 暗色大屏主题（T28 契约 §5：深蓝黑政务风 #0a1628 系，全部变量覆盖，无规则级取色） ---------- */
+html[data-theme="dark"] {
+  color-scheme: dark;
+  /* 背景与容器 */
+  --bg-page: #0A1628;
+  --bg-card: #10213D;
+  --bg-hover: #17335F;
+  --bg-mask: rgba(2, 6, 16, .62);
+  /* 边框 */
+  --border: #24406B;
+  --border-strong: #3D5C92;
+  /* 图表网格线（T28） */
+  --split-line: #24406B;
+  /* 主色（政务蓝 · 暗色提亮） */
+  --primary: #4DA0FF;
+  --primary-hover: #6FB4FF;
+  --primary-active: #2E86E8;
+  --primary-bg: rgba(53, 128, 224, .18);
+  --primary-ring: #4DA0FF;
+  /* 文字 */
+  --text-1: #E9F0FB;
+  --text-2: #B9C7DE;
+  --text-3: #8298B8;
+  /* 方向语义色：红涨绿跌（暗色提亮，对比度达标） */
+  --up: #FF6B6B;
+  --down: #33C6BC;
+  --flat: #8298B8;
+  /* 警示语义色 */
+  --alert: #E5484D;
+  --alert-bg: rgba(229, 72, 77, .14);
+  --warn: #FFB65C;
+  --warn-bg: rgba(255, 182, 92, .13);
+  /* 图表分类色板（暗色提亮变体） */
+  --cat-1: #4DA0FF; --cat-2: #2DD4CE; --cat-3: #A78BFA; --cat-4: #FFB65C;
+  --cat-5: #F78BC0; --cat-6: #4DD8E0; --cat-7: #8FA8FF; --cat-8: #FFD666;
+  /* 省域地图分档（缺数灰压深融入深底，语义色相不变） */
+  --map-neg: #E5484D;
+  --map-neg-deep: #9F1A20;
+  --map-pos: #5FB0FF;
+  --map-pos-deep: #1E7AE8;
+  --map-none: #223A61;
+  --map-hover: #35558A;
+  --tooltip-bg: #142A4E;
+  --tooltip-border: #2E4E80;
+  --tooltip-fg: #DDE8F7;
+  /* 骨架屏 */
+  --skeleton: linear-gradient(90deg, #142A4E 25%, #1C3560 37%, #142A4E 63%);
+  /* 阴影（深底加重） */
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, .35);
+  --shadow-hover: 0 2px 8px rgba(77, 160, 255, .18);
+  --shadow-pop: 0 2px 8px rgba(0, 0, 0, .45);
+  --shadow-toast: 0 2px 8px rgba(0, 0, 0, .5);
+  --shadow-drawer: -4px 0 12px rgba(0, 0, 0, .45);
+  /* 反色基底（暗色主题反转：浅底深字） */
+  --inverse-bg: #DDE8F7;
+  --inverse-fg: #0A1628;
+  --on-primary: #081527;
+  --on-alert: #FFFFFF;
 }
 
 /* ---------- 2. 基础 ---------- */
@@ -70,6 +152,7 @@ body {
   color: var(--text-1);
   background: var(--bg-page);
   line-height: 1.5;
+  transition: background-color var(--dur), color var(--dur); /* T28 主题切换平滑过渡 */
 }
 button { font-family: inherit; cursor: pointer; }
 input, select { font-family: inherit; font-size: var(--fs-caption); color: var(--text-1); }
@@ -98,18 +181,18 @@ a { color: inherit; text-decoration: none; }
 #nav-tabs a.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
 .header-right { margin-left: auto; display: flex; align-items: center; gap: var(--space-2); }
 /* 缓存调试按钮与浮层（§4.7：默认收起，D10/D11 演示用） */
-#cache-debug-btn {
+#cache-debug-btn, #theme-toggle, #export-report-btn {
   height: 28px; padding: 0 var(--space-2);
   border: 1px solid var(--border); border-radius: var(--radius);
   background: var(--bg-card); color: var(--text-2); font-size: var(--fs-caption);
   transition: background var(--dur), color var(--dur);
 }
-#cache-debug-btn:hover { background: var(--bg-hover); color: var(--primary); }
+#cache-debug-btn:hover, #theme-toggle:hover, #export-report-btn:hover { background: var(--bg-hover); color: var(--primary); }
 .debug-pop {
   position: fixed; top: 54px; right: var(--space-4); z-index: 120;
   width: 320px; padding: var(--space-3);
   background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
-  box-shadow: 0 2px 8px rgba(17,31,44,.15); font-size: var(--fs-caption);
+  box-shadow: var(--shadow-pop); font-size: var(--fs-caption);
 }
 .debug-pop h3 { font-size: var(--fs-card-title); font-weight: 600; margin-bottom: var(--space-2); }
 .debug-pop dl { display: grid; grid-template-columns: 96px 1fr; gap: var(--space-1); margin-bottom: var(--space-2); }
@@ -121,7 +204,7 @@ a { color: inherit; text-decoration: none; }
   border: 1px solid var(--primary); border-radius: var(--radius);
   background: var(--primary-bg); color: var(--primary);
 }
-.debug-pop .bump-row button:hover { background: var(--primary); color: #FFF; }
+.debug-pop .bump-row button:hover { background: var(--primary); color: var(--on-primary); }
 .role-label { font-size: var(--fs-caption); color: var(--text-3); }
 #role-switch {
   height: 28px; padding: 0 var(--space-2);
@@ -134,8 +217,8 @@ a { color: inherit; text-decoration: none; }
 #toast {
   position: fixed; top: 56px; left: 50%; transform: translateX(-50%) translateY(-8px);
   max-width: 70vw; padding: var(--space-2) var(--space-3);
-  background: var(--text-1); color: #FFF; font-size: var(--fs-caption);
-  border-radius: var(--radius); box-shadow: 0 2px 8px rgba(17,31,44,.2);
+  background: var(--inverse-bg); color: var(--inverse-fg); font-size: var(--fs-caption);
+  border-radius: var(--radius); box-shadow: var(--shadow-toast);
   opacity: 0; pointer-events: none; transition: opacity var(--dur), transform var(--dur);
   z-index: 200;
 }
@@ -199,7 +282,7 @@ a { color: inherit; text-decoration: none; }
   display: flex; flex-direction: column; gap: var(--space-1);
   transition: box-shadow var(--dur), border-color var(--dur), transform var(--dur);
 }
-.mcard:hover { border-color: var(--primary); box-shadow: 0 2px 8px rgba(22,119,255,.15); }
+.mcard:hover { border-color: var(--primary); box-shadow: var(--shadow-hover); }
 .mcard:focus-within, .mcard.focus { border-color: var(--primary); background: var(--primary-bg); }
 /* 逆指标：左侧 3px 警示竖条（§3.6） */
 .mcard.inverse::before {
@@ -229,10 +312,20 @@ a { color: inherit; text-decoration: none; }
 .cp-mid .chart-card { height: 420px; }
 .cp-bottom { display: grid; grid-template-columns: 8fr 4fr; gap: var(--space-3); min-height: 220px; }
 .cp-bottom > section { min-height: 220px; }
+/* 省域地图卡片（T27）：下钻态上下分栏——全国地图（选中省高亮）+ 市排名条形（下钻产物） */
+.map-split { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: var(--space-1); }
+.map-split .chart { min-height: 0; }
+.map-split .map-main { flex: 3; }
+.map-split .map-city { flex: 2; border-top: 1px dashed var(--border); }
 
 /* 异常预警列表 AlertList（§4.5） */
 .alert-list { padding: var(--space-2) var(--space-3) var(--space-3); overflow: hidden; display: flex; flex-direction: column; }
 .alert-list h2 { font-size: var(--fs-card-title); font-weight: 600; padding: var(--space-1) 0 var(--space-2); }
+/* 预警来源徽标（T25：实时计算 / 预埋兜底），沿用既有 CSS 变量，不引入新硬编码色 */
+.alert-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-2); }
+.alert-badge { font-size: var(--fs-axis); line-height: 1; padding: 3px 8px; border-radius: var(--radius-pill); white-space: nowrap; font-weight: 500; }
+.alert-badge.live { background: var(--primary-bg); color: var(--primary); border: 1px solid var(--primary); }
+.alert-badge.fallback { background: var(--warn-bg); color: var(--warn); border: 1px solid var(--warn); }
 .alert-rows { overflow-y: auto; flex: 1; }
 .alert-row {
   position: relative; display: flex; align-items: center; gap: var(--space-2);
@@ -250,7 +343,7 @@ a { color: inherit; text-decoration: none; }
   display: inline-flex; align-items: center; height: 18px; padding: 0 var(--space-2);
   border-radius: var(--radius-pill); font-size: var(--fs-axis); white-space: nowrap;
 }
-.chip.red { background: var(--alert); color: #FFF; }
+.chip.red { background: var(--alert); color: var(--on-alert); }
 .chip.orange { background: var(--warn-bg); color: var(--warn); border: 1px solid var(--warn); }
 .chip.info { background: var(--primary-bg); color: var(--primary); border: 1px solid var(--primary); }
 .alert-metric { color: var(--text-1); white-space: nowrap; }
@@ -265,7 +358,7 @@ a { color: inherit; text-decoration: none; }
   cursor: pointer; display: flex; flex-direction: column; gap: var(--space-1);
   transition: border-color var(--dur), box-shadow var(--dur);
 }
-.entry-card:hover { border-color: var(--primary); box-shadow: 0 2px 8px rgba(22,119,255,.15); }
+.entry-card:hover { border-color: var(--primary); box-shadow: var(--shadow-hover); }
 .entry-name { font-size: var(--fs-card-title); font-weight: 600; color: var(--primary); }
 .entry-card p { font-size: var(--fs-caption); color: var(--text-3); line-height: 1.5; }
 
@@ -340,7 +433,7 @@ a { color: inherit; text-decoration: none; }
 .funnel-badge::after {
   content: attr(data-tip);
   position: absolute; right: 2px; top: 18px;
-  background: var(--text-1); color: #FFF; font-size: var(--fs-axis);
+  background: var(--inverse-bg); color: var(--inverse-fg); font-size: var(--fs-axis);
   padding: 3px var(--space-2); border-radius: var(--radius);
   white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity var(--dur);
 }
@@ -410,7 +503,7 @@ a { color: inherit; text-decoration: none; }
   display: inline-flex; align-items: center; gap: var(--space-1);
   height: 28px; padding: 0 var(--space-3);
   border: 1px solid var(--primary); border-radius: var(--radius);
-  background: var(--primary); color: #FFF; font-size: var(--fs-caption);
+  background: var(--primary); color: var(--on-primary); font-size: var(--fs-caption);
   transition: background var(--dur);
 }
 .btn:hover { background: var(--primary-hover); }
@@ -457,7 +550,7 @@ a { color: inherit; text-decoration: none; }
 .drawer, .dimtree {
   position: fixed; top: 0; right: 0; bottom: 0; z-index: 100;
   background: var(--bg-card); border-left: 1px solid var(--border);
-  box-shadow: -4px 0 12px rgba(17,31,44,.12);
+  box-shadow: var(--shadow-drawer);
   display: flex; flex-direction: column;
   animation: slide-in var(--dur) ease;
 }
@@ -485,7 +578,7 @@ a { color: inherit; text-decoration: none; }
 .ctxmenu {
   position: fixed; z-index: 150; min-width: 110px;
   background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
-  box-shadow: 0 2px 8px rgba(17,31,44,.15); padding: var(--space-1);
+  box-shadow: var(--shadow-pop); padding: var(--space-1);
 }
 .ctxmenu button {
   display: block; width: 100%; border: none; background: transparent;
@@ -496,3 +589,42 @@ a { color: inherit; text-decoration: none; }
 
 /* 数字等宽 */
 .tabular { font-variant-numeric: tabular-nums; }
+
+/* ---------- 14. 迷你趋势线（T28：取色收敛至变量，跟随主题） ---------- */
+.spark-line { fill: none; stroke: var(--text-3); stroke-width: 1; }
+.spark-dot { fill: var(--primary); }
+
+/* ---------- 15. 投屏适配（T28：?screen=tv 参数 + ≥1920px 媒体查询 双通道） ---------- */
+/* 通道一：URL 参数 html[data-screen="tv"]（主动投屏，不限视口） */
+html[data-screen="tv"] {
+  --fs-title: 30px;
+  --fs-card-title: 18px;
+  --fs-metric: 36px;
+  --fs-body: 16px;
+  --fs-caption: 15px;
+  --fs-axis: 13px;
+}
+html[data-screen="tv"] .page { max-width: 1840px; padding: var(--space-4); }
+html[data-screen="tv"] .mcards, html[data-screen="tv"] .cp-mid,
+html[data-screen="tv"] .cp-bottom, html[data-screen="tv"] .th-grid { gap: var(--space-4); }
+html[data-screen="tv"] .cp-mid .chart-card { height: 520px; }
+html[data-screen="tv"] .th-grid .chart-card { height: 540px; }
+html[data-screen="tv"] .chart { min-height: 300px; }
+html[data-screen="tv"] .mcard { padding: var(--space-4); }
+/* 通道二：大屏媒体查询（≥1920px 自动放大，无需参数） */
+@media (min-width: 1920px) {
+  html {
+    --fs-title: 30px;
+    --fs-card-title: 18px;
+    --fs-metric: 36px;
+    --fs-body: 16px;
+    --fs-caption: 15px;
+    --fs-axis: 13px;
+  }
+  .page { max-width: 1840px; padding: var(--space-4); }
+  .mcards, .cp-mid, .cp-bottom, .th-grid { gap: var(--space-4); }
+  .cp-mid .chart-card { height: 520px; }
+  .th-grid .chart-card { height: 540px; }
+  .chart { min-height: 300px; }
+  .mcard { padding: var(--space-4); }
+}
